@@ -1,0 +1,360 @@
+---
+import type { Point } from '../repo-stats';
+import { compact } from '../stats';
+
+// A stat tile with a plot: label, headline value, and the series behind it.
+//
+// The SVG is built here, at build time, and shipped as markup — the same
+// no-client-JS bargain the rest of the site makes. That costs the hover layer an
+// interactive chart would normally carry: a crosshair and a per-day tooltip would
+// mean either a script or one invisible hit rect per point, and a year of daily
+// traffic is ~365 of them per chart on a page that carries five charts. The
+// detail those would surface is carried instead by the peak label, the axis
+// ticks, and the full PDF report linked at the foot of the page, and the SVG
+// gets a title/desc pair so a screen reader is told the shape rather than shown
+// an unlabelled graphic.
+//
+// One series per chart, so there is no legend and no categorical palette to get
+// wrong: every plot is copper on the cell, which clears 3:1 against both themes'
+// surfaces. Charts that would otherwise share axes are faceted into small
+// multiples instead of stacked into one frame.
+
+interface Props {
+  points: Point[];
+  /** Tile label, sentence case, no trailing colon. */
+  label: string;
+  /** Headline number for the tile, already reduced (a sum, or a latest value). */
+  value: number;
+  /** What the headline counts, e.g. "in the last 30 days". */
+  valueNote: string;
+  /**
+   * Cumulative series (stars, forks) hold their value between readings, so they
+   * step rather than ramp — ghrs only writes a row on a day the count changed,
+   * and a straight line between two such rows would draw growth on days that had
+   * none.
+   */
+  step?: boolean;
+}
+
+const { points: daily, label, value, valueNote, step = false } = Astro.props;
+
+const WEEK = 7 * 86_400_000;
+
+/**
+ * A plot this size has room for roughly one point every three pixels. Past that
+ * the line stops being a line and becomes a hairball: five years of daily
+ * traffic is 1,800 readings across 530px, and every day's spike lands on top of
+ * its neighbour's. Rolling long series up into weeks keeps the whole record on
+ * the axis — which is the entire point of the page — while giving the shape room
+ * to be read. The tile says which granularity it is showing, because a weekly
+ * peak and a daily peak are different claims.
+ *
+ * Counts sum within the week. Cumulative series take the week's last reading:
+ * adding up a running total would draw a number that never existed.
+ */
+function weekly(points: Point[]): Point[] {
+  const end = points.at(-1)!.t;
+  const groups = new Map<number, Point[]>();
+
+  for (const p of points) {
+    const k = Math.floor((end - p.t) / WEEK);
+    (groups.get(k) ?? groups.set(k, []).get(k)!).push(p);
+  }
+
+  const buckets = [...groups.entries()]
+    .sort((a, b) => b[0] - a[0]) // oldest first
+    .map(([k, ps]) => {
+      const last = ps.reduce((a, b) => (b.t > a.t ? b : a));
+      return {
+        date: last.date,
+        t: end - k * WEEK,
+        value: step ? last.value : ps.reduce((sum, p) => sum + p.value, 0),
+      };
+    });
+
+  // The oldest bucket is only a full week if the record happens to divide evenly
+  // into weeks counting back from today. When it does not, a sum over its
+  // partial span draws a dip at the left edge that is an artefact of where the
+  // collection started rather than anything that happened.
+  const partial = !step && (end - points[0].t) % WEEK !== 0;
+  return partial && buckets.length > 8 ? buckets.slice(1) : buckets;
+}
+
+const rollUp = daily.length > 200;
+const points = rollUp ? weekly(daily) : daily;
+
+// The badge discloses aggregation, so it appears only when there is some. Its
+// absence means the plot is drawing the readings as they were recorded — which
+// for a cumulative series is not one a day anyway, since ghrs writes a row only
+// on a day the count moved. Labelling those "daily" would be a claim about the
+// sampling that is not true.
+const grain = rollUp ? 'weekly' : null;
+
+const W = 600;
+const H = 200;
+const PAD = { t: 18, r: 14, b: 26, l: 48 };
+const plotW = W - PAD.l - PAD.r;
+const plotH = H - PAD.t - PAD.b;
+
+/** Round an axis top up to a clean 1/2/2.5/5 × 10ⁿ, so ticks read as numbers. */
+function niceMax(v: number): number {
+  if (v <= 0) return 1;
+  const mag = 10 ** Math.floor(Math.log10(v));
+  for (const m of [1, 2, 2.5, 5, 10]) if (v <= m * mag) return m * mag;
+  return 10 * mag;
+}
+
+const tMin = points[0]?.t ?? 0;
+const tMax = points.at(-1)?.t ?? 0;
+const span = tMax - tMin;
+const max = niceMax(Math.max(...points.map((p) => p.value), 0));
+
+// A single reading has no span to scale against; centre it rather than dividing
+// by zero. Two readings on the same day are the same case.
+const x = (t: number) => PAD.l + (span ? ((t - tMin) / span) * plotW : plotW / 2);
+const y = (v: number) => PAD.t + plotH - (v / max) * plotH;
+
+/** One decimal is under half a device pixel at this size, and halves the markup. */
+const r1 = (n: number) => Math.round(n * 10) / 10;
+
+const coords = points.map((p) => ({ x: r1(x(p.t)), y: r1(y(p.value)) }));
+
+const line = coords
+  .map((c, i) =>
+    i === 0
+      ? `M${c.x} ${c.y}`
+      : step
+        ? `H${c.x}V${c.y}` // hold, then move: the reading changed on this day
+        : `L${c.x} ${c.y}`,
+  )
+  .join('');
+
+const baseline = r1(PAD.t + plotH);
+const area =
+  coords.length > 1
+    ? `${line}V${baseline}H${coords[0].x}Z`
+    : '';
+
+const ticks = [0, max / 2, max];
+
+// Label the extreme, not every point. Ties go to the earliest peak, which is
+// where the spike actually started.
+const peakIdx = points.reduce(
+  (best, p, i) => (p.value > points[best].value ? i : best),
+  0,
+);
+// A series can arrive empty if the upstream CSV ever drops a column: `series()`
+// filters unparseable rows, and filtering them all leaves nothing. The page
+// already declines to render a tile in that case, but a chart that crashes the
+// whole build on missing data would contradict what the rest of this module
+// promises, so the arithmetic below stays safe on its own.
+const empty = points.length === 0;
+const peak = points[peakIdx] ?? { value: 0, t: 0, date: '' };
+const peakAt = coords[peakIdx];
+const showPeak = points.length > 1 && peak.value > 0;
+
+// Keep the label inside the plot: anchor it to whichever edge it is near, and
+// drop it below the point when it would otherwise ride over the top gridline.
+const peakAnchor =
+  peakAt && peakAt.x < PAD.l + 24
+    ? 'start'
+    : peakAt && peakAt.x > W - PAD.r - 24
+      ? 'end'
+      : 'middle';
+const peakBelow = peakAt ? peakAt.y < PAD.t + 14 : false;
+
+const fmtDate = (t: number) =>
+  new Date(t).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+
+const desc = empty
+  ? `${label}: no readings recorded yet.`
+  : `${label}, ${grain ?? 'as recorded'}: ${points.length} readings from ${fmtDate(
+      tMin,
+    )} to ${fmtDate(tMax)}, peaking at ${peak.value.toLocaleString(
+      'en-GB',
+    )} ${rollUp ? 'in the week ending' : 'on'} ${fmtDate(peak.t)}.`;
+
+// aria-labelledby is a space-separated list of IDs, so a label like "Unique
+// visitors" would resolve to four tokens matching nothing and leave the graphic
+// unnamed. Slugged once and used for both ends of the reference.
+const uid = label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+
+<figure class="tile">
+  <figcaption>
+    <span class="label">
+      {label}
+      {grain && <span class="grain">{grain}</span>}
+    </span>
+    <strong class="value">{value.toLocaleString('en-GB')}</strong>
+    <span class="note">{valueNote}</span>
+  </figcaption>
+
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${uid}-t ${uid}-d`}>
+    <title id={`${uid}-t`}>{label}</title>
+    <desc id={`${uid}-d`}>{desc}</desc>
+
+    {/* Grid before data, so the data sits on top of it and never under it. */}
+    {ticks.map((v) => (
+      <line
+        class="grid"
+        x1={PAD.l}
+        x2={W - PAD.r}
+        y1={r1(y(v))}
+        y2={r1(y(v))}
+      />
+    ))}
+    {ticks.map((v) => (
+      <text class="tick" x={PAD.l - 8} y={r1(y(v)) + 3.5} text-anchor="end">
+        {compact(v)}
+      </text>
+    ))}
+
+    {area && <path class="area" d={area} />}
+    {!empty && <path class="line" d={line} />}
+
+    {/* End dot with a ring in the cell colour, so it stays legible where it
+        meets the line and the right-hand gridline. */}
+    {coords.length > 0 && (
+      <circle class="dot" cx={coords.at(-1)!.x} cy={coords.at(-1)!.y} r="4" />
+    )}
+
+    {showPeak && (
+      <g>
+        <circle class="dot peak" cx={peakAt.x} cy={peakAt.y} r="3" />
+        <text
+          class="peak-label"
+          x={peakAt.x}
+          y={peakBelow ? peakAt.y + 15 : peakAt.y - 9}
+          text-anchor={peakAnchor}
+        >
+          {compact(peak.value)}
+        </text>
+      </g>
+    )}
+
+    {/* With no readings there are no dates to put on the axis: fmtDate would
+        render the epoch, which looks like data rather than the absence of it. */}
+    {empty ? (
+      <text class="tick" x={W / 2} y={PAD.t + plotH / 2} text-anchor="middle">
+        no readings yet
+      </text>
+    ) : (
+      <>
+        <text class="tick" x={PAD.l} y={H - 7}>{fmtDate(tMin)}</text>
+        <text class="tick" x={W - PAD.r} y={H - 7} text-anchor="end">
+          {fmtDate(tMax)}
+        </text>
+      </>
+    )}
+  </svg>
+</figure>
+
+<style>
+  .tile {
+    margin: 0;
+    padding: 1.15rem 1.25rem 0.9rem;
+    background: var(--bg);
+  }
+
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem 0.55rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex: 1 0 100%;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+  }
+
+  /* Which grain the plot is drawn at, set apart from the label so it reads as a
+     property of the chart rather than as part of what is being counted. */
+  .grain {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  /* Proportional figures, not tabular: these are display-size standalone
+     numbers, and tabular widths make one like 121 read loose. */
+  .value {
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .note {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .grid {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+
+  /* Axis and tick text wear text tokens, never the series colour. Mono, because
+     the site sets reference numbers in mono, and tabular figures keep the
+     stacked y-ticks aligned on their decimal. */
+  .tick {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+    fill: var(--text-dim);
+  }
+
+  .area {
+    fill: var(--copper);
+    fill-opacity: 0.1;
+  }
+
+  .line {
+    fill: none;
+    stroke: var(--copper);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .dot {
+    fill: var(--copper);
+    stroke: var(--bg);
+    stroke-width: 2;
+  }
+
+  .peak-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    fill: var(--text);
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width: 3;
+  }
+</style>

@@ -22,6 +22,9 @@ export const links = {
   buildStory: 'https://chouhan.ai/building-with-claude',
   // Placeholder page on this site; chouhan.ai/research is a different thing.
   research: '/research/',
+  // The long traffic record for the repo, drawn from the data branch that
+  // .github/workflows/repo-stats.yml appends to daily.
+  stats: '/stats/',
   // The Antler write-up, on chouhan.ai rather than this site's own /blog copy.
   antler: 'https://chouhan.ai/antler-crackathon',
   // TODO(launch): confirm the real inbox before launch; copperhead.sh has no MX

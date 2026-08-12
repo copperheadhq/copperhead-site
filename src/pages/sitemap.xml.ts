@@ -15,6 +15,9 @@ export const GET: APIRoute = async () => {
     { loc: '/blog/', changefreq: 'weekly', priority: '0.8' },
     { loc: '/research/', changefreq: 'monthly', priority: '0.8' },
     { loc: '/blog/faq/', changefreq: 'monthly', priority: '0.7' },
+    // Redrawn on every scheduled rebuild, so it changes more often than anything
+    // else here even though the page itself rarely does.
+    { loc: '/stats/', changefreq: 'daily', priority: '0.5' },
     ...posts.map((p) => ({
       loc: postPath(p.id),
       changefreq: 'monthly',
