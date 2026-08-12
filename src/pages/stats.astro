@@ -1,0 +1,430 @@
+---
+import Base from "../layouts/Base.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import TrendChart from "../components/TrendChart.astro";
+import { links } from "../config";
+import { repoStats, reportUrl, trackedSlug, trailing } from "../repo-stats";
+
+// The public face of .github/workflows/repo-stats.yml. Everything on this page is
+// read at build time from the `github-repo-stats` branch and rendered to static
+// markup — see src/repo-stats.ts for the contract, including what happens before
+// the workflow has ever run.
+
+const s = repoStats;
+
+// Six tiles, but only the ones with data behind them. ghrs writes no stargazers
+// file until the first star and no forks file until the first fork, and a tile
+// reading zero over an empty plot claims a measurement that was never taken.
+const tiles = s
+  ? [
+      {
+        label: "Unique visitors",
+        points: s.views.unique,
+        value: trailing(s.views.unique, 30),
+        valueNote: "daily uniques, last 30 days",
+      },
+      {
+        label: "Page views",
+        points: s.views.total,
+        value: trailing(s.views.total, 30),
+        valueNote: "last 30 days",
+      },
+      {
+        label: "Unique cloners",
+        points: s.clones.unique,
+        value: trailing(s.clones.unique, 30),
+        valueNote: "daily uniques, last 30 days",
+      },
+      {
+        label: "Clones",
+        points: s.clones.total,
+        value: trailing(s.clones.total, 30),
+        valueNote: "last 30 days",
+      },
+      ...(s.stars.length
+        ? [
+            {
+              label: "Stars",
+              points: s.stars,
+              value: s.stars.at(-1)!.value,
+              valueNote: "cumulative",
+              step: true,
+            },
+          ]
+        : []),
+      ...(s.forks.length
+        ? [
+            {
+              label: "Forks",
+              points: s.forks,
+              value: s.forks.at(-1)!.value,
+              valueNote: "cumulative",
+              step: true,
+            },
+          ]
+        : []),
+    ]
+  : [];
+
+// Popular paths come back fully qualified (/owner/repo/blob/main/README.md).
+// The owner/repo prefix is the same on every row, so it is noise in a table
+// about one repo — strip it, and give the bare repo root a name of its own.
+const shortPath = (p: string) => {
+  const rest = p.replace(new RegExp(`^/${trackedSlug}`), "");
+  return rest === "" || rest === "/" ? "repository home" : rest;
+};
+
+const fmtDay = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+---
+
+<Base
+  title="Stats · copperhead"
+  description="The long record of traffic to the copperhead repository: views, clones, stars, referrers and popular paths, collected daily because GitHub only keeps fourteen days of it."
+  path="/stats/"
+  ogImageAlt="copperhead repository traffic, collected daily"
+>
+  <Navbar home={false} />
+  <main>
+    <article>
+      <div class="wrap">
+        <header>
+          <p class="kind">Stats</p>
+          <h1>GitHub Repository Traffic</h1>
+        </header>
+
+        {
+          s ? (
+            <>
+              <p class="range">
+                {s.days.toLocaleString("en-GB")} days on the record, from{" "}
+                {fmtDay(s.since)} to {fmtDay(s.updated)}.
+              </p>
+
+              <div class="grid">
+                {tiles.map((t) => (
+                  <TrendChart
+                    points={t.points}
+                    label={t.label}
+                    value={t.value}
+                    valueNote={t.valueNote}
+                    step={t.step}
+                  />
+                ))}
+              </div>
+
+              <p class="caveat">
+                Unique counts are per day. A thirty-day figure adds those days
+                up, so somebody who came back on Tuesday is counted again on
+                Tuesday. Clones include CI: a workflow that checks the repo out
+                on every run is a cloner, and a busy one outnumbers the people.
+              </p>
+
+              {(s.referrers.length > 0 || s.paths.length > 0) && (
+                <div class="tables">
+                  {s.referrers.length > 0 && (
+                    <section>
+                      <h2>Where it came from</h2>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th scope="col">Referrer</th>
+                            <th scope="col" class="num">
+                              Unique
+                            </th>
+                            <th scope="col" class="num">
+                              Views
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {s.referrers.map((r) => (
+                            <tr>
+                              <td>{r.name}</td>
+                              <td class="num">
+                                {r.unique.toLocaleString("en-GB")}
+                              </td>
+                              <td class="num">
+                                {r.total.toLocaleString("en-GB")}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </section>
+                  )}
+
+                  {s.paths.length > 0 && (
+                    <section>
+                      <h2>What they read</h2>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th scope="col">Path</th>
+                            <th scope="col" class="num">
+                              Unique
+                            </th>
+                            <th scope="col" class="num">
+                              Views
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {s.paths.map((p) => (
+                            <tr>
+                              <td class="path">
+                                <a href={`https://github.com${p.name}`}>
+                                  {shortPath(p.name)}
+                                </a>
+                              </td>
+                              <td class="num">
+                                {p.unique.toLocaleString("en-GB")}
+                              </td>
+                              <td class="num">
+                                {p.total.toLocaleString("en-GB")}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </section>
+                  )}
+                </div>
+              )}
+
+              <p class="both-tables-note">
+                Both tables are the trailing fourteen days, which is all GitHub
+                will say about referrers and paths however long the record runs.
+                Only the daily totals above accumulate.
+              </p>
+            </>
+          ) : (
+            <p class="empty">
+              Nothing collected yet. The daily job that writes this page's data
+              has not completed a run, so there is no record to draw. Rather
+              than show an empty axis, the page says so. It fills in on the
+              first build after the first snapshot.
+            </p>
+          )
+        }
+
+        {
+          /* The argument for the page, after the thing it is arguing for. The
+            numbers lead; this explains why there are any to lead with. */
+        }
+        <p class="why">
+          GitHub shows a repository's traffic for the last fourteen days and
+          then forgets it. Nothing recovers what fell off the back: there is no
+          archive and no API for it, so the only way to have a year of the
+          numbers is to have been writing them down all along. A job here
+          snapshots the copperhead repo once a day and appends to a file that
+          never rolls over. This is that file, drawn.
+        </p>
+
+        <p class="source">
+          Collected by <a href="https://github.com/jgehrcke/github-repo-stats">
+            github-repo-stats</a
+          >, from the <a href={links.repo}>copperhead repo</a>. The raw CSVs and
+          a fuller <a href={reportUrl}>rendered report</a> live on this site's{
+            " "
+          }
+          <code>github-repo-stats</code> branch, so every number here can be recomputed
+          rather than taken on trust.
+        </p>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  article {
+    padding-block: 150px 120px;
+  }
+
+  header {
+    max-width: 62ch;
+  }
+
+  .kind {
+    margin: 0 0 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    letter-spacing: -0.045em;
+  }
+
+  /* The closing note, marked off by a rule: past this line the page stops
+     reporting and starts explaining. Sized above body copy but well below the
+     standfirst it used to be, because arriving here it is a colophon rather
+     than an opening claim. */
+  .why {
+    max-width: 60ch;
+    margin: 4.5rem 0 0;
+    padding-top: 2.25rem;
+    border-top: 1px solid var(--line);
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .range {
+    margin: 2.25rem 0 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+  }
+
+  /* A framed grid: one hairline frame, cells in the page colour, and the gaps
+     doing the separating. Same construction the design system reserves --bg for. */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .caveat,
+  .both-tables-note {
+    max-width: 68ch;
+    margin: 1.5rem 0 0;
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  /* The last tile takes the full row when the count is odd, rather than leaving
+     a cell of bare grid showing. Stars is the one that lands there most often,
+     and a cumulative curve is the plot that most wants the extra width. */
+  .grid > :global(.tile:last-child:nth-child(odd)) {
+    grid-column: 1 / -1;
+  }
+
+  .tables {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
+    margin-top: 4rem;
+  }
+
+  /* global.css gives every <section> 136px of block padding, which is right for
+     a full-width band of the page and very wrong for two tables sitting side by
+     side inside one. */
+  .tables section {
+    padding-block: 0;
+  }
+
+  .tables h2 {
+    margin: 0 0 1rem;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 0 0 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  td {
+    padding: 0.62rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    /* Long referrer hosts and deep paths both wrap rather than push the number
+       column off the edge. */
+    overflow-wrap: anywhere;
+  }
+
+  /* Columns of numbers, so these do take tabular figures. */
+  .num {
+    text-align: right;
+    width: 5.5rem;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  td.num {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+
+  .path a {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+  }
+
+  .empty {
+    max-width: 62ch;
+    margin: 3rem 0 0;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--text-dim);
+    font-size: 0.96rem;
+    line-height: 1.65;
+  }
+
+  /* Tight to .why: the two are one closing block, not two sections. */
+  .source {
+    max-width: 66ch;
+    margin: 1.75rem 0 0;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .source code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+  }
+
+  @media (max-width: 860px) {
+    .grid,
+    .tables {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tables {
+      gap: 2.5rem;
+    }
+  }
+
+  @media (max-width: 720px) {
+    article {
+      padding-block: 120px 80px;
+    }
+
+    .why {
+      font-size: 1rem;
+      margin-top: 3rem;
+      padding-top: 1.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,49 @@
+# GitHub only keeps repository traffic (views, clones, referrers, popular paths)
+# for a rolling 14 days, and serves nothing older through any API. The only way
+# to have a year of it is to have been writing it down all along. This workflow
+# is that: once a day it snapshots the traffic API for
+# chouhanindustries/copperhead, appends the new rows to a long-lived time series,
+# and commits the result to this repo's `github-repo-stats` branch.
+#
+# The data lands as CSV under <owner>/<repo>/ghrs-data/ on that branch, which is
+# what src/repo-stats.ts reads at build time to render /stats/. The action also
+# writes a rendered report (latest-report/report.html and .pdf) — GitHub previews
+# the PDF inline, so the branch is browsable on its own if the site is down.
+#
+# The data branch is orphaned from main and is created by the action on its first
+# run. Nothing here touches main, so this never triggers a Cloudflare build; the
+# site picks the new numbers up on the next scheduled rebuild (see
+# cloudflare-refresh.yml, every 6 hours).
+#
+# Requires repo secret GHRS_GITHUB_API_TOKEN: a classic PAT with `repo` scope.
+# The default GITHUB_TOKEN cannot do this job — the traffic API needs push access
+# to the repo being measured, and that repo (copperhead) is not the repo this
+# workflow runs in (copperhead-site), so a token scoped to this one is not enough.
+name: Repo stats
+
+on:
+  # Manual "snapshot now", useful right after adding the token.
+  workflow_dispatch:
+
+  # Daily, late UTC. The action is idempotent per day: a second run on the same
+  # day refreshes that day's row rather than double-counting it, so a manual run
+  # alongside the cron is safe.
+  schedule:
+    - cron: "20 23 * * *"
+
+jobs:
+  repo-stats:
+    name: Snapshot copperhead traffic
+    runs-on: ubuntu-latest
+    steps:
+      # Pinned to the release tag rather than a moving ref: this is a Docker
+      # action, so every run builds its Dockerfile from whatever the ref points
+      # at, and an unpinned ref would let that change under us.
+      - name: Collect and analyse
+        uses: jgehrcke/github-repo-stats@v1.4.2
+        with:
+          # The tracked repo, not the data repo. Kept in sync by hand with
+          # `repo` in src/config.ts, which is what the site reads the data under.
+          repository: chouhanindustries/copperhead
+          ghtoken: ${{ secrets.GHRS_GITHUB_API_TOKEN }}
+          databranch: github-repo-stats

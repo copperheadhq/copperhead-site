@@ -214,6 +214,30 @@ static assets (see `wrangler.jsonc`). CI builds on push to
 main and fails the build on em-dashes, dead links, or a transfer budget over
 100 KB.
 
+## Repo traffic (`/stats/`)
+
+GitHub keeps repository traffic for fourteen days and then drops it, with no
+archive and no API to recover it from. `.github/workflows/repo-stats.yml` runs
+[github-repo-stats](https://github.com/jgehrcke/github-repo-stats) once a day
+against `chouhanindustries/copperhead` and appends each snapshot to CSVs on this
+repo's orphaned `github-repo-stats` branch, so the record accumulates instead of
+rolling over. `src/repo-stats.ts` reads those CSVs at build time and `/stats/`
+renders them as static SVG, the same no-client-JS bargain as `src/stats.ts`.
+
+**It needs one secret before it will run.** Add a repository secret named
+`GHRS_GITHUB_API_TOKEN` holding a classic PAT with `repo` scope. The built-in
+`GITHUB_TOKEN` cannot stand in: the traffic API requires push access to the repo
+being measured, and that repo is not the one the workflow runs in.
+
+Until the first run completes there is no data branch, so `/stats/` renders a
+short "nothing collected yet" note rather than empty axes. After adding the
+secret, trigger the first snapshot by hand from the Actions tab; the page picks
+it up on the next Cloudflare rebuild (`cloudflare-refresh.yml`, every 6 hours).
+
+Nothing in this touches `main`, so collection never triggers a deploy. The data
+branch also carries a rendered `latest-report/report.pdf`, which GitHub previews
+inline if you want the numbers without the site.
+
 ## License
 
 [MIT](LICENSE)
