@@ -143,7 +143,13 @@ const peakIdx = points.reduce(
   (best, p, i) => (p.value > points[best].value ? i : best),
   0,
 );
-const peak = points[peakIdx];
+// A series can arrive empty if the upstream CSV ever drops a column: `series()`
+// filters unparseable rows, and filtering them all leaves nothing. The page
+// already declines to render a tile in that case, but a chart that crashes the
+// whole build on missing data would contradict what the rest of this module
+// promises, so the arithmetic below stays safe on its own.
+const empty = points.length === 0;
+const peak = points[peakIdx] ?? { value: 0, t: 0, date: '' };
 const peakAt = coords[peakIdx];
 const showPeak = points.length > 1 && peak.value > 0;
 
@@ -165,11 +171,18 @@ const fmtDate = (t: number) =>
     timeZone: 'UTC',
   });
 
-const desc = `${label}, ${grain ?? 'as recorded'}: ${points.length} readings from ${fmtDate(
-  tMin,
-)} to ${fmtDate(tMax)}, peaking at ${peak.value.toLocaleString(
-  'en-GB',
-)} ${rollUp ? 'in the week ending' : 'on'} ${fmtDate(peak.t)}.`;
+const desc = empty
+  ? `${label}: no readings recorded yet.`
+  : `${label}, ${grain ?? 'as recorded'}: ${points.length} readings from ${fmtDate(
+      tMin,
+    )} to ${fmtDate(tMax)}, peaking at ${peak.value.toLocaleString(
+      'en-GB',
+    )} ${rollUp ? 'in the week ending' : 'on'} ${fmtDate(peak.t)}.`;
+
+// aria-labelledby is a space-separated list of IDs, so a label like "Unique
+// visitors" would resolve to four tokens matching nothing and leave the graphic
+// unnamed. Slugged once and used for both ends of the reference.
+const uid = label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 
 <figure class="tile">
@@ -182,9 +195,9 @@ const desc = `${label}, ${grain ?? 'as recorded'}: ${points.length} readings fro
     <span class="note">{valueNote}</span>
   </figcaption>
 
-  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${label}-t ${label}-d`}>
-    <title id={`${label}-t`}>{label}</title>
-    <desc id={`${label}-d`}>{desc}</desc>
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${uid}-t ${uid}-d`}>
+    <title id={`${uid}-t`}>{label}</title>
+    <desc id={`${uid}-d`}>{desc}</desc>
 
     {/* Grid before data, so the data sits on top of it and never under it. */}
     {ticks.map((v) => (
@@ -203,7 +216,7 @@ const desc = `${label}, ${grain ?? 'as recorded'}: ${points.length} readings fro
     ))}
 
     {area && <path class="area" d={area} />}
-    <path class="line" d={line} />
+    {!empty && <path class="line" d={line} />}
 
     {/* End dot with a ring in the cell colour, so it stays legible where it
         meets the line and the right-hand gridline. */}
@@ -225,10 +238,20 @@ const desc = `${label}, ${grain ?? 'as recorded'}: ${points.length} readings fro
       </g>
     )}
 
-    <text class="tick" x={PAD.l} y={H - 7}>{fmtDate(tMin)}</text>
-    <text class="tick" x={W - PAD.r} y={H - 7} text-anchor="end">
-      {fmtDate(tMax)}
-    </text>
+    {/* With no readings there are no dates to put on the axis: fmtDate would
+        render the epoch, which looks like data rather than the absence of it. */}
+    {empty ? (
+      <text class="tick" x={W / 2} y={PAD.t + plotH / 2} text-anchor="middle">
+        no readings yet
+      </text>
+    ) : (
+      <>
+        <text class="tick" x={PAD.l} y={H - 7}>{fmtDate(tMin)}</text>
+        <text class="tick" x={W - PAD.r} y={H - 7} text-anchor="end">
+          {fmtDate(tMax)}
+        </text>
+      </>
+    )}
   </svg>
 </figure>
 

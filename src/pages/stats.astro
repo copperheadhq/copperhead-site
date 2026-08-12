@@ -64,7 +64,7 @@ const tiles = s
             },
           ]
         : []),
-    ]
+    ].filter((t) => t.points.length > 0)
   : [];
 
 // Popular paths come back fully qualified (/owner/repo/blob/main/README.md).
@@ -230,12 +230,25 @@ const fmtDay = (iso: string) =>
         <p class="source">
           Collected by <a href="https://github.com/jgehrcke/github-repo-stats">
             github-repo-stats</a
-          >, from the <a href={links.repo}>copperhead repo</a>. The raw CSVs and
-          a fuller <a href={reportUrl}>rendered report</a> live on this site's{
-            " "
+          >, from the <a href={links.repo}>copperhead repo</a>.{" "}
+          {
+            /* The report only exists once a snapshot has been taken, so before
+               that the link would be a 404 dressed up as a citation. */
+            s ? (
+              <>
+                The raw CSVs and a fuller{" "}
+                <a href={reportUrl}>rendered report</a> live on this site's{" "}
+                <code>github-repo-stats</code> branch, so every number here can be
+                recomputed rather than taken on trust.
+              </>
+            ) : (
+              <>
+                The raw CSVs and a rendered report will appear on this site's{" "}
+                <code>github-repo-stats</code> branch once the first snapshot has
+                run.
+              </>
+            )
           }
-          <code>github-repo-stats</code> branch, so every number here can be recomputed
-          rather than taken on trust.
         </p>
       </div>
     </article>

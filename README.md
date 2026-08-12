@@ -225,9 +225,21 @@ rolling over. `src/repo-stats.ts` reads those CSVs at build time and `/stats/`
 renders them as static SVG, the same no-client-JS bargain as `src/stats.ts`.
 
 **It needs one secret before it will run.** Add a repository secret named
-`GHRS_GITHUB_API_TOKEN` holding a classic PAT with `repo` scope. The built-in
-`GITHUB_TOKEN` cannot stand in: the traffic API requires push access to the repo
-being measured, and that repo is not the one the workflow runs in.
+`GHRS_GITHUB_API_TOKEN`. The built-in `GITHUB_TOKEN` cannot stand in: it is
+scoped to the repo the workflow runs in, and the traffic being read belongs to a
+different one.
+
+Least privilege is a **fine-grained PAT** covering both repositories:
+
+| Repository | Permission | Why |
+| --- | --- | --- |
+| `chouhanindustries/copperhead` | Administration: **read** | the traffic endpoints |
+| `chouhanindustries/copperhead-site` | Contents: **read and write** | push the data branch |
+
+Administration is a read permission here, so the measured repo never grants push
+access. Fine-grained tokens have to be enabled for the org. A classic PAT with
+`repo` scope also works and is what upstream documents, but `repo` grants far
+more than this needs across every repo you can reach.
 
 Until the first run completes there is no data branch, so `/stats/` renders a
 short "nothing collected yet" note rather than empty axes. After adding the

@@ -122,6 +122,11 @@ async function fetchText(url: string): Promise<string | null> {
   try {
     const res = await fetch(url, {
       headers: ghToken ? { Authorization: `Bearer ${ghToken}` } : {},
+      // A build that cannot reach GitHub should lose a page, not hang. Without
+      // this a stalled connection blocks the whole Cloudflare build behind a
+      // decorative page, and the timeout lands in the same catch as any other
+      // failure, so the result is the "not collecting yet" state.
+      signal: AbortSignal.timeout(10_000),
     });
     // 404 is the expected answer before the workflow's first run, not an error.
     if (!res.ok) return null;
