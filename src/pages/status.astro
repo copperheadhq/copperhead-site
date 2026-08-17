@@ -1,0 +1,321 @@
+---
+import Base from "../layouts/Base.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { STATUS_PAGE_URL } from "../status";
+
+// The status page, on this domain. The monitors live at UptimeRobot, whose
+// public status-page JSON is fetched in the browser and drawn here; every
+// decision over that JSON is in src/status.ts. Rendered client-side on
+// purpose: a static build would freeze "operational" into HTML for however
+// long the deploy stays up, which is the one thing a status page must not do.
+---
+
+<Base
+  title="Status · copperhead"
+  description="Current status and ninety-day uptime of copperhead's hosted services: the console at app.copperhead.sh and this site."
+  path="/status/"
+  ogImageAlt="copperhead service status"
+>
+  <Navbar home={false} />
+  <main>
+    <article class="status-page">
+      <div class="wrap">
+        <header>
+          <p class="kind">Status</p>
+          <h1 id="headline" data-state="loading">Checking</h1>
+          <p class="sub" id="sub">Reading the monitors.</p>
+        </header>
+
+        <ol id="monitors" class="monitors" aria-live="polite" aria-busy="true"></ol>
+
+        <p class="legend" aria-hidden="true">
+          <span class="key up"></span> operational
+          <span class="key partial"></span> partial outage
+          <span class="key down"></span> outage
+          <span class="key none"></span> no data
+        </p>
+
+        <p class="source">
+          Checked from outside the platform every five minutes by{" "}
+          <a href={STATUS_PAGE_URL}>UptimeRobot</a>, whose record this page
+          draws. Ninety days per row, oldest on the left. Each cell is a day's
+          uptime; a hollow cell is a day before the monitor existed.
+        </p>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  import { STATUS_API_URL, dayClass, dayLabel, fmtUptime, monitorOf, overallOf } from "../status";
+  import type { ApiResponse } from "../status";
+
+  const headline = document.getElementById("headline")!;
+  const sub = document.getElementById("sub")!;
+  const list = document.getElementById("monitors")!;
+
+  const STATE_WORD: Record<string, string> = {
+    up: "Operational",
+    down: "Down",
+    degraded: "Degraded",
+    unknown: "No data",
+  };
+
+  function render(res: ApiResponse) {
+    const monitors = res.data.map(monitorOf);
+    const overall = overallOf(monitors);
+    headline.textContent = overall.headline;
+    headline.dataset.state = overall.state;
+    sub.textContent = `Last checked ${new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}. Refreshes every minute.`;
+
+    list.replaceChildren(
+      ...monitors.map((m) => {
+        const li = document.createElement("li");
+        li.className = "monitor";
+        li.dataset.state = m.state;
+
+        const head = document.createElement("div");
+        head.className = "row";
+        const name = document.createElement("span");
+        name.className = "name";
+        name.textContent = m.name;
+        const state = document.createElement("span");
+        state.className = "state";
+        state.textContent = STATE_WORD[m.state] ?? m.state;
+        head.append(name, state);
+
+        const bars = document.createElement("div");
+        bars.className = "days";
+        bars.setAttribute("role", "img");
+        bars.setAttribute("aria-label", `${m.name}: ${fmtUptime(m.uptime90)} uptime over ninety days`);
+        for (const d of m.days) {
+          const cell = document.createElement("span");
+          cell.className = `day ${dayClass(d)}`;
+          cell.title = dayLabel(d);
+          bars.append(cell);
+        }
+
+        const foot = document.createElement("div");
+        foot.className = "row dim";
+        const span = document.createElement("span");
+        span.textContent = "90 days";
+        const pct = document.createElement("span");
+        pct.textContent = `${fmtUptime(m.uptime90)} uptime`;
+        foot.append(span, pct);
+
+        li.append(head, bars, foot);
+        return li;
+      }),
+    );
+    list.setAttribute("aria-busy", "false");
+  }
+
+  function fail(reason: string) {
+    headline.textContent = "Status unavailable";
+    headline.dataset.state = "unknown";
+    sub.textContent = `The monitor record could not be read (${reason}). This says nothing about the services; try the hosted page linked below.`;
+    list.setAttribute("aria-busy", "false");
+  }
+
+  async function load() {
+    try {
+      const res = await fetch(STATUS_API_URL, { cache: "no-store" });
+      if (!res.ok) return fail(`HTTP ${res.status}`);
+      const body = (await res.json()) as ApiResponse;
+      if (body.status !== "ok" || !Array.isArray(body.data)) return fail("unexpected response");
+      render(body);
+    } catch (e) {
+      fail(e instanceof Error ? e.message : "network error");
+    }
+  }
+
+  load();
+  setInterval(load, 60_000);
+</script>
+
+<!-- is:global, namespaced under .status-page: Astro's scoped styles carry a
+     data attribute the monitors, which the script creates, would never get. -->
+<style is:global>
+  .status-page {
+    padding-block: 150px 120px;
+  }
+
+  .status-page header {
+    max-width: 62ch;
+  }
+
+  .status-page .kind {
+    margin: 0 0 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+
+  .status-page h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    letter-spacing: -0.045em;
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+  }
+
+  /* The state dot before the headline: green for up, copper for degraded,
+     a hard red for down, hollow for unknown. */
+  .status-page h1::before {
+    content: "";
+    flex: none;
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 50%;
+    border: 2px solid var(--text-dim);
+  }
+  .status-page h1[data-state="up"]::before {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .status-page h1[data-state="degraded"]::before {
+    background: var(--copper);
+    border-color: var(--copper);
+  }
+  .status-page h1[data-state="down"]::before {
+    background: #c2362f;
+    border-color: #c2362f;
+  }
+
+  .status-page .sub {
+    margin: 0.75rem 0 0;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+  }
+
+  .status-page .monitors {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .status-page .monitor {
+    background: var(--bg);
+    padding: 1.1rem 1.25rem 1rem;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .status-page .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .status-page .name {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+  }
+
+  .status-page .state {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .status-page .monitor[data-state="up"] .state {
+    color: var(--green);
+  }
+  .status-page .monitor[data-state="degraded"] .state {
+    color: var(--copper);
+  }
+  .status-page .monitor[data-state="down"] .state {
+    color: #c2362f;
+  }
+
+  .status-page .dim {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+  }
+
+  /* Ninety cells across the row, each a flexible column: they shrink together
+     on a phone rather than wrapping into a second line that would read as a
+     second period. */
+  .status-page .days {
+    display: grid;
+    grid-template-columns: repeat(90, minmax(0, 1fr));
+    gap: 2px;
+    height: 28px;
+  }
+
+  .status-page .day {
+    border-radius: 2px;
+    background: var(--green);
+  }
+  .status-page .day.partial {
+    background: var(--copper);
+  }
+  .status-page .day.down {
+    background: #c2362f;
+  }
+  .status-page .day.none {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--line-hi);
+  }
+
+  .status-page .legend {
+    margin: 1rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+  }
+  .status-page .key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background: var(--green);
+  }
+  .status-page .key.partial {
+    background: var(--copper);
+  }
+  .status-page .key.down {
+    background: #c2362f;
+  }
+  .status-page .key.none {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--line-hi);
+  }
+
+  .status-page .source {
+    max-width: 60ch;
+    margin: 4.5rem 0 0;
+    padding-top: 2.25rem;
+    border-top: 1px solid var(--line);
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .status-page {
+      padding-block: 110px 80px;
+    }
+    .status-page .days {
+      height: 22px;
+      gap: 1px;
+    }
+  }
+</style>
