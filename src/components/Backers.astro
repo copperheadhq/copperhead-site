@@ -92,23 +92,24 @@ const backers: Backer[] = [
   },
 ];
 
-// A group has to be wider than the widest viewport or the rail runs out of
-// logos mid-screen and the strip shows a hole. One pass of the list no longer
-// is: at seven lockups it clears the 1328px frame on its own, where the five
-// this note was written for came to roughly 1150px and did not. The doubling
-// stays anyway — it costs one repeated pass and it is what keeps the seam
-// invisible, and the list is short enough to fall back under the frame again
-// if a backer is ever dropped.
-// The second pass is marked `dup` rather than counted, so the reduced-motion
-// rule that drops it back to a single set reads the list's own length instead
-// of a hardcoded count that each new backer would silently break.
-const group = [
-  ...backers.map((b) => ({ ...b, dup: false })),
-  ...backers.map((b) => ({ ...b, dup: true })),
-];
+// A group has to be at least as wide as the rail's own box or the loop runs out
+// of logos mid-screen and the strip shows a hole. The .marquee is capped at
+// --maxw, so that box is 1328px and never more, whatever the viewport does.
+//
+// The list used to be doubled here to reach it, back when five lockups came to
+// roughly 1150px and fell short. Seven measure 1458px, so a single pass clears
+// 1328 by 130px on its own and the doubling had become 14 redundant lockups —
+// with the two groups the template renders, 28 in the built page.
+//
+// The margin is the thing to watch: drop below about five backers, or shorten
+// the labels much, and one pass falls under 1328 again and the seam opens. It
+// is measurable — one .group's width against the .marquee's — so measure it
+// rather than assuming, and put the second pass back here if it goes negative.
+const group = backers;
 
 // One label for the whole strip. The rail is role="img", so assistive tech
-// reads this sentence once instead of walking twenty duplicated list items.
+// reads this sentence once instead of walking the fourteen repeated lockups the
+// seam needs.
 const spoken = `Backed by ${backers.map((b) => b.name).join(', ')}`;
 ---
 
@@ -118,19 +119,34 @@ const spoken = `Backed by ${backers.map((b) => b.name).join(', ')}`;
       the layout audit in scripts/shots.mjs would otherwise report every logo
       past the edge as horizontal overflow. Scoped to this element so the check
       stays live everywhere else. */}
-  <div class="marquee" role="img" aria-label={spoken} data-bleed-ok>
+  {/* tabindex: the pause below is keyed on hover and focus, and until this was
+      here the focus half could never fire — there is nothing focusable inside,
+      and `role="img"` prunes the subtree from the accessibility tree anyway. So
+      the rule read as though the strip could be stopped from the keyboard when
+      only a mouse could stop it, which is the WCAG 2.2.2 mechanism the comment
+      on it claims. The element takes focus itself instead. Its ring comes from
+      the global `:where(a, button, [tabindex]):focus-visible`. */}
+  <div
+    class="marquee"
+    role="img"
+    aria-label={spoken}
+    tabindex="0"
+    data-bleed-ok
+  >
     <div class="rail">
       {
-        /* Two identical groups. The animation travels exactly one group width
-           (-50% of the rail) and restarts, so the seam lands where the second
-           group's first logo is already standing in the first's place. Each
+        /* Two identical groups, which is what the seam needs and is separate
+           from the doubling that used to sit inside a group and no longer does
+           (see the note on `group`). The animation travels exactly one group
+           width (-50% of the rail) and restarts, so the seam lands where the
+           second group's first logo is already standing in the first's place. Each
            group carries the trailing gap itself — putting that gap on .rail
            instead would make one group width and -50% differ by half a gap,
            which is exactly the visible stutter this shape avoids. */
         [0, 1].map(() => (
           <div class="group">
             {group.map((b) => (
-              <div class:list={['lockup', b.dup && 'dup']}>
+              <div class="lockup">
                 <svg
                   class="mark"
                   viewBox="0 0 24 24"
@@ -210,9 +226,11 @@ const spoken = `Backed by ${backers.map((b) => b.name).join(', ')}`;
     animation: roll 80s linear infinite;
   }
 
-  /* WCAG 2.2.2 wants a way to stop moving content. Reduced motion below is the
-     real answer; this is the one for a reader who simply wants to look at a
-     logo without chasing it. */
+  /* WCAG 2.2.2 wants a way to stop moving content, and it has to be operable
+     without a pointer, so the rail stops on focus as well as hover — see the
+     tabindex on .marquee, without which the second selector matched nothing.
+     Reduced motion below is the fuller answer; this is the one for a reader who
+     simply wants to look at a logo without chasing it. */
   .marquee:hover .rail,
   .marquee:focus-within .rail {
     animation-play-state: paused;
@@ -303,11 +321,6 @@ const spoken = `Backed by ${backers.map((b) => b.name).join(', ')}`;
       padding-right: 0;
     }
 
-    /* The list is doubled to keep the moving rail full; standing still, that
-       doubling is just the same logos printed twice. */
-    .lockup.dup {
-      display: none;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) and (max-width: 720px) {

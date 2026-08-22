@@ -242,11 +242,23 @@ const showStats = stats.stars !== null || stats.downloads !== null;
        split centres in whatever height is left above the strip, so a pixel
        added here lifts the strip by a pixel and closes the gap above it by
        half — which is why the strip rides higher than the old 4svh/56 left it
-       without the copy beside it having to move much. It has to stay stated in
-       svh and capped: at 1280x720 the split has only ~64px of slack to give
-       back, and a flat number big enough to matter at 1080 would push the
-       terminal out of the fold there. 7svh spends 50px of that 64 at 720 and
-       85px at 945, which is the most this can take and still seat the stack. */
+       without the copy beside it having to move much. It stays stated in svh
+       and capped so the lift tracks the room available rather than spending a
+       flat number that a short window does not have.
+
+       9svh, measured rather than reasoned about. An earlier note here called
+       7svh the ceiling on the grounds that 1280x720 had only ~64px of slack to
+       give back — that was true of the layout before this one, and is not true
+       of this one. At 9svh the numbers are: 720 spends 64.8px and the split
+       still holds 42px it is not using, with the terminal ending at 505 of 720;
+       945 spends 85px against 225px of slack; 1080 spends 97.2px against 259px.
+       The terminal is in the fold at every one of them, and 720 is the tightest
+       by a wide margin.
+
+       Re-measure before moving it again, and measure the split's spare height
+       rather than the terminal's bottom edge — the terminal has hundreds of
+       pixels of clearance at 720 and stops being the thing that binds long
+       before the copy column does. */
     padding-block: calc(var(--nav-h) + clamp(30px, 4.6svh, 58px))
       clamp(28px, 9svh, 104px);
     overflow: hidden;
