@@ -48,6 +48,13 @@ const nav = [
         </ul>
       </nav>
 
+      {/* The hosted platform's front door. A destination, not an action, so it
+          reads in the link tier rather than as a second pill beside the CTA —
+          the bar already has exactly one loud thing in it and that is "Let's
+          talk". It sits inside .menu with the links so the mobile drop panel
+          carries it, same as the CTA. */}
+      <a class="signin" href={links.app}>Sign in</a>
+
     <div class="actions">
         {/* A switch, not an icon button. The bare icon gave no affordance
             that it was pressable and no read on which mode you were in: the
@@ -201,12 +208,16 @@ const nav = [
     order: 2;
   }
 
-  a.waitlist {
+  a.signin {
     order: 3;
   }
 
-  .burger {
+  a.waitlist {
     order: 4;
+  }
+
+  .burger {
+    order: 5;
   }
 
   /* Centred on the bar, not packed after the wordmark. Their own comment on the
@@ -279,10 +290,49 @@ const nav = [
     background: none;
   }
 
+  /* The quiet half of a button pair: an outlined box beside the copper pill,
+     so the two right-hand actions read as one control group and the copper
+     still carries the only fill in the bar. Squared, like everything else on
+     this site — the toggle's 999px track is the one deliberate exception.
+
+     36px and 15px are the pill's own numbers, and the face and weight are the
+     link row's, because it has to belong to both: it is the same tier as the
+     labels and the same object as the CTA. It sits 16px off the GitHub chip on
+     .inner's 24px gap, the same arithmetic the pill uses.
+
+     The nav labels' drawn ::after target is gone with it — a padded 36px box is
+     already past the 40px-ish minimum on its own, so the pseudo-element would
+     only be a second target stacked on a real one. */
+  a.signin {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 14px;
+    margin-left: -8px; /* 24px .inner gap − 8 = the pill's 16px */
+    border: 1px solid var(--line);
+    font-family: var(--nav);
+    font-size: 0.9375rem; /* 15px */
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--panel);
+    transition: color 0.16s ease, background-color 0.16s ease,
+      border-color 0.16s ease;
+  }
+
+  /* The frame brightens with the fill, the pairing the tier cards already use
+     for a hovered panel. */
+  a.signin:hover {
+    background: var(--panel-hi);
+    border-color: var(--line-hi);
+  }
+
   /* Right cluster: mastra pairs a GitHub chip with a solid CTA pill. */
-  /* The CTA is no longer inside this box, so the 16px that parts the two
-     right-hand items is now a margin on the CTA rather than a gap in here —
-     .inner's own 24px gap would otherwise set it. */
+  /* Neither the sign-in box nor the CTA is inside here, so the 16px that parts
+     the right-hand items is a margin on each of them rather than a gap in here
+     — .inner's own 24px gap would otherwise set it. */
   .actions {
     margin-left: auto;
     display: inline-flex;
@@ -640,8 +690,12 @@ const nav = [
       order: 2;
     }
 
-    a.waitlist {
+    a.signin {
       order: 3;
+    }
+
+    a.waitlist {
+      order: 4;
     }
 
     /* px-6 and the 16px of top padding are theirs; the vertical rhythm inside
@@ -680,6 +734,19 @@ const nav = [
       color: var(--text-dim);
     }
 
+    /* Not a drawer row — the drawer's rows are a list of places to go, and this
+       is now a control, so it stacks with the CTA at the foot of the panel
+       rather than trailing the links. Full width and 46px to match the pill it
+       sits on, and the same 24px side margin, so the two read as one block of
+       two buttons. The 14px above it is the pill's own top margin, which moves
+       up here; the pill keeps only the 18px that closes the column. */
+    a.signin {
+      justify-content: center;
+      height: 46px;
+      padding: 0 14px;
+      margin: 14px 24px 0;
+    }
+
     /* GitHub is a drawer row like their "Join Discord": icon, label, py-2. The
        theme toggle rides at the far end of that row rather than taking a row of
        its own — it is a control, not a destination, and the drawer's rows are a
@@ -713,7 +780,7 @@ const nav = [
        reasoning, in their own comment. */
     a.waitlist {
       height: 46px;
-      margin: 14px 24px 18px;
+      margin: 10px 24px 18px;
       font-size: 0.9375rem;
     }
 

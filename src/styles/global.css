@@ -97,7 +97,7 @@
      follows the theme it is painted on */
   color-scheme: light dark;
 
-  --bg:        light-dark(#FFFFFF, #09090B);
+  --bg:        light-dark(#FDFCFC, #09090B);
   --panel:     light-dark(#FAFAFA, #111114);
   --panel-hi:  light-dark(#F2F2F4, #17171B); /* hover on a panel */
   --surface:   light-dark(#F1F1F3, #131317);

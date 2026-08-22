@@ -121,12 +121,26 @@ for (const theme of THEMES) {
 
           // Anything sticking out sideways is a real bug at every width; a page
           // that scrolls horizontally on a phone is the classic one.
+          //
+          // Except where an ancestor clips it. A box that hangs past the
+          // viewport inside `overflow: hidden` cannot move the page, and some
+          // are meant to: the hero's backer marquee is a rail deliberately
+          // wider than the screen, and reported raw it buried the real signal
+          // under one line per logo per viewport. Checking overflow-x alone is
+          // enough — a non-visible overflow-y forces x to compute to at least
+          // auto, so a clip on either axis shows up here.
           const vw = document.documentElement.clientWidth;
+          const clipped = el => {
+            for (let p = el.parentElement; p && p !== document.documentElement; p = p.parentElement) {
+              if (getComputedStyle(p).overflowX !== 'visible') return true;
+            }
+            return false;
+          };
           const bleed = [...document.querySelectorAll('body *')]
             .filter(el => {
               const b = el.getBoundingClientRect();
               return (b.width || b.height) && getComputedStyle(el).position !== 'fixed'
-                && (b.right > vw + 1 || b.left < -1);
+                && (b.right > vw + 1 || b.left < -1) && !clipped(el);
             })
             .map(el => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className
               ? '.' + el.className.trim().split(/\s+/).join('.') : ''));

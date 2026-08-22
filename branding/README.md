@@ -13,6 +13,9 @@ not the font is installed.
 ![copperhead lockup](png/copperhead-lockup-light-h128.png#gh-light-mode-only)
 ![copperhead lockup](png/copperhead-lockup-h128.png#gh-dark-mode-only)
 
+The words that go next to the mark — tagline, one-liner, bios, hero copy —
+live in `COPY.md`.
+
 ## Files
 
 | Path | What it is |
