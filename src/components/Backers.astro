@@ -114,7 +114,11 @@ const spoken = `Backed by ${backers.map((b) => b.name).join(', ')}`;
 
 <section class="backers" aria-label="Backers">
   {caption && <p class="caption">{caption}</p>}
-  <div class="marquee" role="img" aria-label={spoken}>
+  {/* data-bleed-ok: the rail inside is wider than the screen on purpose, and
+      the layout audit in scripts/shots.mjs would otherwise report every logo
+      past the edge as horizontal overflow. Scoped to this element so the check
+      stays live everywhere else. */}
+  <div class="marquee" role="img" aria-label={spoken} data-bleed-ok>
     <div class="rail">
       {
         /* Two identical groups. The animation travels exactly one group width
