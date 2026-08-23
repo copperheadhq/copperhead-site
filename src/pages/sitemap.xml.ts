@@ -18,6 +18,8 @@ export const GET: APIRoute = async () => {
     // Redrawn on every scheduled rebuild, so it changes more often than anything
     // else here even though the page itself rarely does.
     { loc: '/stats/', changefreq: 'daily', priority: '0.5' },
+    // Its content is live in the browser; the page itself hardly changes.
+    { loc: '/status/', changefreq: 'monthly', priority: '0.5' },
     ...posts.map((p) => ({
       loc: postPath(p.id),
       changefreq: 'monthly',
