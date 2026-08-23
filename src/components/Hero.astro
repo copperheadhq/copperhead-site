@@ -1,23 +1,38 @@
 ---
 import InstallBlock from "./InstallBlock.astro";
 import TerminalDemo from "./TerminalDemo.astro";
+import Backers from "./Backers.astro";
 import { quickstart, links, pkg } from "../config";
 import { stats, compact } from "../stats";
 import { postPath } from "../blog";
 
-// Centred single-column hero in the supermemory.ai shape, top to bottom:
-// announcement chip, 72px headline, 16px subhead, a button pair, the install
-// command as a bar the exact width of that pair, a tertiary text link, then a
-// social-proof row. Every measurement below is taken from that layout.
+// Two-column hero, with a backer strip across the foot of the fold:
 //
-// The product render and its "Proven on real copper" caption used to hold a
-// right-hand column here; this layout has no room for them above the fold, so
-// they moved to Proof.astro, the section immediately below.
+//   ┌──────────────────────────┬───────────────────────────┐
+//   │ chip                     │                           │
+//   │ headline                 │   terminal                │
+//   │ subhead                  │                           │
+//   │ buttons + install bar    │   stats                   │
+//   ├──────────────────────────┴───────────────────────────┤
+//   │            BACKED BY   ← logos rolling →             │
+//   └──────────────────────────────────────────────────────┘
 //
-// A thin live-stats line closes the fold: highest-credibility spot on the page,
-// under the `npm i` line the numbers vindicate. Each stat renders only when its
-// build-time fetch succeeded (stats.ts), so the row disappears cleanly until the
-// repo and package are public.
+// It was a centred single column in the supermemory.ai shape before this, and
+// the measurements below are still theirs — the type sizes, the 33px chip, the
+// 194+12+194 action column. What changed is the axis: side by side, the fold
+// has to seat the *taller* of the two columns rather than the sum of the whole
+// stack, which is what buys the room the marquee now spends. The headline
+// clamp is the one number that had to come down with it, because it is sizing
+// against a half-width column now (see h1).
+//
+// The stats line stays where it was in reading order — directly under the
+// transcript, as a caption on the claim rather than a line to cross to reach
+// it. Each stat renders only when its build-time fetch succeeded (stats.ts),
+// so the row disappears cleanly until the repo and package are public.
+//
+// The product render and its "Proven on real copper" caption used to hold the
+// right-hand column here; the terminal has it now, and they live in
+// Proof.astro, the section immediately below.
 const showStats = stats.stars !== null || stats.downloads !== null;
 ---
 
@@ -27,33 +42,35 @@ const showStats = stats.stars !== null || stats.downloads !== null;
   <div class="grid-dots" aria-hidden="true"></div>
 
   <div class="wrap">
-    <a class="chip" href={postPath('from-brief-to-gerbers')}>
-      <span class="chip-tag"
-        ><span class="chip-dot" aria-hidden="true"></span>New</span
-      >
-      <span class="chip-text"
-        >From brief.md to gerbers<svg
-          class="chip-arrow"
-          viewBox="0 0 16 16"
-          width="12"
-          height="12"
-          aria-hidden="true"
-          focusable="false"
-          ><path
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.6"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3 8h9.5M9 4.5 12.5 8 9 11.5"></path></svg
-        ></span
-      >
-    </a>
+    <div class="split">
+      <div class="copy">
+        <a class="chip" href={postPath("from-brief-to-gerbers")}>
+          <span class="chip-tag"
+            ><span class="chip-dot" aria-hidden="true"></span>New</span
+          >
+          <span class="chip-text"
+            >From brief.md to gerbers<svg
+              class="chip-arrow"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+              aria-hidden="true"
+              focusable="false"
+              ><path
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8h9.5M9 4.5 12.5 8 9 11.5"></path></svg
+            ></span
+          >
+        </a>
 
-    <h1>Cursor for circuit boards<span class="stop">.</span></h1>
+        <h1>Cursor for circuit boards<span class="stop">.</span></h1>
 
-    {
-      /* Length is set by how this wraps on a phone, and the lever is the words:
+        {
+          /* Length is set by how this wraps on a phone, and the lever is the words:
         no type size fixes it. The original ran to four lines at 375 and three
         at 390, and reached two only at 9.5-11.5px against 15px body, which is
         why "Built for real hardware" went rather than the font shrinking.
@@ -61,123 +78,139 @@ const showStats = stats.stars !== null || stats.downloads !== null;
         Two on phones as well needs one more cut — dropping "is an AI PCB
         engineer" does it, at the cost of the category label for a first-time
         reader. Measured, not guessed; re-measure before trading it away. */
-    }
-    <p class="sub">
-      copperhead is an AI PCB engineer that designs, routes, validates and
-      documents real circuit boards. Open source.
-    </p>
+        }
+        <p class="sub">
+          Copperhead is an open-source AI engineering platform that helps
+          hardware teams design, verify and ship circuit boards.
+        </p>
 
-    <div class="cta">
-      <div class="actions">
-        <a class="primary" href="#quickstart">
-          <span class="label">Start building</span>
-          <span class="tip"
-            ><svg
-              viewBox="0 0 16 16"
-              width="14"
-              height="14"
-              aria-hidden="true"
-              focusable="false"
-              ><path
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3 8h9.5M9 4.5 12.5 8 9 11.5"></path></svg
-            ></span
-          >
-        </a>
-        <!-- The ↗ came across with the label from the tertiary link this
-             replaced: docs live off-site, and the outbound arrow is the one
-             thing the button pair does not otherwise say. Drawn rather than set
-             as a glyph because ↗ is not in the font subsets and fell back to a
-             face that did not match the page. -->
-        <a class="secondary" href={links.docs}>
-          Read the docs<svg
-            class="arrow"
-            viewBox="0 0 16 16"
-            width="12"
-            height="12"
-            aria-hidden="true"
-            focusable="false"
-            ><path
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 12 12 4M6.5 4H12v5.5"></path></svg
-          >
-        </a>
-      </div>
-
-      <div class="install">
-        <!-- the install line only; the key + create steps stay in the full
-             quickstart block this button scrolls to -->
-        <InstallBlock lines={[quickstart[0]]} bar />
-      </div>
-      <!-- The dashed tertiary link that used to close this block was also "Read
-           the docs", so promoting it into the button pair left the two stacked
-           one above the other. The link is the one that goes: the button says
-           the same thing in the place the eye reaches first, and dropping it
-           takes ~48px off the fold. "Let's talk" still has its home in the
-           navbar CTA and again at the foot of the page. -->
-    </div>
-
-    <!-- The product shot, in the slot supermemory gives its own: directly under
-         the fold copy, wide enough to break the copy column, and cropped by the
-         viewport so its top edge is the thing that invites the scroll. That is
-         also why the scroll-cue chevron that used to sit here is gone: a
-         half-visible terminal says "there is more" better than an arrow. -->
-    <div class="demo">
-      <TerminalDemo />
-    </div>
-
-    {
-      showStats && (
-        <div class="proof">
-          <p class="stats" role="status">
-            {stats.stars !== null && (
-              <a
-                class="stat"
-                href={links.repo}
-                aria-label={`${stats.stars} stars on GitHub`}
-              >
-                <svg
-                  class="ico"
+        <div class="cta">
+          <div class="actions">
+            {/* Routes to the hosted platform, not down the page to
+                #quickstart. That anchor is still the footer's "Quickstart"
+                target and the CLI tier's "Get started" on /pricing, so the
+                block it points at keeps both of its inbound links. */}
+            <a class="primary" href={links.app}>
+              <span class="label">Start building</span>
+              <span class="tip"
+                ><svg
                   viewBox="0 0 16 16"
                   width="14"
                   height="14"
                   aria-hidden="true"
                   focusable="false"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M8 .5l2.3 4.66 5.15.75-3.72 3.63.88 5.13L8 12.34l-4.6 2.42.88-5.13L.55 5.9l5.15-.75L8 .5z"
-                  />
-                </svg>
-                <strong class="num">{compact(stats.stars)}</strong>
-                <span class="lbl">GitHub stars</span>
-              </a>
-            )}
-            {stats.stars !== null && stats.downloads !== null && (
-              <span class="sep" aria-hidden="true" />
-            )}
-            {stats.downloads !== null && (
-              <a
-                class="stat"
-                href={`https://www.npmjs.com/package/${pkg}`}
-                aria-label={`${stats.downloads} installs a month on npm`}
+                  ><path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 8h9.5M9 4.5 12.5 8 9 11.5"></path></svg
+                ></span
               >
-                <strong class="num">{compact(stats.downloads)}</strong>
-                <span class="lbl">installs / month</span>
-              </a>
-            )}
-          </p>
+            </a>
+            <!-- The ↗ came across with the label from the tertiary link this
+             replaced: docs live off-site, and the outbound arrow is the one
+             thing the button pair does not otherwise say. Drawn rather than set
+             as a glyph because ↗ is not in the font subsets and fell back to a
+             face that did not match the page. -->
+            <a class="secondary" href={links.docs}>
+              Read the docs<svg
+                class="arrow"
+                viewBox="0 0 16 16"
+                width="12"
+                height="12"
+                aria-hidden="true"
+                focusable="false"
+                ><path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 12 12 4M6.5 4H12v5.5"></path></svg
+              >
+            </a>
+          </div>
+
+          <div class="install">
+            <!-- the install line only; the key + create steps stay in the full
+             quickstart block this button scrolls to -->
+            <InstallBlock lines={[quickstart[0]]} bar />
+          </div>
+          <!-- The dashed tertiary link that used to close this block was also "Read
+           the docs", so promoting it into the button pair left the two stacked
+           one above the other. The link is the one that goes: the button says
+           the same thing in the place the eye reaches first, and dropping it
+           takes ~48px off the fold. "Let's talk" still has its home in the
+           navbar CTA and again at the foot of the page. -->
         </div>
-      )
-    }
+      </div>
+
+      <!-- The right column: the transcript, with its receipts under it. It used
+           to sit below the copy and be cropped by the fold, which is where the
+           "there is more" cue came from. Beside the copy it fits whole, so
+           nothing is left half-visible to invite the scroll; the backer strip
+           at the foot of the fold does that job now. -->
+      <div class="stage">
+        <div class="demo">
+          <TerminalDemo />
+        </div>
+
+        {
+          showStats && (
+            <div class="proof">
+              <p class="stats" role="status">
+                {stats.stars !== null && (
+                  <a
+                    class="stat"
+                    href={links.repo}
+                    aria-label={`${stats.stars} stars on GitHub`}
+                  >
+                    <svg
+                      class="ico"
+                      viewBox="0 0 16 16"
+                      width="14"
+                      height="14"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M8 .5l2.3 4.66 5.15.75-3.72 3.63.88 5.13L8 12.34l-4.6 2.42.88-5.13L.55 5.9l5.15-.75L8 .5z"
+                      />
+                    </svg>
+                    <strong class="num">{compact(stats.stars)}</strong>
+                    <span class="lbl">GitHub stars</span>
+                  </a>
+                )}
+                {stats.stars !== null && stats.downloads !== null && (
+                  <span class="sep" aria-hidden="true" />
+                )}
+                {stats.downloads !== null && (
+                  <a
+                    class="stat"
+                    href={`https://www.npmjs.com/package/${pkg}`}
+                    aria-label={`${stats.downloads} installs a month on npm`}
+                  >
+                    <strong class="num">{compact(stats.downloads)}</strong>
+                    <span class="lbl">installs / month</span>
+                  </a>
+                )}
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- The foot of the fold. Outside .wrap, so the rail runs the full --maxw box
+       and its ends feather against the frame's vertical rules rather than
+       stopping 32px inside them. `flex: none` keeps it out of the fight for the
+       fold's slack: the column above absorbs a short viewport, this does not. -->
+  <div class="strip">
+    <Backers caption="Backed by" />
   </div>
 </section>
 
@@ -189,22 +222,45 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      terminal is never cropped (see .demo) — on a window too short to seat the
      whole stack the section grows and the stats row slides below the fold
      instead, still on the page and one scroll away.
-     `stretch` rather than flex-start because the column below needs the hero's
-     height as a definite size to centre itself against. */
+     A column, not a row: the split takes the slack and the backer strip keeps
+     its own height, so a short window eats into the gap around the copy rather
+     than into the logos. */
   .hero {
     position: relative;
     min-height: 100svh;
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
     /* Written as "clear the bar, then leave a gap" rather than as one number,
        because the bar is fixed and the hero cannot see it: any padding
        expressed as a bare svh fraction shrinks toward the bar on a short
        viewport and the chip ends up crowding it. Only the gap term scales, and
        its floor is 30px — the tightest that still reads as air under the rule
        rather than as the chip resting on it. --nav-h so the reserved space
-       tracks the bar's own height instead of a copy of it. */
+       tracks the bar's own height instead of a copy of it.
+
+       The bottom term is the one lever on where the backer strip sits. The
+       split centres in whatever height is left above the strip, so a pixel
+       added here lifts the strip by a pixel and closes the gap above it by
+       half — which is why the strip rides higher than the old 4svh/56 left it
+       without the copy beside it having to move much. It stays stated in svh
+       and capped so the lift tracks the room available rather than spending a
+       flat number that a short window does not have.
+
+       9svh, measured rather than reasoned about. An earlier note here called
+       7svh the ceiling on the grounds that 1280x720 had only ~64px of slack to
+       give back — that was true of the layout before this one, and is not true
+       of this one. At 9svh the numbers are: 720 spends 64.8px and the split
+       still holds 42px it is not using, with the terminal ending at 505 of 720;
+       945 spends 85px against 225px of slack; 1080 spends 97.2px against 259px.
+       The terminal is in the fold at every one of them, and 720 is the tightest
+       by a wide margin.
+
+       Re-measure before moving it again, and measure the split's spare height
+       rather than the terminal's bottom edge — the terminal has hundreds of
+       pixels of clearance at 720 and stops being the thing that binds long
+       before the copy column does. */
     padding-block: calc(var(--nav-h) + clamp(30px, 4.6svh, 58px))
-      clamp(24px, 4svh, 56px);
+      clamp(28px, 9svh, 104px);
     overflow: hidden;
   }
 
@@ -220,14 +276,54 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      as well one scroll down. */
   .hero .wrap {
     position: relative;
+    /* takes every pixel the strip does not, and centres the split inside it */
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: safe center;
-    text-align: center;
   }
 
   .hero .wrap > * {
     flex: none;
+  }
+
+  /* ── The two columns. `minmax(0, …)` on both tracks rather than a bare
+     fraction: a grid track's default minimum is auto, and the terminal's
+     longest tool line would hold the right track open at its own min-content
+     width, pushing the copy narrower than its share and eventually overflowing
+     the page. The fractions are uneven because the terminal is the wider
+     object and wants the room: at --maxw it comes out near 600/648, which
+     leaves the transcript just inside its own 733px cap, so it fills its
+     column and needs no centring.
+     `center` rather than `start` so the shorter column sits against the middle
+     of the taller one — the copy is the shorter one at every desktop width, and
+     top-aligning it left the whole left half looking like it had slipped. ── */
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 4.4vw, 4.5rem);
+  }
+
+  /* The hero used to centre everything; it now reads left, in both columns and
+     at every width. Stated once here rather than left to each child, which is
+     what the `margin-inline: auto` on the headline and subhead used to be
+     fighting. */
+  .copy,
+  .stage {
+    min-width: 0;
+    text-align: left;
+  }
+
+  /* The strip's own clearance from the split above it. Note that this does not
+     move the strip — its top is pinned by the hero's bottom padding and its own
+     height — it moves the split *down* into the slack this gives back, which is
+     the other half of closing the gap between the receipts and the logos. Kept
+     large enough that the stacked layout, where this is all that parts the
+     terminal from the strip, still reads as a break. */
+  .strip {
+    flex: none;
+    margin-top: clamp(1.25rem, 2.6svh, 2rem);
   }
 
   /* A diamond lattice, off supermemory's field. Theirs is measured —
@@ -356,9 +452,9 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      divider. ── */
   .chip {
     display: inline-flex;
-    /* blockified by the column flex parent, so it centres itself rather than
-       inheriting the centring from .wrap's text-align */
-    align-self: center;
+    /* It sat in a centred column flex before and needed align-self to centre
+       itself; inside .copy it is an inline-level box in a left-set block and
+       simply starts where the text does. */
     align-items: stretch;
     height: 33px;
     border: 1px solid color-mix(in srgb, var(--copper) 25%, transparent);
@@ -418,12 +514,24 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      up and eases down to ~50px at 720, which is the single largest saving in the
      stack and costs nothing on the screens that have the room. ── */
   h1 {
-    font-size: clamp(2.25rem, min(5.6vw, 7svh), 4.5rem);
+    /* 5.6vw was measured against the full content column. Half that column is
+       what it gets now, so the width term comes down with it — at 4.4vw a
+       1440 viewport lands at 63px, which sets "Cursor for circuit" on one line
+       inside a ~600px track and leaves "boards." on the second. Pushed back up
+       and the third word breaks off alone, which is the failure this number is
+       set to avoid; re-measure at 1280, 1440 and 1920 before moving it.
+       The svh term is untouched — a short window is still a short window — and
+       so is the 4.5rem ceiling, which no viewport reaches through 4.4vw until
+       2560 and is there to stop the headline running away on a wall display. */
+    font-size: clamp(2.25rem, min(4.4vw, 7svh), 4.5rem);
     font-weight: 500;
     line-height: 1.04;
     letter-spacing: -0.058em;
+    /* The column is the measure now, so the 18ch cap has nothing left to do on
+       a desktop; it stays as the cap for the stacked layout, where the copy
+       runs the full width. */
     max-width: 18ch;
-    margin: clamp(18px, 3.4svh, 28px) auto 0;
+    margin: clamp(18px, 3.4svh, 28px) 0 0;
     text-wrap: balance;
   }
 
@@ -439,7 +547,7 @@ const showStats = stats.stars !== null || stats.downloads !== null;
     line-height: 1.6;
     letter-spacing: -0.012em;
     max-width: 600px;
-    margin: clamp(12px, 2.4svh, 20px) auto 0;
+    margin: clamp(12px, 2.4svh, 20px) 0 0;
     /* balance, not pretty: pretty only rescues a single trailing word, and this
        sentence was breaking to leave "a prompt." alone on the second line */
     text-wrap: balance;
@@ -450,7 +558,7 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      comes to the 400px the bar and the tertiary link both take. ── */
   .cta {
     width: min(100%, 400px);
-    margin: clamp(20px, 4svh, 32px) auto 0;
+    margin: clamp(20px, 4svh, 32px) 0 0;
   }
 
   /* Grid, not flex: against `flex-basis: 0` the secondary's 20px side padding
@@ -565,6 +673,8 @@ const showStats = stats.stars !== null || stats.downloads !== null;
   .stats {
     display: flex;
     align-items: center;
+    /* Centred on the transcript above them, not on the copy beside it — see
+       the note under .demo. */
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.5rem 1.15rem;
@@ -642,8 +752,53 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      to a hairline. Below that floor the terminal is no longer worth showing and
      the stack overflows instead, top-anchored, exactly as it did before. */
   .demo {
-    margin-top: clamp(16px, 3svh, 28px);
+    /* First in its own column, so nothing above it to clear. The margin comes
+       back with the stacked layout, where the copy is above it again. */
+    margin-top: 0;
     text-align: left;
+  }
+
+  /* The terminal keeps TerminalDemo's own `margin: 0 auto`, and the stats
+     centre in the same track — so the two share a centre line and the receipts
+     sit centred under the thing they are receipts for at every width. Worth
+     stating because the alternative looks equivalent and is not: left-aligning
+     both to the track start breaks wherever the terminal is held at its 611px
+     cap inside a wider track (roughly 1400-1600), which puts its left edge
+     ~7px right of the row beneath it. Centres cannot drift like that. */
+
+  /* ── Where the two columns stop fitting. Below this the copy track drops
+     under ~470px, at which point the headline breaks a word onto a line of its
+     own and the transcript's 72-character tool lines start wrapping — so the
+     split folds back into the stack it came from: copy, terminal, stats,
+     logos, in reading order, which is the DOM order already.
+     1080 rather than a round 1024 because a 1024 tablet is exactly the width
+     where two columns technically fit and visibly should not. ── */
+  @media (max-width: 1080px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+
+    /* The terminal has the copy above it again, so it needs the step back. */
+    .demo {
+      margin-top: clamp(16px, 3svh, 28px);
+    }
+
+    /* Centred, exactly as the hero was before the split — the left set is a
+       property of having a column beside you, and stacked there is not one.
+       The chip needs nothing here: it is inline-level, so it rides this.
+       .install and the transcript assert their own left set and are unaffected,
+       which is right — a centred command line is not a command line. */
+    .copy,
+    .stage {
+      text-align: center;
+    }
+
+    h1,
+    .sub,
+    .cta {
+      margin-inline: auto;
+    }
   }
 
   /* The field used to be switched off here: with two vertical bands there was

@@ -17,6 +17,11 @@ export const links = {
   blog: '/blog/',
   faq: '/blog/faq/',
   docs: 'https://docs.copperhead.sh/',
+  // The hosted platform, copperhead cloud (the copperhead-cloud repo). This
+  // site links to it and does nothing else with it: cloud SPEC §3.1 scopes
+  // copperhead-site to "links only" and forbids auth code, a Supabase client,
+  // or any secret landing here.
+  app: 'https://app.copperhead.sh/',
   demoVideo: '/copperhead-demo.mp4',
   telegraphRepo: 'https://github.com/animesh-chouhan/open-telegraph',
   buildStory: 'https://chouhan.ai/building-with-claude',

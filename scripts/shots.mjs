@@ -121,12 +121,25 @@ for (const theme of THEMES) {
 
           // Anything sticking out sideways is a real bug at every width; a page
           // that scrolls horizontally on a phone is the classic one.
+          //
+          // Except where the page says it meant it. The backer marquee is a
+          // rail deliberately wider than the screen, and reported raw it buried
+          // the real signal under one line per logo per viewport.
+          //
+          // The exemption is an opt-in attribute rather than "has a clipping
+          // ancestor". That test read as though it were about `overflow:
+          // hidden`, but .hero carries `overflow: hidden` too, so every box on
+          // the fold inherited the exemption and the check went quiet over the
+          // whole first screen — a 900px div dropped into .hero .copy at 375px
+          // was reported before and silent after. Intent cannot be inferred
+          // from a computed style; it has to be declared.
           const vw = document.documentElement.clientWidth;
+          const intentional = el => el.closest('[data-bleed-ok]') !== null;
           const bleed = [...document.querySelectorAll('body *')]
             .filter(el => {
               const b = el.getBoundingClientRect();
               return (b.width || b.height) && getComputedStyle(el).position !== 'fixed'
-                && (b.right > vw + 1 || b.left < -1);
+                && (b.right > vw + 1 || b.left < -1) && !intentional(el);
             })
             .map(el => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className
               ? '.' + el.className.trim().split(/\s+/).join('.') : ''));
