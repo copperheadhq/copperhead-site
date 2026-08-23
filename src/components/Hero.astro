@@ -287,6 +287,38 @@ const showStats = stats.stars !== null || stats.downloads !== null;
     flex: none;
   }
 
+  /* ── The hero, and only the hero, runs wider than the content column. It sits
+     outside .framed by design (see the frame note in global.css: it is the
+     page's cover, not a cell of the grid), so there are no vertical rules for
+     its edges to miss and the wider box costs nothing in alignment.
+
+     Gated on viewport *height*, which looks wrong and is the whole point. The
+     transcript is the thing that has to fill the right track, and its size is
+     set by TerminalDemo's `(min-width: 901px) and (max-height: 1000px)` step:
+     at 12px it caps at 733px wide, at the 10px that step drops it to, 611px.
+     A 1080p monitor lands on the short side of that — a maximised browser
+     there gives ~945-980px of viewport, not 1080 — so on the most common
+     desktop the window is 611 and the track already has ~15px it is not using.
+     Widen the box there and every pixel goes into that gap rather than into
+     the terminal: measured, the slack runs 15px → 73px at 1440x900 and 89px at
+     1920x960, and since the window is `margin: 0 auto` it shows up as air on
+     both sides of the transcript with the two columns drifting apart.
+
+     Above 1000px tall the terminal is at its 733 size and grows straight into
+     the wider track instead — measured at 0px of slack at 1440x1040, 1920x1100
+     and 2560x1300. So the condition here is the complement of the terminal's
+     own step, and the two move together by construction: change that step's
+     height threshold and this one has to follow it.
+
+     The backer strip is deliberately not on this. It stays at --maxw so its
+     feathered ends still land on the frame rules that begin immediately below
+     the hero. ── */
+  @media (min-height: 1001px) {
+    .hero .wrap {
+      max-width: var(--maxw-hero);
+    }
+  }
+
   /* ── The two columns. `minmax(0, …)` on both tracks rather than a bare
      fraction: a grid track's default minimum is auto, and the terminal's
      longest tool line would hold the right track open at its own min-content
@@ -323,7 +355,7 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      terminal from the strip, still reads as a break. */
   .strip {
     flex: none;
-    margin-top: clamp(1.25rem, 2.6svh, 2rem);
+    margin-top: clamp(12px, 2.6svh, 2rem);
   }
 
   /* A diamond lattice, off supermemory's field. Theirs is measured —
@@ -842,35 +874,76 @@ const showStats = stats.stars !== null || stats.downloads !== null;
     }
   }
 
+  /* ── Scaling the phone stack to the fold.
+
+     The hero has to seat chip, headline, subhead, buttons, install bar,
+     terminal, stats and the backer strip. It used to hold every step at a flat
+     px value, so the stack came to a fixed ~822px whatever the screen had, and
+     the strip — last in order and `flex: none` — was simply pushed out: 269px
+     under the fold on an iPhone SE, 77px on a 14. It was in practice never
+     seen. So every step here is stated against svh and closes up as the screen
+     gets shorter, and the terminal scales with it (its own note carries the
+     numbers). Reading order is untouched: copy, terminal, stats, logos.
+
+     The maxima are the old flat values and the coefficients reach them at
+     ~900svh, so a phone with the room looks exactly as it did. The floors are
+     where air stops being compressible without the stack reading as collapsed.
+
+     What this does and does not buy, measured at each phone's *small* viewport
+     (100svh resolves to the toolbars-shown height, so these are well under the
+     device heights — an SE is 553, not 667):
+
+       iPhone 14      750   strip in fold
+       iPhone 15 Pro  758   strip in fold
+       Pixel 7        823   strip in fold
+       15 Pro Max     838   strip in fold, terminal still at a full 8px
+       iPhone SE      553   still 150px under — see below
+       iPhone 13 mini 629   still 86px under
+
+     The last two are arithmetic, not tuning. At 375 the incompressible core is
+     394px — 56 nav clearance, 28 chip, 69 headline, 68 subhead, 92 of buttons
+     and install bar (44px tap targets, which do not scale), 21 stats, 61 strip
+     — and the terminal at its 7px legibility floor is 228 more. That is 622px
+     before a single pixel of spacing, against 553 available. No amount of air
+     closes a 69px gap that exists with zero air in it. Seating the strip on
+     those two screens needs the terminal out of the fold, which is a change to
+     reading order and deliberately not made here. They scroll, as they did.
+
+     Re-measure the whole table before touching a coefficient; the fold is won
+     or lost in tens of pixels and every number above is measured. ── */
   @media (max-width: 560px) {
-    /* Clear the bar, then 15px, which is what the old flat 84 was against the
-       69px bar. Stated against --nav-h now so the phone's shorter bar actually
-       buys the fold the height it saves rather than leaving dead space. The
-       100svh floor above is left alone — a phone cannot seat this stack, so the
-       section runs past the fold and scrolls, which is what a floor does and a
-       fixed height would not. */
+    /* Clear the bar, then up to 15px, which is what the old flat 84 was against
+       the 69px bar. Stated against --nav-h so the phone's shorter bar actually
+       buys the fold the height it saves rather than leaving dead space, and the
+       gap term scales with the screen like every other step in the stack — 15
+       is now the ceiling rather than a constant.
+
+       The 100svh floor above is left alone. It is a floor, not a height: the
+       screens that still cannot seat the stack (see the fit note above) run
+       past it and scroll, and the ones that can are unaffected by it. */
     .hero {
-      padding-block: calc(var(--nav-h) + 15px) 40px;
+      padding-block: calc(var(--nav-h) + clamp(8px, 1.67svh, 15px))
+        clamp(18px, 4.44svh, 40px);
     }
 
     h1 {
-      margin-top: 18px;
+      margin-top: clamp(9px, 2svh, 18px);
     }
 
     .sub {
-      margin-top: 12px;
+      margin-top: clamp(6px, 1.33svh, 12px);
     }
 
     .cta {
-      margin-top: 20px;
+      margin-top: clamp(10px, 2.22svh, 20px);
     }
 
     .demo {
-      margin-top: 24px;
+      margin-top: clamp(12px, 2.67svh, 24px);
     }
 
     .proof {
-      margin-top: 20px;
+      margin-top: clamp(9px, 2.22svh, 20px);
     }
 
     /* Narrower here than the type alone would make it. At 12.5px the message
