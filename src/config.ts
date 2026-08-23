@@ -30,6 +30,9 @@ export const links = {
   // The long traffic record for the repo, drawn from the data branch that
   // .github/workflows/repo-stats.yml appends to daily.
   stats: '/stats/',
+  // Service status, drawn on this domain from UptimeRobot's public record
+  // (src/status.ts). Their hosted copy is the fallback linked from the page.
+  status: '/status/',
   // The Antler write-up, on chouhan.ai rather than this site's own /blog copy.
   antler: 'https://chouhan.ai/antler-crackathon',
   // TODO(launch): confirm the real inbox before launch; copperhead.sh has no MX
