@@ -126,10 +126,12 @@ If you change a block here, change it on the surfaces above in the same
 pass. Copy that only got fixed in one place is how two versions of the
 product's name for itself start circulating.
 
-The two repo descriptions and the `package.json` one are deliberately not
-product copy: they say what the repository is, which is a different job from
-what the product is, and a reader on a file listing wants the former. They
-are listed so nobody "fixes" them into the one-liner.
+`copperhead-site`'s description and the `package.json` one are deliberately
+not product copy: they say what the repository is, which is a different job
+from what the product is, and a reader on a file listing wants the former.
+They are listed so nobody "fixes" them into the one-liner. The `copperhead`
+repo is the exception in the table above and stays on the tagline: it is the
+product's own repository, so a reader landing there wants the product.
 
 The hero subhead is the one-liner with the Oxford comma dropped from "design,
 verify, and ship", and that is deliberate too. The comma costs a line at
@@ -149,7 +151,7 @@ the layout audit's narrowest viewport is 375 and will not catch it.
 - **Its CTAs do not match either.** It names *View on GitHub* as the
   secondary; the fold runs *Read the docs*, beside a primary that now goes
   to `app.copperhead.sh` rather than down the page.
-- **The meta description is a fourth variant** — "An open source AI agent
+- **The meta description is a fourth variant** — "An open-source AI agent
   that designs, documents and validates real PCBs from a prompt." The
   one-liner's own note claims the meta description as one of its homes, so
   one of the two is out of date.

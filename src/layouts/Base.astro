@@ -22,12 +22,12 @@ interface Props {
 
 const {
   title = 'copperhead. Cursor for circuit boards.',
-  description = 'An open source AI agent that designs, documents and validates real PCBs from a prompt.',
+  description = 'An open-source AI agent that designs, documents and validates real PCBs from a prompt.',
   path = '/',
   jsonLd: extraJsonLd,
   ogType = 'website',
   ogImage: ogImagePath = '/og-image.png',
-  ogImageAlt = 'copperhead: an open source AI agent for circuit board design',
+  ogImageAlt = 'copperhead: an open-source AI agent for circuit board design',
   publishedTime,
 } = Astro.props;
 
@@ -41,7 +41,7 @@ const appJsonLd = {
   '@type': 'SoftwareApplication',
   name: 'copperhead',
   description:
-    'An open source AI agent that designs, documents and validates real PCBs from a prompt.',
+    'An open-source AI agent that designs, documents and validates real PCBs from a prompt.',
   url: site,
   codeRepository: repo,
   applicationCategory: 'DeveloperApplication',
