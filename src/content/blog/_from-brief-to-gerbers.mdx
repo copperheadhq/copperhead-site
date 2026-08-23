@@ -33,16 +33,16 @@ commit would be a surprise rather than a courtesy.
 
 ## Eight stages
 
-| Stage        | What it is asked for                                                        | What the gate checks                                |
-| ------------ | --------------------------------------------------------------------------- | --------------------------------------------------- |
-| Spec         | `docs/SPEC.md`, every budget also recorded as a machine-readable constraint | A filled budgets section                            |
-| Architecture | `docs/SUBSYSTEMS.md`, one section per subsystem with the reasoning          | Real prose under a heading                          |
-| Parts        | `docs/BOM.md`, part numbers with datasheet-verifiable justification         | A part chosen, not a placeholder                    |
-| Schematic    | the `.kicad_sch`, built subsystem by subsystem                              | Symbols, agreement, ERC clean                       |
-| Layout       | placement, power and critical nets routed, a draft quality note             | Footprints on the board, draft quality written down |
-| Outputs      | gerbers, drill, DXF, STEP, SVG renders, ordering BOM                        | Gerbers actually on disk                            |
-| Firmware     | `firmware/` with `pins.h` generated from the pinout                         | Source files on disk                                |
-| Dev plan     | bring-up order, test points, risks, prototype order plan                    | A written plan rather than an empty file            |
+| Stage        | Asked for                                | Gate                           |
+| ------------ | ---------------------------------------- | ------------------------------ |
+| Spec         | `SPEC.md`, budgets as constraints        | Budgets filled in              |
+| Architecture | `SUBSYSTEMS.md`, reasoning per subsystem | Real prose under a heading     |
+| Parts        | `BOM.md`, verifiable part numbers        | A part chosen, not placeholder |
+| Schematic    | the `.kicad_sch`, subsystem by subsystem | Symbols, agreement, ERC clean  |
+| Layout       | placement, routing, a draft quality note | Footprints, draft note written |
+| Outputs      | gerbers, drill, STEP, renders, order BOM | Gerbers actually on disk       |
+| Firmware     | `firmware/` with generated `pins.h`      | Source files on disk           |
+| Dev plan     | bring-up order, test points, risks       | A written plan, not empty      |
 
 Each stage is a complete agent run with its own prompt, its own turn budget, and its
 own commit. It is not one long conversation with eight topics in it. A stage that
