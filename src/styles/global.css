@@ -125,6 +125,20 @@
     'Segoe UI', Roboto, sans-serif;
 
   --maxw: 1328px; /* mastra --ds-layout-content-v2 */
+  /* The hero only, and only on a viewport over 1000px tall — Hero.astro's
+     `min-height: 1001px` block is the sole consumer and carries the reasoning
+     for the gate. In short: below that height the terminal is scaled down to
+     611px and cannot fill a wider track, so the width would become a gap.
+
+     1480 rather than more because the right track is (W - 64 - gap) / 1.92
+     against the terminal's 733px cap, which puts the true ceiling at W ~= 1540.
+     1540 was measured and rejected, not reasoned away: it works, and it puts
+     the window at 731-732px against a 733px cap, which is a layout sitting on
+     a cliff edge — a pixel off the gap clamp or the 32px padding and the
+     terminal starts centring inside a track it no longer fills. 1480 lands at
+     700px with 33px of margin under the cap, and the 60px it gives up is 4% of
+     the box. Take the margin. */
+  --maxw-hero: 1480px;
   --pad-y: 136px;
   /* Height of the fixed nav's inner box, the 1px rule excluded. Lives here
      rather than in Navbar.astro because the bar is fixed and therefore invisible
