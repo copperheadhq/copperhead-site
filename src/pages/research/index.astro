@@ -1,13 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import Navbar from '../../components/Navbar.astro';
-import Footer from '../../components/Footer.astro';
-import { site, links } from '../../config';
-import { formatDate } from '../../blog';
-import { articlePath } from '../../research';
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import { site, links } from "../../config";
+import { formatDate } from "../../blog";
+import { articlePath } from "../../research";
 
-const articles = (await getCollection('research')).sort(
+const articles = (await getCollection("research")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
@@ -17,22 +17,22 @@ const articles = (await getCollection('research')).sort(
 // says only what it would contain, not when.
 const planned = [
   {
-    title: 'The first model matrix',
-    body: 'Strict pass rate and cost per passing task, per tier and per model, from the first live run of the suite. Records and the generated leaderboard published alongside, so the table can be recomputed rather than trusted.',
+    title: "The first model matrix",
+    body: "Strict pass rate and cost per passing task, per tier and per model, from the first live run of the suite. Records and the generated leaderboard published alongside, so the table can be recomputed rather than trusted.",
   },
   {
-    title: 'Drift measurement',
-    body: 'Putting a number on the problem the tool exists to solve: how far a schematic and its documents diverge over the life of a design, measured across open hardware repositories.',
+    title: "Drift measurement",
+    body: "Putting a number on the problem the tool exists to solve: how far a schematic and its documents diverge over the life of a design, measured across open hardware repositories.",
   },
 ];
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'copperhead research',
-  url: new URL('/research/', site).href,
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "copperhead research",
+  url: new URL("/research/", site).href,
   hasPart: articles.map((a) => ({
-    '@type': 'TechArticle',
+    "@type": "TechArticle",
     headline: a.data.title,
     description: a.data.description,
     datePublished: a.data.date.toISOString(),
@@ -55,10 +55,11 @@ const jsonLd = {
           <p class="kind">Research</p>
           <h1>Research</h1>
           <p class="standfirst">
-            The evidence behind the claims made everywhere else on this site: how
-            the agent is measured, what it is measured against, and eventually what
-            it scores. The method is published first, on purpose. No model matrix
-            has been run yet, so there are no results here.
+            The evidence behind the claims made everywhere else on this site:
+            how the agent is measured, what it is measured against, and
+            eventually what it scores. The method is published first, on
+            purpose. No model matrix has been run yet, so there are no results
+            here.
           </p>
         </header>
 
@@ -97,9 +98,9 @@ const jsonLd = {
         </ul>
 
         <p class="meanwhile">
-          The <a href={links.blog}>blog</a> carries the argument and the
-          <a href={links.repo}>repo</a> carries the code. Both are the best place to
-          push back on any of it.
+          The <a href={links.blog}>blog</a> carries the argument and the <a
+            href={links.repo}>repo</a
+          > carries the code. Both are the best place to push back on any of it.
         </p>
       </div>
     </article>
