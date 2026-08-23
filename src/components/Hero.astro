@@ -21,9 +21,11 @@ import { postPath } from "../blog";
 // the measurements below are still theirs — the type sizes, the 33px chip, the
 // 194+12+194 action column. What changed is the axis: side by side, the fold
 // has to seat the *taller* of the two columns rather than the sum of the whole
-// stack, which is what buys the room the marquee now spends. The headline
-// clamp is the one number that had to come down with it, because it is sizing
-// against a half-width column now (see h1).
+// stack, which is what buys the room the marquee now spends. Which column that
+// is varies: the terminal used to be taller everywhere, and since the headline
+// came up a step and the stage went to 90% the two run within a few px of each
+// other on most desktops. That slack, not the fold, is what the headline and
+// subhead are sized against — see h1, where the measurements are.
 //
 // The stats line stays where it was in reading order — directly under the
 // transcript, as a caption on the claim rather than a line to cross to reach
@@ -347,6 +349,46 @@ const showStats = stats.stars !== null || stats.downloads !== null;
     text-align: left;
   }
 
+  /* ── The two columns against each other. They are centred: `align-items:
+     center` on .split, which is the base rule, so each column is its own
+     natural height and the two share a centre line.
+
+     This was `stretch` for a while, with the copy column distributing itself
+     over the row and the stage pinned top and bottom, because centring shows a
+     height difference twice — half of it as an inset at the top and half again
+     at the bottom — and at the time the difference was 76px at 1920x1080. Two
+     things have since taken most of that away: the headline and subhead came up
+     a step, and the stage went to 90% below. Measured now, the two columns are
+     within a few px of each other at 1280x720 and at 1920 and up, and the worst
+     case left is ~35px at 1512x945 and 1600x900 — small enough that centring
+     reads as balance rather than as the chip having slipped.
+
+     Centring is also what keeps .proof's margin honest. Distributing the stage
+     put the slack into the one gap between the window and the stats, which is a
+     caption distance and should not be elastic: it measured 60.5px at 1512x945
+     against the 22.7px the margin asks for, and near the margin at 1280 and
+     1920, so the same relationship was drawn three different ways depending on
+     the window. Natural height means the gap is the margin, everywhere. ── */
+  @media (min-width: 1081px) {
+    /* The scale knob for the right-hand column, and the only thing this query
+       does. `zoom` and not `max-height`: a height cap does shrink the box —
+       measured, 424 to 382 at 1280x720 — but it shrinks nothing inside it. The
+       window stays 604x382 and the stats row is simply cut off below the new
+       edge, which is a crop, not a smaller terminal; `overflow: hidden` only
+       makes the crop deliberate. `zoom` scales the box and its contents
+       together, and unlike `transform: scale()` it does it in layout, so the
+       grid row comes down with it and the column beside it sees the new height.
+       The window goes 604x382 -> 550x344 and 700x458 -> 660x412, both at
+       1.60:1, the ratio it already had, and no type size in TerminalDemo.astro
+       is touched.
+
+       Scoped to the width where there are two columns at all — below 1081
+       .split is a single track and the terminal is the full-size object again. */
+    .stage {
+      zoom: 0.9;
+    }
+  }
+
   /* The strip's own clearance from the split above it. Note that this does not
      move the strip — its top is pinned by the hero's bottom padding and its own
      height — it moves the split *down* into the slack this gives back, which is
@@ -537,25 +579,32 @@ const showStats = stats.stars !== null || stats.downloads !== null;
     opacity: 0.6;
   }
 
-  /* ── Headline. supermemory's exactly: Space Grotesk 500 at 72px, 74.88px
-     leading (1.04), -4.176px of tracking (-0.058em) — which is what it gets on
-     any viewport 1000px or taller.
-     The `min()` adds a height term to the usual width-driven clamp: a 72px
-     headline is 75px of the fold, and on a 720px-tall window the fold cannot
-     spend that and still show a terminal. At 7svh it lands at 72px from 1030px
-     up and eases down to ~50px at 720, which is the single largest saving in the
-     stack and costs nothing on the screens that have the room. ── */
+  /* ── Headline. supermemory's metrics are the shape — Space Grotesk 500,
+     74.88px leading on 72px (1.04), -4.176px of tracking (-0.058em) — but not
+     the size any more: this runs a step larger than theirs on a desktop, and
+     the leading and tracking are ratios so they came up with it.
+     The `min()` adds a height term to the usual width-driven clamp, because a
+     headline is the one item on the fold that can eat the terminal's room. What
+     makes the larger step affordable is that it does not: the terminal column
+     is the taller of the two at every desktop width — measured, 424 against a
+     296px copy column at 1280x720 and 510 against 403 at 1920x1080 — so the
+     copy has 40-128px of slack before it starts setting the height of the
+     split at all. The numbers below spend that slack and stop inside it; the
+     tightest is 1512x945, where the copy column has 40px to give. ── */
   h1 {
-    /* 5.6vw was measured against the full content column. Half that column is
-       what it gets now, so the width term comes down with it — at 4.4vw a
-       1440 viewport lands at 63px, which sets "Cursor for circuit" on one line
-       inside a ~600px track and leaves "boards." on the second. Pushed back up
-       and the third word breaks off alone, which is the failure this number is
-       set to avoid; re-measure at 1280, 1440 and 1920 before moving it.
-       The svh term is untouched — a short window is still a short window — and
-       so is the 4.5rem ceiling, which no viewport reaches through 4.4vw until
-       2560 and is there to stop the headline running away on a wall display. */
-    font-size: clamp(2.25rem, min(4.4vw, 7svh), 4.5rem);
+    /* Both terms are up a step from the 4.4vw/7svh this ran before. Measured
+       across the desktop range, the pair lands at 60px at 1280x720, 67px at
+       1440x800, 79px at 1512x945 and the 5.25rem ceiling from 1920 up — where
+       it was 50/56/66/72. The wrap is unchanged by it: `balance` sets this as
+       "Cursor for" over "circuit boards." at every desktop width, and the
+       second line is the longer one, so the test when moving these is whether
+       "circuit boards." still fits the copy track (it wants ~6.4em, against a
+       556-644px column). Re-measure at 1280, 1440, 1512 and 1920.
+       The ceiling exists to stop the headline running away on a wall display;
+       nothing below 2560 reaches it through the width term, so raising it only
+       moves the tall-and-wide screens, which is exactly where 72px had started
+       to read small against the terminal beside it. */
+    font-size: clamp(2.25rem, min(5.2vw, 8.4svh), 5.25rem);
     font-weight: 500;
     line-height: 1.04;
     letter-spacing: -0.058em;
@@ -572,13 +621,21 @@ const showStats = stats.stars !== null || stats.downloads !== null;
     color: var(--copper);
   }
 
-  /* 15px on 24px leading in a 600px measure, their subhead's metrics. */
+  /* Was 15px on 24px leading in a 600px measure, supermemory's subhead exactly.
+     It reads thin under the larger headline above, so it takes the same step
+     up: 17px on the same 1.6 leading, and the measure widens with it, because
+     600px was 40em of text and is only 35em at 17px. At 640px this is two
+     lines from 1150px of viewport up; below that the copy track is narrower
+     than the cap and sets the measure itself, and it runs to three lines for
+     the ~70px of width between the split's 1081px floor and 1150 — which the
+     copy column has the height for (403 against the stage's 430 at 1081x900).
+     Phones are unaffected: the <=720px block below restates 15px. */
   .sub {
     color: var(--text-dim);
-    font-size: 0.9375rem; /* 15px */
+    font-size: 1.0625rem; /* 17px */
     line-height: 1.6;
     letter-spacing: -0.012em;
-    max-width: 600px;
+    max-width: 640px;
     margin: clamp(12px, 2.4svh, 20px) 0 0;
     /* balance, not pretty: pretty only rescues a single trailing word, and this
        sentence was breaking to leave "a prompt." alone on the second line */
@@ -696,8 +753,15 @@ const showStats = stats.stars !== null || stats.downloads !== null;
   /* The stats sit under the terminal, not above it: the transcript is the claim
      and these are its receipts, so they read as a caption on it rather than as
      a line the reader must cross to reach it. */
+  /* The gap between the window and the receipts it captions. Trimmed from
+     clamp(18px, 3svh, 32px): with the stage a flex column that ends on .proof,
+     this margin is the last term in the column's height whenever the stage is
+     the taller of the two — which it is at every desktop width — so it comes
+     straight off the row and, with it, off the fold. The stage's own 0.9 scale
+     is on top of this, so what actually renders on a desktop is 0.9 of these
+     numbers again: ~23px at the ceiling rather than the 32 this started at. */
   .proof {
-    margin-top: clamp(18px, 3svh, 32px);
+    margin-top: clamp(15px, 2.4svh, 26px);
   }
 
   /* The number carries the weight (dark, tabular) and the unit sits dim beside
