@@ -6,8 +6,8 @@
  * this repo's `github-repo-stats` branch; this module reads those CSVs during the
  * Astro build so /stats/ ships as static HTML. Same contract as stats.ts: the
  * fetch happens in Node at build time, the numbers are baked into the markup, and
- * the refresh cadence is the deploy cadence (cloudflare-refresh.yml rebuilds every
- * six hours).
+ * the refresh cadence is the deploy cadence (deploy.yml rebuilds and redeploys
+ * every six hours).
  *
  * Everything here is null-guarded the way stats.ts and assets.ts are. The data
  * branch does not exist until the workflow's first successful run, and that run

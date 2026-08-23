@@ -11,9 +11,9 @@
 # the PDF inline, so the branch is browsable on its own if the site is down.
 #
 # The data branch is orphaned from main and is created by the action on its first
-# run. Nothing here touches main, so this never triggers a Cloudflare build; the
-# site picks the new numbers up on the next scheduled rebuild (see
-# cloudflare-refresh.yml, every 6 hours).
+# run. Nothing here touches main, so this never triggers a deploy; the site picks
+# the new numbers up on the next scheduled rebuild (see deploy.yml, every 6
+# hours).
 #
 # Requires repo secret GHRS_GITHUB_API_TOKEN. The default GITHUB_TOKEN cannot do
 # this job at all: it is scoped to the repo the workflow runs in (copperhead-site)

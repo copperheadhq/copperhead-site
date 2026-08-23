@@ -1,0 +1,113 @@
+# Builds and deploys copperhead.sh to Cloudflare Workers.
+#
+# This used to be Cloudflare's job: the Workers Builds Git integration watched
+# main and built there, and this repo only ever poked it through a deploy hook.
+# That arrangement went quiet — three merges landed on main with no build and no
+# status posted back on any of them — and because Cloudflare owned the build
+# there was nothing in this repo to look at when it did. The build now happens
+# here, where its log is next to the code that produced it, and Cloudflare is
+# handed a finished dist/ to serve.
+#
+# IMPORTANT: disconnect the Workers Builds Git integration in the Cloudflare
+# dashboard (Workers > copperhead-site > Settings > Build). If it is still
+# watching main, every push deploys twice from two different builds, and the
+# one that lands last wins.
+#
+# Requires two repo secrets:
+#   CLOUDFLARE_API_TOKEN   an API token with the "Edit Cloudflare Workers"
+#                          template. Account > Workers Scripts > Edit is the
+#                          permission that actually matters for an assets-only
+#                          Worker; it uploads the files as part of the script.
+#   CLOUDFLARE_ACCOUNT_ID  Workers > Overview, right-hand column.
+#
+# CLOUDFLARE_DEPLOY_HOOK_URL is no longer read by anything and can be deleted
+# once this is green.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+  # "Deploy now" from the Actions tab, for when a deploy needs forcing without
+  # an empty commit.
+  workflow_dispatch:
+
+  # The stats in src/stats.ts are baked in at build time and go stale between
+  # pushes, so the site rebuilds on a schedule as well. This is the job the
+  # separate cloudflare-refresh workflow used to do by POSTing a deploy hook;
+  # it is the same rebuild, minus the hop through Cloudflare's builder.
+  # 00:00/06:00/12:00/18:00 UTC.
+  schedule:
+    - cron: "0 */6 * * *"
+
+# One deploy at a time, and never cancel one in flight: a half-uploaded asset
+# manifest is worse than a queued run. A scheduled refresh that collides with a
+# push simply waits, and the push's content wins because it goes second.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # src/stats.ts reads this to lift the GitHub API's 60/hr
+          # unauthenticated limit. It is why the stars and install counts in the
+          # hero survive a busy runner; without it the fetch is rate-limited and
+          # the row silently renders empty.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # The same content gates ci.yml runs, repeated here because ci.yml runs
+      # *beside* this workflow rather than before it — a red gate over there
+      # would not stop a deploy from going out from here.
+      #
+      # The link check is deliberately not among them. It makes 16 requests to
+      # third parties, and a deploy that cannot go out because someone else's
+      # server returned a 500 is a worse failure than the one it prevents. It
+      # stays on ci.yml, where it gates the PR.
+      - name: "Gate: no em-dashes in rendered copy (W-6)"
+        run: |
+          if grep -q "—\|&mdash;\|&#8212;" dist/index.html; then
+            echo "em-dash found in rendered HTML (W-6)"; exit 1
+          fi
+
+      - name: "Gate: transfer budget under 100 KB (W-10)"
+        run: |
+          total=0
+          for f in dist/index.html dist/fonts/*.woff2 dist/favicon.svg dist/favicon-32.png; do
+            [ -f "$f" ] || continue
+            total=$((total + $(gzip -c "$f" | wc -c)))
+          done
+          echo "gzipped transfer: $total bytes"
+          [ "$total" -le 102400 ] || { echo "over 100 KB budget (W-10)"; exit 1; }
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # dist/ is already built above, so this only uploads. Without an
+          # explicit command the action would run its own `deploy` anyway, but
+          # naming it keeps the step honest about what it does.
+          command: deploy
+          # Pinned to the version in package.json rather than floating, so a
+          # wrangler release cannot change what a deploy means without a commit
+          # here saying so.
+          wranglerVersion: "4.125.0"

@@ -244,7 +244,7 @@ more than this needs across every repo you can reach.
 Until the first run completes there is no data branch, so `/stats/` renders a
 short "nothing collected yet" note rather than empty axes. After adding the
 secret, trigger the first snapshot by hand from the Actions tab; the page picks
-it up on the next Cloudflare rebuild (`cloudflare-refresh.yml`, every 6 hours).
+it up on the next scheduled rebuild (`deploy.yml`, every 6 hours).
 
 Nothing in this touches `main`, so collection never triggers a deploy. The data
 branch also carries a rendered `latest-report/report.pdf`, which GitHub previews
