@@ -4,6 +4,7 @@ import TerminalDemo from "./TerminalDemo.astro";
 import Backers from "./Backers.astro";
 import { quickstart, links, pkg } from "../config";
 import { stats, compact } from "../stats";
+import { getCollection } from "astro:content";
 import { postPath } from "../blog";
 
 // Two-column hero, with a backer strip across the foot of the fold:
@@ -37,6 +38,19 @@ import { postPath } from "../blog";
 // The product render and its "Proven on real copper" caption used to hold the
 // right-hand column here; the terminal has it now, and they live in
 // Proof.astro, the section immediately below.
+// The "New" chip, from the collection rather than typed in. It was hardcoded
+// to from-brief-to-gerbers with the title written out beside it, so it went on
+// announcing a post two newer ones had replaced. Deriving it is the only way a
+// badge that says "New" stays true without anyone remembering to edit it.
+// Destructuring an empty collection gives undefined, and the chip below is
+// guarded on it rather than assuming a post exists: the collection is empty on
+// a checkout with no posts, and transiently whenever the content-layer cache in
+// .astro is cleared under a running dev server. Neither should take the home
+// page down with a TypeError.
+const [latest] = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
 const showStats = stats.stars !== null || stats.downloads !== null;
 ---
 
@@ -48,28 +62,36 @@ const showStats = stats.stars !== null || stats.downloads !== null;
   <div class="wrap">
     <div class="split">
       <div class="copy">
-        <a class="chip" href={postPath("from-brief-to-gerbers")}>
-          <span class="chip-tag"
-            ><span class="chip-dot" aria-hidden="true"></span>New</span
-          >
-          <span class="chip-text"
-            >From brief.md to gerbers<svg
-              class="chip-arrow"
-              viewBox="0 0 16 16"
-              width="12"
-              height="12"
-              aria-hidden="true"
-              focusable="false"
-              ><path
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.6"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3 8h9.5M9 4.5 12.5 8 9 11.5"></path></svg
-            ></span
-          >
-        </a>
+        {
+          latest && (
+            <a class="chip" href={postPath(latest.id)}>
+              <span class="chip-tag">
+                <span class="chip-dot" aria-hidden="true" />
+                New
+              </span>
+              <span class="chip-text">
+                <span class="chip-title">{latest.data.title}</span>
+                <svg
+                  class="chip-arrow"
+                  viewBox="0 0 16 16"
+                  width="12"
+                  height="12"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 8h9.5M9 4.5 12.5 8 9 11.5"
+                  />
+                </svg>
+              </span>
+            </a>
+          )
+        }
 
         <h1>Cursor for circuit boards<span class="stop">.</span></h1>
 
@@ -597,6 +619,22 @@ const showStats = stats.stars !== null || stats.downloads !== null;
     gap: 8px;
     padding: 6px 10px;
     color: var(--text);
+    /* the flex item has to be allowed to shrink below its content, or the
+       title pushes the chip past the column instead of truncating */
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* The title takes whatever room is left and ellipsises. The chip is one line
+     by construction and the newest post's title is whatever it is: this ran
+     against a 24-character headline and clipped a 53-character one mid-word on
+     a 375px screen, arrow and all. Truncation is the honest failure here, and
+     it has to be the title that truncates, not the chip. */
+  .chip-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .chip-arrow {

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { site, repo, links } from '../config';
+import { site, repo, links, siteCard } from '../config';
 
 interface Props {
   /** Full <title>. Defaults to the home page title. */
@@ -26,7 +26,7 @@ const {
   path = '/',
   jsonLd: extraJsonLd,
   ogType = 'website',
-  ogImage: ogImagePath = '/og-image.png',
+  ogImage: ogImagePath = siteCard,
   ogImageAlt = 'copperhead: an open-source AI agent for circuit board design',
   publishedTime,
 } = Astro.props;
@@ -189,6 +189,19 @@ const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
     <link
       rel="preload"
       href="/fonts/dm-sans-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    {/* The 400 sets the blog's running text (--text in global.css). Preloaded
+        with the 500 rather than discovered from the stylesheet, for the same
+        reason: a body face that arrives a round trip late reflows the article
+        under the reader. It costs 8.3 KB on pages that do not use it, which is
+        the price of one preload tag over a per-page conditional. */}
+    <link
+      rel="preload"
+      href="/fonts/dm-sans-400.woff2"
       as="font"
       type="font/woff2"
       crossorigin

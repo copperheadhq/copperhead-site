@@ -1,19 +1,21 @@
 ---
 title: 'Meet copperhead'
-description: 'An open source AI agent that designs, documents, and verifies real PCBs from a prompt, working on your KiCad files inside your own repository.'
+description: 'An open source AI agent that designs, documents and verifies real PCBs from a prompt, working on your KiCad files inside your own repository.'
 date: 2026-07-14
 kind: 'Product'
+cover: 'meet-copperhead'
+coverAlt: 'A copperhead title card: a via with four traces breaking out of it.'
 ---
 
 import FileBlock from "../../components/FileBlock.astro";
 
 copperhead is an open source AI agent for hardware design. You give it a brief or a
 change request in plain English. It edits your real KiCad files, updates every
-document that references them, and runs KiCad's own checks until they pass.
+document that references them and runs KiCad's own checks until they pass.
 
 It is not a chatbot that describes a circuit to you. It is a loop that leaves
 artifacts on disk: a schematic, a board, gerbers, a bill of materials, a firmware
-scaffold, and a bring-up plan. All of it inside the git repository you already have.
+scaffold and a bring-up plan. All of it inside the git repository you already have.
 
 ## Two ways to use it
 
@@ -24,7 +26,7 @@ and the agent handles the fan-out:
 
 It consults the MCU strapping table it has in memory, picks an RTC-capable pin that
 is not a strapping pin, edits the schematic, updates the pinout and subsystem docs
-to match, runs ERC until it is clean, and commits with the reasoning attached.
+to match, runs ERC until it is clean and commits with the reasoning attached.
 
 **Start from nothing.** Hand it a product brief and it runs the full pipeline:
 specification with every assumption flagged, architecture, part selection,
@@ -58,14 +60,14 @@ integration suite. Design data never leaves your repo except as part of the mode
 call itself, and run transcripts stay local in `.copperhead/runs/` with secret
 patterns redacted.
 
-It is Apache-2.0. Everything it writes is plain markdown, JSON, and KiCad source.
+It is Apache-2.0. Everything it writes is plain markdown, JSON and KiCad source.
 There is no proprietary format to get stuck in.
 
 ## Proof
 
-Open Telegraph is a pocket-size Morse key: an ESP32-S3, one button, one RGB LED, and
+Open Telegraph is a pocket-size Morse key: an ESP32-S3, one button, one RGB LED and
 a battery, living inside a 25 microamp sleep budget. It was designed with this
-workflow, and every decision, every trap the agent caught, and every file is public.
+workflow, and every decision, every trap the agent caught and every file is public.
 
 The next post covers [the problem this exists to
 solve](/blog/drift-is-a-build-failure/), and after that, [how the loop keeps itself

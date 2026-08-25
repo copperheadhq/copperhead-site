@@ -1,17 +1,19 @@
 ---
-import { getCollection } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import Navbar from '../../components/Navbar.astro';
-import Footer from '../../components/Footer.astro';
-import { site } from '../../config';
-import { postPath, formatDate } from '../../blog';
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import PostCard from "../../components/PostCard.astro";
+import { site } from "../../config";
+import { postPath, readingTime, defaultAuthor, kindSlug, faqCover } from "../../blog";
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
 // The FAQ is a hand-built page rather than a markdown post (it carries FAQPage
 // JSON-LD and native <details> accordions), so it is listed here explicitly.
+// It has no body to count, which is why `minutes` is left off it.
 const entries = [
   ...posts.map((p) => ({
     href: postPath(p.id),
@@ -19,24 +21,45 @@ const entries = [
     description: p.data.description,
     kind: p.data.kind,
     date: p.data.date,
+    cover: p.data.cover,
+    coverAlt: p.data.coverAlt,
+    author: p.data.author ?? defaultAuthor,
+    minutes: readingTime(p.body ?? ""),
   })),
   {
-    href: '/blog/faq/',
-    title: 'Frequently asked questions',
+    href: "/blog/faq/",
+    title: "Frequently asked questions",
     description:
-      'What it costs, what it refuses to do, whether it replaces an engineer, and what happens to your design files.',
-    kind: 'FAQ',
-    date: new Date('2026-07-17'),
+      "What it costs, what it refuses to do, whether it replaces an engineer, and what happens to your design files.",
+    kind: "FAQ",
+    date: new Date("2026-07-17"),
+    cover: faqCover.cover,
+    coverAlt: faqCover.alt,
+    author: defaultAuthor,
+    minutes: undefined,
   },
 ].sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
+const [featured] = entries;
+
+// Filter chips, in the order the kinds first appear down the page, each
+// carrying its own count. Derived rather than listed: a post introducing a new
+// kind gets a chip without anyone remembering to add one.
+const counts = new Map<string, number>();
+for (const e of entries) counts.set(e.kind, (counts.get(e.kind) ?? 0) + 1);
+const kinds = [...counts.entries()].map(([kind, n]) => ({
+  kind,
+  n,
+  slug: kindSlug(kind),
+}));
+
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Blog',
-  name: 'The copperhead blog',
-  url: new URL('/blog/', site).href,
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "The copperhead blog",
+  url: new URL("/blog/", site).href,
   blogPost: posts.map((p) => ({
-    '@type': 'BlogPosting',
+    "@type": "BlogPosting",
     headline: p.data.title,
     description: p.data.description,
     datePublished: p.data.date.toISOString(),
@@ -53,138 +76,310 @@ const jsonLd = {
 >
   <Navbar home={false} />
   <main id="top">
-    <section class="head">
-      <div class="wrap">
-        <p class="index">Blog</p>
-        <h1 class="section-title">Notes from the copper.</h1>
-        <p class="section-intro">
-          What the agent is, the problem it exists to solve, and the rules it runs
-          under. Every claim here is demonstrable in the repo today.
+    <div class="blog-frame">
+      <header class="blog-head">
+        <p class="index">
+          <svg
+            class="chev"
+            viewBox="0 0 8 12"
+            width="7"
+            height="10"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M1.5 1 6 6l-4.5 5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"></path>
+          </svg>
+          BLOG
         </p>
-      </div>
-    </section>
+        <h1 class="blog-h1">Notes from the copper.</h1>
+        <p class="blog-sub">
+          What we have learned pointing an agent at real hardware files: how it
+          works, where it breaks and why it is fenced in the way it is. Every
+          claim here is one you can go and check in the repo.
+        </p>
 
-    <hr class="trace-rule" />
-
-    <section class="list">
-      <div class="wrap">
-        <ul>
+        <div class="blog-cats" role="group" aria-label="Filter posts by kind">
+          <button
+            type="button"
+            class="blog-cat blog-cat-active"
+            data-filter="all"
+            aria-pressed="true"
+          >
+            All
+          </button>
           {
-            entries.map((e) => (
-              <li>
-                <a href={e.href}>
-                  <div class="meta">
-                    <span class="kind">{e.kind}</span>
-                    <time datetime={e.date.toISOString()}>{formatDate(e.date)}</time>
-                  </div>
-                  <h2>{e.title}</h2>
-                  <p>{e.description}</p>
-                  <span class="more">Read</span>
-                </a>
-              </li>
+            kinds.map((k) => (
+              <button
+                type="button"
+                class="blog-cat"
+                data-filter={k.slug}
+                aria-pressed="false"
+              >
+                {k.kind}
+                <span class="blog-cat-n">{k.n}</span>
+              </button>
             ))
           }
-        </ul>
-      </div>
-    </section>
+        </div>
+      </header>
+
+      <section class="blog-feature">
+        <PostCard {...featured} large />
+      </section>
+
+      <section class="blog-rest">
+        <div class="blog-grid">
+          {entries.map((e, i) => <PostCard {...e} featured={i === 0} />)}
+        </div>
+        <p class="blog-empty" hidden>Nothing filed under that yet.</p>
+      </section>
+    </div>
   </main>
   <Footer />
 </Base>
 
+<script>
+  /* Filter chips.
+     
+     The grid holds every post, including the one shown large above it; that
+     card is hidden while the chip reads "All" and comes back the moment a
+     filter runs, so choosing a kind never makes the newest post of that kind
+     disappear. Filtering is done here rather than by routing to /blog/tag/x
+     because there is one index page and no state worth a round trip. The kind
+     is mirrored into the hash so a filtered view can be linked to. */
+  const chips = [
+    ...document.querySelectorAll<HTMLButtonElement>("[data-filter]"),
+  ];
+  const grid = document.querySelector<HTMLElement>(".blog-grid");
+  const feature = document.querySelector<HTMLElement>(".blog-feature");
+  const empty = document.querySelector<HTMLElement>(".blog-empty");
+  const cards = [
+    ...document.querySelectorAll<HTMLElement>(".blog-grid .post-card"),
+  ];
+
+  function apply(tag: string, push = true) {
+    const all = tag === "all";
+    let shown = 0;
+
+    for (const card of cards) {
+      const match = all
+        ? !card.hasAttribute("data-featured")
+        : card.dataset.kind === tag;
+      card.toggleAttribute("hidden", !match);
+      if (match) shown++;
+    }
+
+    grid?.classList.toggle("filtered", !all);
+    feature?.toggleAttribute("hidden", !all);
+    empty?.toggleAttribute("hidden", shown > 0);
+
+    for (const chip of chips) {
+      const on = chip.dataset.filter === tag;
+      chip.classList.toggle("blog-cat-active", on);
+      chip.setAttribute("aria-pressed", String(on));
+    }
+
+    if (push) {
+      const url = all ? location.pathname : `${location.pathname}#${tag}`;
+      history.replaceState(null, "", url);
+    }
+  }
+
+  for (const chip of chips) {
+    chip.addEventListener("click", () => apply(chip.dataset.filter!));
+  }
+
+  const initial = location.hash.slice(1);
+  if (initial && chips.some((c) => c.dataset.filter === initial))
+    apply(initial, false);
+</script>
+
 <style>
-  /* The bar is fixed, so the first section needs its own top clearance. The
-     rule between head and list gets a tighter gap than a full section break:
-     it separates the masthead from the index, not two arguments. */
-  .head {
-    padding-block: 179px 72px;
+  /* The bar is fixed, so the frame has to reserve its own clearance. */
+  main {
+    padding-top: calc(var(--nav-h) + 1px);
   }
 
-  .list {
-    padding-block: 72px 0;
+  /* One framed column for the whole index, in supermemory's shape: hairlines
+     down both edges of the content box and a faint dot field behind it, so the
+     header, the featured post and the grid read as cells of one sheet rather
+     than as three bands stacked on the page. The site's own .framed does the
+     same job for the home page; this is that idea scoped to one column that
+     also carries the background. */
+  .blog-frame {
+    width: 100%;
+    max-width: var(--maxw);
+    margin-inline: auto;
+    border-inline: 1px solid var(--line);
+    background-image: radial-gradient(var(--hairline) 1px, transparent 1px);
+    background-position: top center;
+    background-size: 22px 22px;
   }
 
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1px;
-    background: var(--hairline);
-    border-block: 1px solid var(--hairline);
+  .blog-head {
+    padding: 64px 32px 40px;
+    border-bottom: 1px solid var(--line);
   }
 
-  /* Full-card links: the whole row is the target, no separate title anchor. */
-  li a {
-    display: block;
-    background: var(--bg);
-    padding: 2.25rem 0;
-    text-decoration: none;
-    color: inherit;
+  /* The reference sets its eyebrow as a chevron, the word, and a rule. The
+     chevron is drawn rather than typed: the glyph supermemory uses (U+3009) is
+     outside this site's font subset and would fall back to a system face for
+     one character. The 44px rule .index used to draw after the label is gone
+     with it, site-wide. */
+  .index .chev {
+    margin-right: 2px;
+    flex: none;
   }
 
-  li a:hover {
-    background: var(--surface);
-  }
-
-  .meta {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--text-dim);
-    margin-bottom: 1rem;
-  }
-
-  .kind {
-    color: var(--copper);
-  }
-
-  li h2 {
-    font-size: clamp(1.35rem, 2.6vw, 1.75rem);
-    max-width: 24ch;
+  .blog-h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.045em;
+    max-width: 18ch;
     text-wrap: balance;
   }
 
-  li p {
+  .blog-sub {
+    font-family: var(--text);
+    margin: 1.1rem 0 0;
+    max-width: 34rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
     color: var(--text-dim);
-    max-width: 64ch;
-    margin: 0.85rem 0 0;
-    font-size: 0.97rem;
   }
 
-  .more {
-    display: inline-block;
-    margin-top: 1.15rem;
+  /* ---- Filter chips ---- */
+
+  .blog-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+  }
+
+  .blog-cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--line);
+    background: var(--panel);
     font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--copper);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease,
+      background 0.15s ease;
   }
 
-  li a:hover .more {
-    color: var(--copper-hi);
+  .blog-cat:hover {
+    border-color: var(--line-hi);
+    color: var(--text);
   }
 
-  /* Hover fill needs to reach past the text column or it reads as a stray band. */
-  @media (min-width: 721px) {
-    li a {
-      padding-inline: 24px;
-      margin-inline: -24px;
+  .blog-cat:active {
+    transform: scale(0.97);
+  }
+
+  .blog-cat-active,
+  .blog-cat-active:hover {
+    background: var(--copper);
+    border-color: var(--copper);
+    color: var(--on-copper);
+  }
+
+  .blog-cat-n {
+    color: color-mix(in srgb, var(--text-dim) 75%, transparent);
+  }
+
+  .blog-cat-active .blog-cat-n {
+    color: color-mix(in srgb, var(--on-copper) 70%, transparent);
+  }
+
+  /* ---- The list ---- */
+
+  .blog-feature {
+    padding: 40px 32px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .blog-rest {
+    padding: 40px 32px 56px;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* The featured post's own grid cell: dead weight until a filter runs, at
+     which point the large card above is hidden and this one takes over. */
+  .blog-grid :global(.post-card[data-featured]) {
+    display: none;
+  }
+
+  /* :not([hidden]) is load-bearing, not belt-and-braces. The hidden rule below
+     is one selector less specific than this one, so without it a filter the
+     featured post does not match still paints it: the newest post would appear
+     under every chip. */
+  .blog-grid.filtered :global(.post-card[data-featured]:not([hidden])) {
+    display: flex;
+  }
+
+  .blog-grid :global(.post-card[hidden]) {
+    display: none;
+  }
+
+  .blog-empty {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+
+  /* section is padded by the global rule; these are cells of a frame. */
+  section {
+    padding-block: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (max-width: 720px) {
-    .head {
-      padding-block: 139px 56px;
+  /* Below this the column is the viewport, where the edge hairlines read as a
+     browser artefact rather than as a frame — the same cut-off .framed uses. */
+  @media (max-width: 900px) {
+    .blog-frame {
+      border-inline: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
     }
 
-    .list {
-      padding-top: 56px;
+    .blog-head {
+      padding: 48px 20px 32px;
     }
 
-    li a {
-      padding-block: 1.85rem;
+    .blog-feature {
+      padding: 28px 20px;
+    }
+
+    .blog-rest {
+      padding: 28px 20px 44px;
     }
   }
 </style>

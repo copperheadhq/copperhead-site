@@ -3,6 +3,8 @@ title: 'Spec-gated in, verification-gated out'
 description: 'The two invariants that make an agent safe to point at real design files, and the six-step loop that runs between them.'
 date: 2026-07-16
 kind: 'Engineering'
+cover: 'spec-gated-in-verification-gated-out'
+coverAlt: 'A copperhead title card: one trace running through two gate pads.'
 ---
 
 An agent that can edit your schematic is only useful if you can predict what it will
@@ -25,7 +27,7 @@ time, not reconstructed from a diff.
 ## Nothing is done until the tools agree
 
 Every change is followed by ERC on the schematic and DRC on the board, through
-`kicad-cli`. Violations get read back, fixed, and re-run. The agent reports success
+`kicad-cli`. Violations get read back, fixed and re-run. The agent reports success
 when the checks report success, not when it feels finished.
 
 This is the part that makes the output auditable. The claim "this schematic is
@@ -44,7 +46,7 @@ It looks a lot like pair programming, except the codebase is a circuit board.
    the same part names and net names everywhere.
 4. **Propagate.** Change one value and it carries across every file that references
    it. The boring, easy-to-get-wrong step is the one the agent is best at.
-5. **Check the work.** ERC and DRC run, the agent reads the errors back, and fixes
+5. **Check the work.** ERC and DRC run, the agent reads the errors back and fixes
    them.
 6. **Write down why.** Every decision gets a one-line reason next to it, so the next
    change does not quietly undo it.
@@ -58,7 +60,7 @@ entire schematic to move one net has made its own work impossible to review.
 
 ## Memory that both sides can read
 
-Constraints are dual-written. Every budget, forbidden pin, and keepout lands in a
+Constraints are dual-written. Every budget, forbidden pin and keepout lands in a
 human-readable document and in the machine-readable registry in the same turn, so
 the engineer and the agent never end up looking at different versions of the truth.
 A constraint the agent knows but you cannot see is a trap waiting to spring.

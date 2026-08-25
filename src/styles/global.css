@@ -52,6 +52,19 @@
   font-display: swap;
 }
 
+/* The 400, for running text. Same family, same subset range, another 8.3 KB.
+   It is what makes --text possible: the bold in blog prose is `font-weight:
+   500`, which resolves to the file above rather than synthesising, so the two
+   instances cover the whole text role between them. No italic file, so an <em>
+   is obliqued by the browser; that was already true of Space Grotesk. */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/dm-sans-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Bold mono exists for exactly one word, so it is subset to exactly that word:
    the eight glyphs of "copperhead" come to 1.1 KB, where carrying the variable
    mono for the same effect would have cost 8 KB. Anything else set at 700 in
@@ -122,6 +135,16 @@
   /* Nav bar only. Falls back to --sans's stack, so a failed font load leaves
      the bar in the page's own face rather than in the UA's. */
   --nav: 'DM Sans', 'Space Grotesk', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
+  /* Running text on the blog, which is the one place this site sets out to be
+     supermemory's page rather than to be measured against it: their
+     --font-body is DM Sans and their --font-heading is Space Grotesk, so the
+     two roles are two faces there and were one face here. --display keeps the
+     headings; this carries standfirsts, card excerpts, prose, the summary
+     panel and the contents rail. Everything else on the site stays on --sans;
+     making the whole page DM Sans is a one-line change here if that is wanted,
+     but it would re-tune metrics on pages nobody asked about. */
+  --text: 'DM Sans', 'Space Grotesk', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, sans-serif;
 
   --maxw: 1328px; /* mastra --ds-layout-content-v2 */
@@ -210,24 +233,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Measured off supermemory's own h1: Space Grotesk 500 on 1.04 leading. Their
-   headline also runs -0.058em of tracking, but that is an optical-size value
-   for 72px type — it collapses small headings, so the tight figure is applied
+/* Space Grotesk 600 on 1.08 leading. The weight is measured off supermemory's
+   own headings rather than guessed: h1, the post title and prose h2 all compute
+   to 600 there. This comment used to claim 500, which was simply wrong, and the
+   page was rendering a weight light of the reference everywhere. Their headline
+   also runs -0.058em of tracking, but that is an optical-size value for 72px
+   type — it collapses small headings, so the tight figure is applied
    per-heading (the hero h1, .section-title) rather than to every h1/h2/h3. */
 h1,
 h2,
 h3 {
   font-family: var(--display);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.03em;
   margin: 0;
 }
 
 /* Subheads sit a step lighter than the section titles so the hierarchy reads
-   without everything shouting. Free to do with a variable face. */
+   without everything shouting. Free to do with a variable face. The gap is what
+   matters, so this tracks the base weight: 500 under a 600. */
 h3 {
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.3;
   letter-spacing: -0.015em;
 }
@@ -340,8 +367,10 @@ section {
   }
 }
 
-/* Section index, set like a schematic reference designator: a mono number and a
-   short rule, no shouty uppercase label. */
+/* Section index, set like a schematic reference designator: a mono label, no
+   shouty uppercase and no rule. The trailing 44px trace this used to draw is
+   gone; the blog index sets a chevron before the label instead, which is where
+   the reference puts its mark. */
 .index {
   display: flex;
   align-items: center;
@@ -350,13 +379,6 @@ section {
   font-size: 0.75rem;
   color: var(--copper);
   margin: 0 0 1.75rem;
-}
-
-.index::after {
-  content: '';
-  height: 1px;
-  width: 44px;
-  background: var(--trace);
 }
 
 .section-title {

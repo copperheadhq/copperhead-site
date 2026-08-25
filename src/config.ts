@@ -1,10 +1,25 @@
 /** Single source of truth for outbound links and the install command. */
 export const pkg = 'copperhead';
 
-/** git remote of the copperhead repo (brand doc says animesh-chouhan; remote wins). */
-export const repo = 'https://github.com/chouhanindustries/copperhead';
+/**
+ * git remote of the copperhead repo (brand doc says animesh-chouhan; remote wins).
+ * The repo moved from the chouhanindustries org to copperheadhq; GitHub 301s the
+ * old path, but everything published from here uses the current one. Note that
+ * src/repo-stats.ts deliberately does NOT follow this rename — see the comment
+ * on `trackedDataSlug` there.
+ */
+export const repo = 'https://github.com/copperheadhq/copperhead';
 
 export const site = 'https://copperhead.sh';
+
+/**
+ * The share card a page falls back to when it has none of its own: the site
+ * card in public/. Named here rather than inlined in Base.astro because the
+ * blog post route needs the same value for its JSON-LD `image`, and two
+ * literals a directory apart is how a page ends up unfurling one picture and
+ * telling search engines about another.
+ */
+export const siteCard = '/og-image.png';
 
 export const links = {
   repo,
@@ -41,6 +56,7 @@ export const links = {
   discord: 'https://discord.gg/24zYXuR3Pq',
   x: 'https://x.com/copperheadhq',
   linkedin: 'https://www.linkedin.com/company/copperheadhq',
+  reddit: 'https://www.reddit.com/r/copperheadhq/',
   chouhan: 'https://chouhan.ai',
   kicad: 'https://www.kicad.org/',
   openspec: 'https://github.com/Fission-AI/OpenSpec',

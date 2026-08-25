@@ -3,8 +3,11 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
-import { site, links } from '../../config';
-import { postPath, formatDate } from '../../blog';
+import PostCard from '../../components/PostCard.astro';
+import { site, links, siteCard } from '../../config';
+import { Image, getImage } from 'astro:assets';
+import avatar from '../../assets/avatar.jpg';
+import { postPath, formatDate, readingTime, defaultAuthor, coverArt } from '../../blog';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -16,18 +19,73 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const path = postPath(post.id);
+const url = new URL(path, site).href;
+
+const author = post.data.author ?? defaultAuthor;
+const minutes = readingTime(post.body ?? '');
+const cover = post.data.cover;
+const art = cover ? coverArt(cover) : null;
+const coverAlt = post.data.coverAlt ?? '';
+
+// The light half of the title card doubles as the link preview: it says more
+// about the post than the site card does, and it is emitted at 1200x630
+// because that is the size a share card wants and the size Base.astro declares
+// in og:image:width/height. An explicit ogImage still wins.
+const ogCard =
+  art?.optimised
+    ? (await getImage({ src: art.light, width: 1200, height: 630, format: 'png' })).src
+    : art?.light;
+const ogImage = post.data.ogImage ?? ogCard;
+const ogImageAlt = post.data.ogImageAlt ?? post.data.coverAlt;
+
+// One picture for the post, wherever it is asked for. The unfurl gets it from
+// og:image above; this is the same file as an absolute URL for the BlogPosting
+// node, because a crawler reading the structured data does not look at the
+// meta tags, and a post whose card and whose schema image disagree is a post
+// with two different thumbnails depending on who is asking.
+const jsonLdImage = new URL(ogImage ?? siteCard, site).href;
+
+// Two levels only. h4 and below exist in a couple of posts as run-in labels
+// rather than as places in the argument, and listing them turns the rail into
+// an outline of the formatting instead of an outline of the piece.
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+// "Keep reading": the three most recent other posts, same kind first, so a
+// reader who came for an engineering write-up is offered engineering.
+const related = (await getCollection('blog'))
+  .filter((p) => p.id !== post.id)
+  .sort((a, b) => {
+    const kind =
+      Number(b.data.kind === post.data.kind) - Number(a.data.kind === post.data.kind);
+    return kind || b.data.date.valueOf() - a.data.date.valueOf();
+  })
+  .slice(0, 3);
+
+const share = {
+  x: `https://x.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(url)}`,
+  linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+};
+
+// Footer.astro's own glyphs, so one mark serves the whole site.
+const icons = {
+  x: 'M12.6 1.5h2.45l-5.36 6.12L16 14.5h-4.94l-3.87-5.06-4.43 5.06H.31l5.73-6.55L0 1.5h5.06l3.5 4.62L12.6 1.5Zm-.86 11.54h1.36L4.32 2.89H2.86l8.88 10.15Z',
+  linkedin:
+    'M3.6 5.9v8.2H.9V5.9h2.7ZM2.25 1.4c.86 0 1.55.7 1.55 1.55 0 .86-.7 1.55-1.55 1.55a1.55 1.55 0 0 1 0-3.1ZM15.1 9.5v4.6h-2.7V9.8c0-1.1-.4-1.86-1.39-1.86-.76 0-1.2.51-1.4 1-.07.18-.09.43-.09.68v4.48H6.83s.04-7.27 0-8.02h2.69v1.14c.36-.55 1-1.33 2.43-1.33 1.78 0 3.11 1.16 3.11 3.66Z',
+  link: 'M6.6 9.4a2.6 2.6 0 0 0 3.68 0l2.3-2.3a2.6 2.6 0 0 0-3.68-3.68l-1.1 1.1M9.4 6.6a2.6 2.6 0 0 0-3.68 0l-2.3 2.3a2.6 2.6 0 0 0 3.68 3.68l1.1-1.1',
+};
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: post.data.title,
   description: post.data.description,
+  image: jsonLdImage,
   datePublished: post.data.date.toISOString(),
-  url: new URL(path, site).href,
-  mainEntityOfPage: new URL(path, site).href,
-  author: { '@type': 'Organization', name: 'Chouhan Industries', url: links.chouhan },
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Person', name: author },
   publisher: { '@type': 'Organization', name: 'Chouhan Industries', url: links.chouhan },
 };
 ---
@@ -37,86 +95,623 @@ const jsonLd = {
   description={post.data.description}
   path={path}
   ogType="article"
-  ogImage={post.data.ogImage}
-  ogImageAlt={post.data.ogImageAlt}
+  ogImage={ogImage}
+  ogImageAlt={ogImageAlt}
   publishedTime={post.data.date.toISOString()}
   jsonLd={jsonLd}
 >
   <Navbar home={false} />
   <main id="top">
-    <article>
-      <div class="wrap">
-        <header>
-          <div class="meta">
-            <span class="kind">{post.data.kind}</span>
-            <time datetime={post.data.date.toISOString()}>
-              {formatDate(post.data.date)}
-            </time>
-          </div>
-          <h1>{post.data.title}</h1>
-          <p class="standfirst">{post.data.description}</p>
-        </header>
+    <article class="post-frame">
+      <header class="post-head">
+        <a class="all-articles" href="/blog/">
+          <span class="all-articles-ic" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="11" height="11" focusable="false">
+              <path
+                d="M10 3 5 8l5 5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="square"
+              />
+            </svg>
+          </span>
+          All articles
+        </a>
 
-        <div class="prose">
-          <Content />
+        <div class="post-eyebrow">
+          <span class="post-eyebrow-cat">{post.data.kind}</span>
+          <span class="post-eyebrow-sep" aria-hidden="true">/</span>
+          <time datetime={post.data.date.toISOString()}>
+            {formatDate(post.data.date)}
+          </time>
         </div>
 
-        <footer class="end">
-          <a href="/blog/">All posts</a>
-          <a href={links.repo}>View on GitHub</a>
-        </footer>
+        <h1 class="post-title">{post.data.title}</h1>
+        <div class="post-rt">{minutes} minutes read</div>
+      </header>
+
+      {/* Meta rail · content · contents. The two rails are hairline-ruled
+          columns of the same frame as the header, which is what keeps the
+          measure of the middle column honest: 1328 less two 220s and the
+          content padding lands on 800px, the width the prose scale below was
+          set against. Under 1080 both rails leave the grid — the meta becomes
+          a strip above the article and the contents list goes away, since a
+          sticky outline with nothing to stick to is just a second header. */}
+      <div class="post-layout">
+        <aside class="post-rail">
+          <div class="post-rail-sticky">
+            <div class="post-author">
+              <Image
+                class="post-author-img"
+                src={avatar}
+                alt=""
+                aria-hidden="true"
+                width={40}
+                height={40}
+                densities={[1, 2]}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="post-author-name">{author}</div>
+            </div>
+
+            <div class="post-share">
+              <div class="post-share-label">Share this article</div>
+              <div class="post-share-row">
+                <a
+                  class="post-share-btn"
+                  href={share.x}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on X"
+                >
+                  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d={icons.x} />
+                  </svg>
+                </a>
+                <a
+                  class="post-share-btn"
+                  href={share.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on LinkedIn"
+                >
+                  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d={icons.linkedin} />
+                  </svg>
+                </a>
+                <button class="post-share-btn" type="button" data-copy-link aria-label="Copy link">
+                  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+                    <path
+                      d={icons.link}
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="post-content">
+          {
+            art && (
+              <figure class="post-hero">
+                {art.optimised ? (
+                  <>
+                    <Image
+                      class="on-light"
+                      src={art.light}
+                      alt={coverAlt}
+                      widths={[800, 1600]}
+                      sizes="(max-width: 1080px) 100vw, 800px"
+                      format="webp"
+                      loading="eager"
+                      decoding="async"
+                    />
+                    <Image
+                      class="on-dark"
+                      src={art.dark}
+                      alt=""
+                      aria-hidden="true"
+                      widths={[800, 1600]}
+                      sizes="(max-width: 1080px) 100vw, 800px"
+                      format="webp"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </>
+                ) : (
+                  <img src={art.light} alt={coverAlt} loading="eager" decoding="async" />
+                )}
+              </figure>
+            )
+          }
+
+          {/* The description, promoted out of the meta tags and onto the page.
+              It is already written as the one-sentence summary of the post, so
+              the panel restates nothing — it just stops the reader having to
+              infer the argument from the first paragraph. */}
+          <div class="post-summary">
+            <div class="post-summary-label">Summary</div>
+            <p>{post.data.description}</p>
+          </div>
+
+          <div class="prose">
+            <Content />
+          </div>
+
+          <footer class="end">
+            <a href="/blog/">All posts</a>
+            <a href={links.repo}>View on GitHub</a>
+          </footer>
+        </div>
+
+        <nav class="post-toc" aria-label="On this page">
+          {
+            toc.length > 0 && (
+              <div class="post-toc-sticky">
+                <div class="post-toc-label">On this page</div>
+                <ul>
+                  {toc.map((h) => (
+                    <li class={h.depth === 3 ? 'toc-sub' : undefined}>
+                      <a href={`#${h.slug}`}>{h.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+        </nav>
       </div>
+
+      {
+        related.length > 0 && (
+          <section class="post-related">
+            <p class="index">Keep reading</p>
+            <div class="post-related-grid">
+              {related.map((p) => (
+                <PostCard
+                  href={postPath(p.id)}
+                  title={p.data.title}
+                  description={p.data.description}
+                  kind={p.data.kind}
+                  date={p.data.date}
+                  cover={p.data.cover}
+                  coverAlt={p.data.coverAlt}
+                  author={p.data.author ?? defaultAuthor}
+                  minutes={readingTime(p.body ?? '')}
+                />
+              ))}
+            </div>
+          </section>
+        )
+      }
     </article>
   </main>
   <Footer />
 </Base>
 
+<script>
+  /* Copy link, and scrollspy for the contents rail. */
+  const copy = document.querySelector<HTMLButtonElement>('[data-copy-link]');
+  copy?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      copy.classList.add('copied');
+      setTimeout(() => copy.classList.remove('copied'), 1400);
+    } catch {
+      /* no clipboard permission; the address bar still has the URL */
+    }
+  });
+
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.post-toc-sticky a')];
+  const targets = tocLinks
+    .map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+    .filter((el): el is HTMLElement => el !== null);
+
+  /* Not gated on prefers-reduced-motion: marking the current heading moves
+     nothing, it only says where the reader is, and a reader who has asked for
+     less motion has not asked for less information. */
+  if (targets.length > 0) {
+    /* Mark the last heading that has crossed the top of the reading area,
+       rather than the first one intersecting: at the bottom of a long post no
+       heading is on screen at all, and "nothing is active" reads as broken. */
+    const mark = () => {
+      const line = 120;
+      let current = targets[0];
+      for (const t of targets) {
+        if (t.getBoundingClientRect().top <= line) current = t;
+      }
+      for (const a of tocLinks) {
+        a.classList.toggle('active', decodeURIComponent(a.hash.slice(1)) === current.id);
+      }
+    };
+
+    let queued = false;
+    addEventListener(
+      'scroll',
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          mark();
+        });
+      },
+      { passive: true },
+    );
+    mark();
+  }
+</script>
+
 <style>
-  article {
-    padding-block: 179px var(--pad-y);
+  main {
+    padding-top: calc(var(--nav-h) + 1px);
   }
 
-  /* Measure is set on the column, not on each element, so code blocks and the
-     output table line up with the paragraphs instead of running wide. */
-  .wrap {
-    max-width: 760px;
+  .post-frame {
+    width: 100%;
+    max-width: var(--maxw);
+    margin-inline: auto;
+    border-inline: 1px solid var(--line);
   }
 
-  .meta {
-    display: flex;
+  /* ---- Masthead ---- */
+
+  .post-head {
+    padding: 28px 32px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .all-articles {
+    display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 0.5rem;
     font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-size: 12px;
+    letter-spacing: 0.04em;
     color: var(--text-dim);
-    margin-bottom: 1.5rem;
+    text-decoration: none;
+    margin-bottom: 1.25rem;
+    transition: color 0.15s ease;
   }
 
-  .kind {
+  .all-articles:hover {
     color: var(--copper);
   }
 
-  h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
+  .all-articles-ic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--panel);
+  }
+
+  .all-articles:hover .all-articles-ic {
+    border-color: var(--copper);
+    color: var(--copper);
+  }
+
+  .post-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--text-dim) 80%, transparent);
+    margin-bottom: 0.85rem;
+  }
+
+  .post-eyebrow-cat {
+    color: var(--copper);
+  }
+
+  .post-eyebrow-sep {
+    color: var(--line-hi);
+  }
+
+  .post-title {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    max-width: 20ch;
     text-wrap: balance;
   }
 
-  .standfirst {
-    color: var(--text-dim);
-    font-size: 1.12rem;
-    margin: 1.5rem 0 0;
-    max-width: 58ch;
+  .post-rt {
+    margin-top: 1rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--text-dim) 80%, transparent);
   }
 
+  /* ---- Three-column body ---- */
+
+  .post-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 220px;
+    align-items: start;
+  }
+
+  .post-rail,
+  .post-toc {
+    position: relative;
+    align-self: stretch;
+  }
+
+  .post-rail {
+    border-right: 1px solid var(--line);
+  }
+
+  .post-toc {
+    border-left: 1px solid var(--line);
+  }
+
+  .post-rail-sticky,
+  .post-toc-sticky {
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+    padding: 1.75rem 1.5rem;
+  }
+
+  /* A twenty-heading post outruns the sticky box, and an outline whose tail is
+     off-screen is worse than no outline: it scrolls inside its own column. */
+  .post-toc-sticky {
+    max-height: calc(100vh - var(--nav-h) - 48px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .post-content {
+    padding: 1.75rem 2.75rem 3rem;
+    min-width: 0;
+  }
+
+  /* ---- Meta rail ---- */
+
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 2rem;
+  }
+
+  /* The portrait, cropped to head and shoulders in the asset rather than by
+     object-position here: the source is square and so is this slot, so `cover`
+     has nothing to crop and the face would sit small in the middle of its own
+     background. The 1px ring is what separates a light photograph from the
+     page it sits on. */
+  .post-author-img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    object-fit: cover;
+    background: var(--panel);
+  }
+
+  /* Name only, as the reference rail carries. A second line naming the company
+     under it wraps to two lines of its own in a 220px column, and the footer
+     and the nav already say whose site this is. */
+  .post-author-name {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  .post-share-label,
+  .post-toc-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.85rem;
+  }
+
+  .post-share-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .post-share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--text-dim);
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+    transition:
+      border-color 0.16s ease,
+      color 0.16s ease,
+      background 0.16s ease;
+  }
+
+  .post-share-btn:hover {
+    border-color: var(--copper);
+    color: var(--copper);
+    background: color-mix(in srgb, var(--copper) 8%, var(--bg));
+  }
+
+  .post-share-btn.copied::after {
+    content: 'Copied';
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 10px;
+    background: var(--text);
+    color: var(--bg);
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+
+  /* ---- Contents rail ---- */
+
+  .post-toc-sticky ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .post-toc-sticky li {
+    margin-bottom: 0.1rem;
+  }
+
+  .post-toc-sticky li.toc-sub a {
+    padding-left: 1rem;
+    font-size: 12px;
+  }
+
+  .post-toc-sticky a {
+    font-family: var(--text);
+    display: block;
+    padding: 0.3rem 0 0.3rem 0.7rem;
+    border-left: 2px solid var(--line);
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .post-toc-sticky a:hover {
+    color: var(--text);
+  }
+
+  .post-toc-sticky a.active {
+    color: var(--text);
+    border-left-color: var(--copper);
+    font-weight: 500;
+  }
+
+  /* ---- Article furniture ---- */
+
+  .post-hero {
+    margin: 0 0 2rem;
+  }
+
+  .post-hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
+
+  /* Theme pairing, on StageFlow.astro's rule. */
+  .post-hero .on-dark {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .post-hero .on-light {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .post-hero .on-dark {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .post-hero .on-light {
+      display: none;
+    }
+
+    :global(:root:not([data-theme='light'])) .post-hero .on-dark {
+      display: block;
+    }
+  }
+
+  .post-summary {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 1.15rem 1.3rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .post-summary-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 0.6rem;
+  }
+
+  .post-summary p {
+    font-family: var(--text);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-dim);
+  }
+
+  /* ---- Keep reading ---- */
+
+  .post-related {
+    border-top: 1px solid var(--line);
+    padding: 2.5rem 32px 3.5rem;
+  }
+
+  .post-related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* section is padded by the global rule; this one is a cell of the frame. */
+  section {
+    padding-block: 0;
+  }
+
+  /* ---- Prose ----
+
+     Unchanged from the single-column layout this page used to be: the measure
+     now comes from the middle grid column (1328 − 440 − 88 = 800px) instead of
+     from a .wrap cap, so every rule below still meets the width it was set
+     against. */
+
+  /* Running text is --text (DM Sans), headings stay --display (Space Grotesk),
+     which is the reference's split. Set on .prose rather than on each element
+     so anything a post's MDX introduces inherits it; the code and terminal
+     blocks below re-assert --mono for themselves. */
   .prose {
-    margin-top: 3.5rem;
-    border-top: 1px solid var(--hairline);
-    padding-top: 3.5rem;
+    font-family: var(--text);
   }
 
   .prose :global(p) {
     margin: 0 0 1.4rem;
+  }
+
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4) {
+    font-family: var(--display);
   }
 
   /* A paragraph that is one italic run is this blog's caption convention:
@@ -128,8 +723,9 @@ const jsonLd = {
     color: var(--text-dim);
   }
 
+  /* 26px, the reference's prose h2. It was 24. */
   .prose :global(h2) {
-    font-size: 1.5rem;
+    font-size: 1.625rem;
     margin: 3.25rem 0 1.25rem;
   }
 
@@ -195,16 +791,6 @@ const jsonLd = {
     color: light-dark(var(--shiki-light), var(--shiki-dark));
   }
 
-  @media (max-width: 720px) {
-    .prose > :global(pre) {
-      padding: 18px 16px;
-    }
-
-    .prose > :global(pre code) {
-      font-size: 0.8125rem; /* 13px, the quickstart's phone size */
-    }
-  }
-
   .prose :global(:not(pre) > code) {
     background: var(--surface);
     border: 1px solid var(--hairline);
@@ -254,25 +840,101 @@ const jsonLd = {
     color: var(--text-dim);
   }
 
-  /* Big screens. 760px at 17px is already around 80 characters a line, so
-     widening the column on its own would push the measure past comfortable
-     rather than improve it. Width and type scale move together instead: 18px in
-     an 800px column is the same line length as 17px in 760, on a page that no
-     longer looks marooned in the middle of a large display. */
+  /* Big screens. 800px at 17px is already past 80 characters a line, so the
+     type steps up with the column rather than the column widening alone:
+     18px in an 800px measure is the line length 17px had at 760. */
   @media (min-width: 1200px) {
-    .wrap {
-      max-width: 800px;
-    }
-
     .prose {
       font-size: 1.125rem;
     }
   }
 
-  /* Tables can still exceed the measure on a phone; let this one scroll rather
-     than forcing the page body sideways. The first column also gives up its
-     nowrap, which keeps most tables from needing to scroll at all. */
-  @media (max-width: 720px) {
+  .end {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+  }
+
+  /* ---- Collapse ---- */
+
+  @media (max-width: 1080px) {
+    .post-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .post-rail,
+    .post-toc {
+      border: 0;
+    }
+
+    .post-rail {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .post-rail-sticky {
+      position: static;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: 1.25rem 2rem;
+    }
+
+    .post-author {
+      margin-bottom: 0;
+    }
+
+    .post-content {
+      padding: 2rem 2rem 2.5rem;
+    }
+
+    .post-toc {
+      display: none;
+    }
+
+    .post-related-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 900px) {
+    .post-frame {
+      border-inline: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .post-head {
+      padding: 24px 20px 20px;
+    }
+
+    .post-content {
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .post-rail-sticky {
+      padding: 1.1rem 1.25rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+
+    .post-related {
+      padding: 2.5rem 1.25rem 3rem;
+    }
+
+    .post-related-grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* Tables can still exceed the measure on a phone; let this one scroll
+       rather than forcing the page body sideways. The first column also gives
+       up its nowrap, which keeps most tables from needing to scroll at all. */
     .prose :global(table) {
       display: block;
       overflow-x: auto;
@@ -287,31 +949,13 @@ const jsonLd = {
       padding-right: 0.85rem;
       min-width: 5rem;
     }
-  }
 
-  .end {
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--hairline);
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    font-family: var(--mono);
-    font-size: 0.8rem;
-  }
-
-  @media (max-width: 720px) {
-    article {
-      padding-block: 139px var(--pad-y);
+    .prose > :global(pre) {
+      padding: 18px 16px;
     }
 
-    .prose {
-      margin-top: 2.5rem;
-      padding-top: 2.5rem;
-    }
-
-    .standfirst {
-      font-size: 1.05rem;
+    .prose > :global(pre code) {
+      font-size: 0.8125rem; /* 13px, the quickstart's phone size */
     }
   }
 </style>

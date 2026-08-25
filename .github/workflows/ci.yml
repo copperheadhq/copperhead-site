@@ -15,6 +15,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+
+      # blog-post skill rules 1 and 2: no em dashes, no serial comma, across the
+      # blog and research collections. Runs before the build so a style failure
+      # is not buried under a page render.
+      - name: prose lint
+        run: npm run lint:prose
+
       - run: npm run build
 
       # W-6: no em-dashes anywhere in rendered copy

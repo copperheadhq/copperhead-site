@@ -21,7 +21,7 @@ sha256 of the brief into its run metadata, so a brief edited halfway through the
 pipeline shows up as a changed hash instead of quietly moving the target.
 
 Then git gets set up. `create` initializes a repository, sets a repo-local identity,
-writes the baseline `.gitignore`, makes the first commit, and commits the brief on
+writes the baseline `.gitignore`, makes the first commit and commits the brief on
 top. That is not a convenience. Every stage snapshots HEAD before it starts, and a
 failed run restores that snapshot with a hard reset and a clean, sparing only the
 run's own audit trail. Committing the brief up front is what guarantees the file the
@@ -44,7 +44,7 @@ commit would be a surprise rather than a courtesy.
 | Firmware     | `firmware/` with generated `pins.h`      | Source files on disk           |
 | Dev plan     | bring-up order, test points, risks       | A written plan, not empty      |
 
-Each stage is a complete agent run with its own prompt, its own turn budget, and its
+Each stage is a complete agent run with its own prompt, its own turn budget and its
 own commit. It is not one long conversation with eight topics in it. A stage that
 cannot pass its gate stops the pipeline and prints the exact command to pick up from
 there.
@@ -70,7 +70,7 @@ stages complete that have produced nothing. Every gate looks for evidence instea
   boilerplate nor one of the auto-generated refdes bullets.
 - **Parts**: at least one BOM row whose part number column is not the `UNVERIFIED`
   placeholder. Somebody chose something.
-- **Schematic**: symbols exist, the BOM and pinout tables agree with them, and ERC
+- **Schematic**: symbols exist, the BOM and pinout tables agree with them and ERC
   passes.
 
 The schematic gate is three conditions because each one was learned separately.
@@ -143,7 +143,7 @@ successfully with DRC failing, so the gate does not need to ask twice.
 An agent cannot create the KiCad files itself. `write_file` refuses KiCad files
 outright, and `edit_file` needs an existing file to anchor into. So immediately
 before stage 4, the pipeline drops an empty schematic, a blank board with a default
-outline, and a project file into place, and wires them into the config.
+outline and a project file into place, and wires them into the config.
 
 That scaffold is recreated before every attempt rather than once per stage. A failed
 attempt's rollback deletes it, because at that point it is still untracked, and a
