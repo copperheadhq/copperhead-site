@@ -53,7 +53,7 @@
 }
 
 /* The 400, for running text. Same family, same subset range, another 8.3 KB.
-   It is what makes --text possible: the bold in blog prose is `font-weight:
+   It is what makes --body possible: the bold in blog prose is `font-weight:
    500`, which resolves to the file above rather than synthesising, so the two
    instances cover the whole text role between them. No italic file, so an <em>
    is obliqued by the browser; that was already true of Space Grotesk. */
@@ -143,8 +143,13 @@
      headings; this carries standfirsts, card excerpts, prose, the summary
      panel and the contents rail. Everything else on the site stays on --sans;
      making the whole page DM Sans is a one-line change here if that is wanted,
-     but it would re-tune metrics on pages nobody asked about. */
-  --text: 'DM Sans', 'Space Grotesk', -apple-system, BlinkMacSystemFont,
+     but it would re-tune metrics on pages nobody asked about.
+
+     Named --body and not --text: --text is the foreground colour twenty lines
+     up, and a second declaration of it in the same :root does not sit beside
+     the first, it replaces it. Every `color: var(--text)` on the site went
+     invalid, which on a dark page is black type on a dark ground. */
+  --body: 'DM Sans', 'Space Grotesk', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, sans-serif;
 
   --maxw: 1328px; /* mastra --ds-layout-content-v2 */

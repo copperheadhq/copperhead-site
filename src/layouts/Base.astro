@@ -194,7 +194,7 @@ const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
       crossorigin
     />
 
-    {/* The 400 sets the blog's running text (--text in global.css). Preloaded
+    {/* The 400 sets the blog's running text (--body in global.css). Preloaded
         with the 500 rather than discovered from the stylesheet, for the same
         reason: a body face that arrives a round trip late reflows the article
         under the reader. It costs 8.3 KB on pages that do not use it, which is

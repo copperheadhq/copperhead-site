@@ -26,10 +26,17 @@ function normalise(s) {
   return s.replace(/\s+/g, ' ').trim()
 }
 
+// Recursive, because the collections are loaded with a `**/*.{md,mdx}` glob
+// (src/content.config.ts). Walking one level deep would let a post in a
+// subdirectory publish unlinted while CI still printed "prose ok".
 function collect(dir) {
-  return readdirSync(join(root, dir))
-    .filter((f) => f.endsWith('.md') || f.endsWith('.mdx'))
-    .map((f) => join(root, dir, f))
+  const out = []
+  for (const e of readdirSync(join(root, dir), { withFileTypes: true })) {
+    if (e.isDirectory()) out.push(...collect(join(dir, e.name)))
+    else if (e.name.endsWith('.md') || e.name.endsWith('.mdx'))
+      out.push(join(root, dir, e.name))
+  }
+  return out
 }
 
 // Everything the rules do not apply to: fenced code, inline code, frontmatter

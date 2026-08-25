@@ -18,16 +18,21 @@ const blog = defineCollection({
     /**
      * The post's title card. Two forms:
      *
-     *   '/blog/cards/<slug>'          a themed PAIR; '-light.png' and
-     *                                 '-dark.png' are appended
-     *   '/blog/cards/<slug>.png'      one image, used on both themes
+     *   'meet-copperhead'        a bare name, carrying no directory and no
+     *                            extension: a themed PAIR under
+     *                            src/assets/cards, '-light.png' and
+     *                            '-dark.png' appended
+     *   '/blog/art/board.png'    a site-root path carrying a file extension:
+     *                            one image from public/, both themes
      *
-     * A path carrying a file extension is taken literally, anything else is
-     * treated as the base of a pair. The pair is what the house renderer
-     * produces (diagrams/post-cards.html via scripts/render-cards.mjs, named
-     * after the post's slug); the single form is for artwork that came from
-     * somewhere else. A post without either gets the dot-field placeholder in
-     * PostCard.astro rather than a gap.
+     * A value carrying a file extension is taken literally, anything else is
+     * treated as the name of a rendered pair. The pair is what the house
+     * renderer produces (diagrams/post-cards.html via
+     * scripts/render-cards.mjs, named after the post's slug); the single form
+     * is for artwork that came from somewhere else. coverArt in src/blog.ts
+     * resolves both, and throws on a name it has no rendered pair for. A post
+     * without either gets the dot-field placeholder in PostCard.astro rather
+     * than a gap.
      */
     cover: z.string().optional(),
     /** Alt text for that pair. Describes the picture, not the post. */

@@ -138,7 +138,7 @@ const jsonLd = {
           set against. Under 1080 both rails leave the grid — the meta becomes
           a strip above the article and the contents list goes away, since a
           sticky outline with nothing to stick to is just a second header. */}
-      <div class="post-layout">
+      <div class:list={['post-layout', toc.length === 0 && 'no-toc']}>
         <aside class="post-rail">
           <div class="post-rail-sticky">
             <div class="post-author">
@@ -251,9 +251,9 @@ const jsonLd = {
           </footer>
         </div>
 
-        <nav class="post-toc" aria-label="On this page">
-          {
-            toc.length > 0 && (
+        {
+          toc.length > 0 && (
+            <nav class="post-toc" aria-label="On this page">
               <div class="post-toc-sticky">
                 <div class="post-toc-label">On this page</div>
                 <ul>
@@ -264,9 +264,9 @@ const jsonLd = {
                   ))}
                 </ul>
               </div>
-            )
-          }
-        </nav>
+            </nav>
+          )
+        }
       </div>
 
       {
@@ -446,6 +446,14 @@ const jsonLd = {
     align-items: start;
   }
 
+  /* A post that delegates its body to an imported partial returns no headings
+     from render(), so there is no outline to rail. The column goes with it
+     rather than standing there ruled and empty: from-brief-to-gerbers is that
+     post, and it was holding 220px for nothing. */
+  .post-layout.no-toc {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
   .post-rail,
   .post-toc {
     position: relative;
@@ -587,7 +595,7 @@ const jsonLd = {
   }
 
   .post-toc-sticky a {
-    font-family: var(--text);
+    font-family: var(--body);
     display: block;
     padding: 0.3rem 0 0.3rem 0.7rem;
     border-left: 2px solid var(--line);
@@ -664,7 +672,7 @@ const jsonLd = {
   }
 
   .post-summary p {
-    font-family: var(--text);
+    font-family: var(--body);
     margin: 0;
     font-size: 0.95rem;
     line-height: 1.65;
@@ -701,7 +709,7 @@ const jsonLd = {
      so anything a post's MDX introduces inherits it; the code and terminal
      blocks below re-assert --mono for themselves. */
   .prose {
-    font-family: var(--text);
+    font-family: var(--body);
   }
 
   .prose :global(p) {
@@ -932,9 +940,17 @@ const jsonLd = {
       grid-template-columns: 1fr;
     }
 
-    /* Tables can still exceed the measure on a phone; let this one scroll
-       rather than forcing the page body sideways. The first column also gives
-       up its nowrap, which keeps most tables from needing to scroll at all. */
+  }
+
+  /* 720, not the 640 the layout collapses at: these are about the measure, not
+     about the frame. The rails leave the grid at 1080 and the content box is
+     already narrower than the widest tables here well before 640, so folding
+     them into the phone block left 641-720px scrolling the page body sideways.
+     
+     Tables can still exceed the measure on a phone; let this one scroll rather
+     than forcing the page body sideways. The first column also gives up its
+     nowrap, which keeps most tables from needing to scroll at all. */
+  @media (max-width: 720px) {
     .prose :global(table) {
       display: block;
       overflow-x: auto;
