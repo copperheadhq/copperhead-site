@@ -15,6 +15,30 @@ const blog = defineCollection({
     kind: z.string(),
     /** Path to the post's pitch deck PDF, referenced in the body as {frontmatter.deck}. */
     deck: z.string().optional(),
+    /**
+     * The post's title card. Two forms:
+     *
+     *   'meet-copperhead'        a bare name, carrying no directory and no
+     *                            extension: a themed PAIR under
+     *                            src/assets/cards, '-light.png' and
+     *                            '-dark.png' appended
+     *   '/blog/art/board.png'    a site-root path carrying a file extension:
+     *                            one image from public/, both themes
+     *
+     * A value carrying a file extension is taken literally, anything else is
+     * treated as the name of a rendered pair. The pair is what the house
+     * renderer produces (diagrams/post-cards.html via
+     * scripts/render-cards.mjs, named after the post's slug); the single form
+     * is for artwork that came from somewhere else. coverArt in src/blog.ts
+     * resolves both, and throws on a name it has no rendered pair for. A post
+     * without either gets the dot-field placeholder in PostCard.astro rather
+     * than a gap.
+     */
+    cover: z.string().optional(),
+    /** Alt text for that pair. Describes the picture, not the post. */
+    coverAlt: z.string().optional(),
+    /** Byline. Defaults to defaultAuthor in blog.ts. */
+    author: z.string().optional(),
     /** Site-root-relative path of a post-specific 1200x630 share image; the site card otherwise. */
     ogImage: z.string().optional(),
     /** Alt text for that image. Describes the picture, not the post. */

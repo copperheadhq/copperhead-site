@@ -1,0 +1,67 @@
+---
+// A figure drawn by us rather than screenshotted, so it exists twice: one PNG
+// per theme, rendered from a page in diagrams/ by scripts/render-diagram.mjs.
+// `src` is the pair's prefix with no theme suffix and no extension, the same
+// shape a post's `cover` takes.
+//
+// The pair swaps on the OS preference and on the site's own toggle, which
+// stamps data-theme on the root. Each image links to the full-size file, since
+// a 1600px canvas read in an 800px column is worth opening.
+//
+// StageFlow.astro predates this and is the same idea wired to one fixed pair.
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+const { src, alt, width, height } = Astro.props;
+---
+
+<figure class="drawn">
+  <a class="light" href={`${src}-light.png`} target="_blank">
+    <img src={`${src}-light.png`} width={width} height={height} loading="lazy" alt={alt} />
+  </a>
+  <a class="dark" href={`${src}-dark.png`} target="_blank">
+    <img src={`${src}-dark.png`} width={width} height={height} loading="lazy" alt={alt} />
+  </a>
+  <figcaption><slot /></figcaption>
+</figure>
+
+<style>
+  .drawn {
+    margin: 2.4rem auto;
+  }
+
+  .drawn img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+  }
+
+  /* theme pairing: the dark render on the dark page, in both the
+     OS-preference and explicit-toggle paths */
+  .dark {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .light {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .dark {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .light {
+      display: none;
+    }
+
+    :global(:root:not([data-theme='light'])) .dark {
+      display: block;
+    }
+  }
+</style>

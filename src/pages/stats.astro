@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import TrendChart from "../components/TrendChart.astro";
 import { links } from "../config";
-import { repoStats, reportUrl, trackedSlug, trailing } from "../repo-stats";
+import { repoStats, reportUrl, trackedDataSlug, trailing } from "../repo-stats";
 
 // The public face of .github/workflows/repo-stats.yml. Everything on this page is
 // read at build time from the `github-repo-stats` branch and rendered to static
@@ -71,7 +71,7 @@ const tiles = s
 // The owner/repo prefix is the same on every row, so it is noise in a table
 // about one repo — strip it, and give the bare repo root a name of its own.
 const shortPath = (p: string) => {
-  const rest = p.replace(new RegExp(`^/${trackedSlug}`), "");
+  const rest = p.replace(new RegExp(`^/${trackedDataSlug}`), "");
   return rest === "" || rest === "/" ? "repository home" : rest;
 };
 

@@ -1,0 +1,333 @@
+---
+/**
+ * A post as a card: image over a body, on supermemory.ai/blog's geometry.
+ *
+ * Two variants off one component, as theirs is. `large` turns the column into
+ * a row and gives the media 52% of it — that is the featured slot at the top
+ * of the index. `default` is the three-up grid cell. The difference is entirely
+ * in the CSS below; the markup is the same either way, which is what keeps the
+ * two from drifting when one of them is edited.
+ *
+ * The whole card is one anchor. Nothing inside it is separately focusable, so
+ * a keyboard reader gets one stop per post rather than one per line of meta.
+ */
+import { Image } from 'astro:assets';
+import { formatDate, kindSlug, coverArt } from '../blog';
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  kind: string;
+  date: Date;
+  /** Base path of the themed card pair; '-light.png'/'-dark.png' are appended.
+      Without one the card draws a dot field. */
+  cover?: string;
+  coverAlt?: string;
+  author?: string;
+  /** Reading time in minutes. Omitted for entries that are not posts (the FAQ). */
+  minutes?: number;
+  large?: boolean;
+  /** The post already shown in the featured slot: hidden until a filter runs. */
+  featured?: boolean;
+}
+
+const {
+  href,
+  title,
+  description,
+  kind,
+  date,
+  cover,
+  coverAlt,
+  author,
+  minutes,
+  large = false,
+  featured = false,
+} = Astro.props;
+
+const art = cover ? coverArt(cover) : null;
+
+// The widths each slot actually paints, at 1x and 2x. Handing the browser a
+// 2400px card for a 405px cell is what made the type on it go soft.
+const widths = large ? [660, 1320] : [420, 840];
+const sizes = large
+  ? '(max-width: 760px) 100vw, 52vw'
+  : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
+---
+
+<a
+  class:list={['post-card', large ? 'large' : 'default']}
+  href={href}
+  data-kind={kindSlug(kind)}
+  data-featured={featured ? '' : undefined}
+>
+  <div class="post-card-media">
+    {
+      art ? (
+        <>
+          {art.optimised ? (
+            <>
+              <Image
+                class="on-light"
+                src={art.light}
+                alt={coverAlt ?? ''}
+                widths={widths}
+                sizes={sizes}
+                format="webp"
+                loading="lazy"
+                decoding="async"
+              />
+              <Image
+                class="on-dark"
+                src={art.dark}
+                alt=""
+                aria-hidden="true"
+                widths={widths}
+                sizes={sizes}
+                format="webp"
+                loading="lazy"
+                decoding="async"
+              />
+            </>
+          ) : (
+            <img
+              src={art.light}
+              alt={coverAlt ?? ''}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+        </>
+      ) : (
+        <div class="post-card-fallback" aria-hidden="true">
+          <span>{kind.toLowerCase()}</span>
+        </div>
+      )
+    }
+  </div>
+
+  <div class="post-card-body">
+    <div class="post-card-meta">
+      <span class="post-card-cat">{kind}</span>
+      <span class="post-card-dot">·</span>
+      <time datetime={date.toISOString()}>{formatDate(date)}</time>
+    </div>
+
+    <h3 class="post-card-title">{title}</h3>
+    <p class="post-card-excerpt">{description}</p>
+
+    <div class="post-card-foot">
+      {author && <span class="post-card-author">{author}</span>}
+      {minutes && <span class="post-card-rt">{minutes} min read</span>}
+    </div>
+  </div>
+</a>
+
+<style>
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .post-card:hover {
+    border-color: var(--line-hi);
+    transform: translateY(-2px);
+  }
+
+  .post-card-media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--copper) 7%, var(--bg));
+  }
+
+  .post-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Theme pairing, on StageFlow.astro's rule: the dark render on the dark page,
+     in both the OS-preference and the explicit-toggle path. The dark copy is
+     aria-hidden and alt-empty so a screen reader is offered the card once, not
+     twice. */
+  /* Scoped under .post-card-media, not written bare: `.post-card-media img`
+     above sets display:block and carries an element selector, so a bare
+     `.on-dark` loses to it on specificity and both copies paint on a light
+     page. */
+  .post-card-media .on-dark {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .post-card-media .on-light {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .post-card-media .on-dark {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .post-card-media .on-light {
+      display: none;
+    }
+
+    :global(:root:not([data-theme='light'])) .post-card-media .on-dark {
+      display: block;
+    }
+  }
+
+  /* No cover art: the dot field the rest of the site already uses, with the
+     post's own kind set in it. A placeholder that says something beats a grey
+     rectangle, and it keeps the grid's rows the same height either way. */
+  .post-card-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(var(--trace) 1px, transparent 1px) 0 0 / 16px 16px,
+      color-mix(in srgb, var(--copper) 7%, var(--bg));
+  }
+
+  .post-card-fallback span {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--copper);
+    opacity: 0.75;
+  }
+
+  .post-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.1rem 1.15rem 1.25rem;
+    flex: 1;
+  }
+
+  .post-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--text-dim) 80%, transparent);
+  }
+
+  .post-card-cat {
+    color: var(--copper);
+  }
+
+  .post-card-title {
+    font-family: var(--display);
+    font-size: 1.125rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  /* Two lines, clamped. The descriptions on this site are written as full
+     sentences and run longer than a card can hold; clamping keeps every cell
+     in a row the same shape without shortening the copy the meta tags use. */
+  .post-card-excerpt {
+    font-family: var(--body);
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-card-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: auto;
+    padding-top: 0.4rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: color-mix(in srgb, var(--text-dim) 80%, transparent);
+  }
+
+  .post-card-author {
+    color: var(--text-dim);
+  }
+
+  .post-card-author + .post-card-rt::before {
+    content: '·';
+    margin-right: 0.6rem;
+    color: color-mix(in srgb, var(--text-dim) 80%, transparent);
+  }
+
+  /* ---- Featured variant ---- */
+
+  .post-card.large {
+    flex-direction: row;
+  }
+
+  /* 16/9, not the 16/10 their stylesheet declares: the featured card sets an
+     inline aspect-ratio from the cover's own dimensions, and every cover they
+     run is 16/9, so 16/10 is a rule their page never actually renders. At this
+     width the difference is 40px of card height, all of it empty. */
+  .large .post-card-media {
+    flex: 0 0 52%;
+    aspect-ratio: 16 / 9;
+    max-height: 560px;
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+  }
+
+  .large .post-card-body {
+    justify-content: center;
+    gap: 0.85rem;
+    padding: 2.25rem 2.5rem;
+  }
+
+  .large .post-card-title {
+    font-size: 1.5rem;
+  }
+
+  .large .post-card-excerpt {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  .large .post-card-foot {
+    margin-top: 0.4rem;
+  }
+
+  @media (max-width: 760px) {
+    .post-card.large {
+      flex-direction: column;
+    }
+
+    .large .post-card-media {
+      flex: none;
+      aspect-ratio: 16 / 9;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .large .post-card-body {
+      padding: 1.25rem 1.15rem 1.5rem;
+    }
+  }
+</style>

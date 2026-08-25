@@ -2,16 +2,27 @@
 import Base from '../../layouts/Base.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import { getImage } from 'astro:assets';
 import { site, links } from '../../config';
 import { groups, stripTags } from '../../faq';
+import { coverArt, faqCover } from '../../blog';
 
 // Questions and answers come from src/faq.ts, which the homepage's short FAQ
 // section reads too.
+
+// This page is listed on the blog index with a rendered title card of its own
+// (index.astro's `faq` entry), so it unfurls that card rather than the site
+// card, on the posts' rule: light half, 1200x630, the size Base.astro declares.
+const art = coverArt(faqCover.cover);
+const ogImage = (
+  await getImage({ src: art.light, width: 1200, height: 630, format: 'png' })
+).src;
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   url: new URL('/blog/faq/', site).href,
+  image: new URL(ogImage, site).href,
   mainEntity: groups.flatMap((g) =>
     g.items.map((i) => ({
       '@type': 'Question',
@@ -26,6 +37,8 @@ const jsonLd = {
   title="copperhead: FAQ"
   description="What copperhead costs, what it refuses to do, whether it replaces an engineer, and what happens to your design files."
   path="/blog/faq/"
+  ogImage={ogImage}
+  ogImageAlt={faqCover.alt}
   jsonLd={jsonLd}
 >
   <Navbar home={false} />

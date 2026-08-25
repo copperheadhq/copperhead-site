@@ -1,6 +1,6 @@
 # copperhead
 
-> copperhead is an open source (Apache-2.0) AI agent for hardware design — "Cursor for circuit boards." Given a plain-English change request or a product brief, it edits real KiCad files (.kicad_sch, .kicad_pcb) in your own git repository, propagates the change into every document that references it (pinout, BOM, subsystem docs, firmware scaffold), and verifies its own work by running `kicad-cli` ERC and DRC until the checks pass. It leaves artifacts on disk, not advice in a chat window.
+> copperhead is an open source (Apache-2.0) AI agent for hardware design — "Cursor for circuit boards." Given a plain-English change request or a product brief, it edits real KiCad files (.kicad_sch, .kicad_pcb) in your own git repository, propagates the change into every document that references it (pinout, BOM, subsystem docs, firmware scaffold) and verifies its own work by running `kicad-cli` ERC and DRC until the checks pass. It leaves artifacts on disk, not advice in a chat window.
 
 Built by Animesh Chouhan (Chouhan Industries). Proven on Open Telegraph, a shipping 40×40 mm ESP32-S3 Morse key with a 25 µA deep-sleep budget: building that board produced copperhead, and redesigning the board through copperhead proved it.
 
@@ -13,30 +13,39 @@ Spec-gated in, verification-gated out: the design cannot drift from its requirem
 
 Key facts:
 
-- Two ways to use it: iterate on an existing KiCad repository (`copperhead init`, then `copperhead do "..."` — the main case), or run the full pipeline from a written brief (`copperhead create --brief brief.md`) to get a spec, architecture, justified part selection, ERC-clean schematic, DRC-clean draft layout, gerbers, renders, an orderable BOM, and a bring-up plan.
-- Install: `npm i -g copperhead`. Requires Node 20+, KiCad with `kicad-cli` on the path, and your own model API key (model-agnostic: Claude and GPT-5 both tested; set ANTHROPIC_API_KEY or OPENAI_API_KEY).
-- Cost: roughly $0.10–$1.00 in model tokens per change request, 5–10× that for a full `create` run; billed by your model provider. copperhead itself is free. No hosted version today.
-- Everything it writes is plain markdown, JSON, and KiCad source — no proprietary format, no editor to move into. Edits are surgical s-expression changes, so diffs stay small and untouched file regions stay byte-identical.
-- It does not replace a hardware engineer: draft layouts are correct rather than optimal, and LAYOUT.md states exactly what a specialist should redo before fabrication. It refuses to run on a dirty git tree, refuses edits without a validated proposal, refuses changes that break documented constraints, and never invents unjustifiable part numbers.
-- Data stays local: the agent runs on your machine, stores nothing on a server, and only sends design context in the model API call itself. Run transcripts live in .copperhead/runs/ with secrets redacted.
+- Two ways to use it: iterate on an existing KiCad repository (`copperhead init`, then `copperhead do "..."` — the main case), or run the full pipeline from a written brief (`copperhead create --brief brief.md`) to get a spec, architecture, justified part selection, ERC-clean schematic, DRC-clean draft layout, gerbers, renders, an orderable BOM and a bring-up plan.
+- Install: `npm i -g copperhead`. Requires Node 20+, KiCad with `kicad-cli` on the path and your own model API key (model-agnostic: Claude and GPT-5 both tested; set ANTHROPIC_API_KEY or OPENAI_API_KEY).
+- Cost: roughly $0.10–$1.00 in model tokens per change request, 5–10× that for a full `create` run; billed by your model provider. The CLI itself is free forever and does every core operation without a paid plan. copperhead Cloud adds hosted runs on private repos at $49 per user per month, Team adds org governance and a CI bot for a flat $199 per month and Enterprise is a custom flat annual license, self-hosted. Cloud is free for public repositories released under CERN-OHL-S or an OSHWA-certified license, within fair-use credit limits.
+- Everything it writes is plain markdown, JSON and KiCad source — no proprietary format, no editor to move into. Edits are surgical s-expression changes, so diffs stay small and untouched file regions stay byte-identical.
+- It does not replace a hardware engineer: draft layouts are correct rather than optimal, and LAYOUT.md states exactly what a specialist should redo before fabrication. It refuses to run on a dirty git tree, refuses edits without a validated proposal, refuses changes that break documented constraints and never invents unjustifiable part numbers.
+- Data stays local on the CLI: the agent runs on your machine, stores nothing on a server and only sends design context in the model API call itself. Run transcripts live in .copperhead/runs/ with secrets redacted. Cloud is the opt-in exception: it runs the same agent on hosted infrastructure against the repositories you connect to it.
 - KiCad only; no proprietary EDA formats are supported or planned.
 
 ## Docs
 
 - [Documentation](https://docs.copperhead.sh/): full copperhead documentation (Astro Starlight site)
-- [FAQ](https://copperhead.sh/blog/faq/): cost, what it refuses to do, whether it replaces an engineer, and where design data goes
-- [GitHub repository](https://github.com/chouhanindustries/copperhead): source code, issues, and the best place to ask questions
+- [Pricing](https://copperhead.sh/pricing/): the open core split — free CLI, Cloud, Team, Enterprise and free Cloud for open hardware
+- [FAQ](https://copperhead.sh/blog/faq/): cost, what it refuses to do, whether it replaces an engineer and where design data goes
+- [GitHub repository](https://github.com/copperheadhq/copperhead): source code, issues and the best place to ask questions
 
 ## Blog
 
 - [Meet copperhead](https://copperhead.sh/blog/meet-copperhead/): product introduction — what the agent is and the two ways to use it
 - [Drift is a build failure](https://copperhead.sh/blog/drift-is-a-build-failure/): the problem — a board is a dozen documents pretending to be one thing, and drift ships to fabrication
 - [Spec-gated in, verification-gated out](https://copperhead.sh/blog/spec-gated-in-verification-gated-out/): engineering — the two invariants and the six-step loop between them
-- [copperhead: Cursor for circuit boards](https://copperhead.sh/blog/antler-crackathon/): the Antler Crackathon submission — problem, product, competitive field, market, and go-to-market
+- [copperhead: Cursor for circuit boards](https://copperhead.sh/blog/antler-crackathon/): the Antler Crackathon submission — problem, product, competitive field, market and go-to-market
+- [From brief.md to gerbers](https://copperhead.sh/blog/from-brief-to-gerbers/): engineering — eight gated stages from a markdown brief to gerbers, firmware and docs, each one gated on what it has to prove before the next begins
+- [Improving TTFB with Anycast](https://copperhead.sh/blog/ttfb-anycast/): infrastructure — an anycast edge in front of an unchanged single-region origin took Asia Pacific from 627 ms to 160 ms and Europe from 293 ms to 90 ms, and made South America worse
+
+## Research
+
+- [copperbench: Can language models edit real hardware designs?](https://copperhead.sh/research/copperbench/): a benchmark for language-model agents on verified hardware edits — real KiCad boards, electrical verification as the oracle and cost reported alongside pass rate
 
 ## Optional
 
 - [Pitch deck (PDF)](https://copperhead.sh/Copperhead.pdf): the Crackathon pitch deck
 - [Open Telegraph](https://github.com/animesh-chouhan/open-telegraph): the open source proof board (CERN-OHL-S v2.0)
 - [Building open hardware with Claude](https://chouhan.ai/building-with-claude): the longer story of how Open Telegraph and copperhead came together
+- [Repository stats](https://copperhead.sh/stats/): the long record of traffic to the copperhead repository, collected daily because GitHub keeps only fourteen days of it
+- [Status](https://copperhead.sh/status/): current status and ninety-day uptime of copperhead's hosted services
 - [KiCad](https://www.kicad.org/): the open source ECAD tool copperhead works on

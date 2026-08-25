@@ -17,25 +17,37 @@
  * branch, a failed request, and a malformed CSV all take the same path: no data,
  * no page furniture pretending otherwise.
  */
-import { repo } from './config';
 
 /**
- * The repo being measured — the product, not this site. Exported because the
- * page needs it too, to strip the prefix every popular-path row shares; deriving
- * it twice is how the two would come to disagree.
+ * The slug the measured repo's data is filed under — the product repo, not this
+ * site. Exported because the page needs it too, to strip the prefix every
+ * popular-path row shares; deriving it twice is how the two would come to
+ * disagree.
+ *
+ * Deliberately a literal rather than derived from `repo` in src/config.ts.
+ * copperhead moved from the chouhanindustries org to copperheadhq. ghrs lays its
+ * output out under <owner>/<repo>/ on the data branch and stamps that same prefix
+ * onto every popular-path row, so the whole existing series lives under the
+ * pre-rename slug. Following the rename here would point the build at a directory
+ * that does not exist, and /stats/ would fall back to "not collecting yet" with a
+ * year of history sitting untouched one directory over.
+ *
+ * So this stays pinned, and .github/workflows/repo-stats.yml keeps passing the old
+ * slug as its `repository` input (GitHub 301s it to the new one, and the action
+ * keeps appending to the same directory). Moving the data means renaming the
+ * directory on the data branch and changing both places in one commit.
  */
-export const trackedSlug = repo.replace(/^https?:\/\/github\.com\//, '');
+export const trackedDataSlug = 'chouhanindustries/copperhead';
 
 /** The repo the workflow commits data to, and the branch it uses. */
-const dataRepo = 'chouhanindustries/copperhead-site';
+const dataRepo = 'copperheadhq/copperhead-site';
 const dataBranch = 'github-repo-stats';
 
-/** ghrs lays its output out under <owner>/<repo>/ on the data branch. */
-const dataDir = `${trackedSlug}/ghrs-data`;
+const dataDir = `${trackedDataSlug}/ghrs-data`;
 const rawBase = `https://raw.githubusercontent.com/${dataRepo}/${dataBranch}/${dataDir}`;
 
 /** Link to the rendered PDF report, for readers who want the whole thing. */
-export const reportUrl = `https://github.com/${dataRepo}/blob/${dataBranch}/${trackedSlug}/latest-report/report.pdf`;
+export const reportUrl = `https://github.com/${dataRepo}/blob/${dataBranch}/${trackedDataSlug}/latest-report/report.pdf`;
 
 /** Same optional token as stats.ts: lifts the unauthenticated 60/hr API limit. */
 const ghToken = process.env.GITHUB_TOKEN;

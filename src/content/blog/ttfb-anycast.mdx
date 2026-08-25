@@ -1,0 +1,424 @@
+---
+title: "Improving TTFB with Anycast"
+description: "We put an anycast edge in front of a single-region Azure app. TTFB fell sharply across Europe and Asia, but two South American probes became slower."
+date: 2026-08-24
+kind: "Engineering"
+cover: "ttfb-anycast"
+coverAlt: "A copperhead title card: three arcs of decreasing radius closing on a via."
+---
+
+import FileBlock from "../../components/FileBlock.astro";
+import ThemeFigure from "../../components/ThemeFigure.astro";
+import { Image } from "astro:assets";
+import summaryBefore from "../../assets/ttfb-summary-app.copperhead.sh-2026-08-16.png";
+import scoresBefore from "../../assets/ttfb-regional-scores-app.copperhead.sh-2026-08-16.png";
+import summaryAfter from "../../assets/ttfb-summary-app.copperhead.sh-2026-08-23.png";
+import scoresAfter from "../../assets/ttfb-regional-scores-app.copperhead.sh-2026-08-23.png";
+
+A probe in Delhi waited 775 milliseconds for the first byte from our app. Roughly 20
+of those milliseconds looked like application work. The rest was the network path to
+our single Azure region in Virginia.
+
+Moving the application closer was not practical, because authentication and tenancy
+depend on a database that lives in that region. So we tried a narrower change: put an
+anycast edge in front of the existing origin and leave the application alone.
+
+It worked well in Europe and Asia. It also made two South American probes slower, and
+a handful of probes near the origin. This is what we measured, what broke during the
+rollout and which part of our explanation is still a hypothesis.
+
+## Two measurements, taken before anything moved
+
+The first was ICMP round trip time to the origin's address, three requests per
+location.
+
+| Location      | Avg           | Std dev | Loss |
+| ------------- | ------------- | ------- | ---- |
+| New York      | **7.10 ms**   | 0.49 ms | 0%   |
+| San Francisco | **68.18 ms**  | 0.29 ms | 0%   |
+| London        | **77.78 ms**  | 0.41 ms | 0%   |
+| Amsterdam     | **86.00 ms**  | 0.66 ms | 0%   |
+| Frankfurt     | **90.93 ms**  | 0.02 ms | 0%   |
+| Sydney        | **199.01 ms** | 1.34 ms | 0%   |
+| Bangalore     | **203.76 ms** | 0.37 ms | 0%   |
+| Singapore     | **221.84 ms** | 0.23 ms | 0%   |
+
+Zero packet loss anywhere, standard deviation under 1.4 ms anywhere. These are healthy
+paths. They are just long.
+
+The second was end to end time to first byte from a multi-region probe set, run on 16
+August. It averaged 172 ms across America, 293 ms across Europe and 627 ms across Asia
+Pacific. Northern Virginia answered in 35 ms, London in 253 and Delhi in 775.
+
+<figure>
+  <Image
+    src={summaryBefore}
+    alt="SpeedVitals multi-run report for app.copperhead.sh on 16 August 2026: grade C, score 86%, average TTFB 373 ms, with Europe at 293 ms, America at 172 ms and Asia Pacific at 627 ms."
+  />
+  <figcaption>
+    The baseline, 16 August. An average that mostly records how far each probe
+    sat from Virginia.
+  </figcaption>
+</figure>
+
+<figure>
+  <Image
+    src={scoresBefore}
+    alt="Per-location TTFB on 16 August 2026: Europe from London 253 ms to Finland 335 ms, America from Northern Virginia 35 ms to Sao Paulo 373 ms, Asia Pacific from Tel Aviv 384 ms to Delhi 775 ms."
+  />
+  <figcaption>
+    Asia Pacific is amber or red from end to end, and the application is
+    identical for every row on the page.
+  </figcaption>
+</figure>
+
+## A working model for where the time went
+
+Both sets are consistent with a simple model: `TTFB ≈ 3 × RTT + 20 ms`. Three round
+trips happen before a byte comes back, TCP handshake then TLS handshake then the
+request itself, with the origin adding a roughly fixed cost on top.
+
+We chose that model to fit these two sets, so the same sets cannot then confirm it.
+Four locations do appear in both under the same name, and those are the rows where
+each quantity was measured rather than inferred from the other.
+
+| Location  | Measured RTT | Model  | Measured TTFB |
+| --------- | ------------ | ------ | ------------- |
+| London    | 77.78 ms     | 253 ms | 253 ms        |
+| Frankfurt | 90.93 ms     | 293 ms | 287 ms        |
+| Sydney    | 199.01 ms    | 617 ms | 609 ms        |
+| Singapore | 221.84 ms    | 686 ms | 678 ms        |
+
+<ThemeFigure
+  src="/blog/figures/ttfb-anatomy"
+  width={1600}
+  height={900}
+  alt="Four stacked bars to scale: London 253 ms, Frankfurt 287 ms, Sydney 609 ms and Singapore 678 ms, each drawn as three round trips at that location's measured RTT plus a small leftover of 12 to 20 ms."
+>
+  The same four rows, drawn to scale. Three round trips at the measured RTT account for
+  everything except 12 to 20 ms, and that remainder is the whole of what the origin
+  contributed.
+</ThemeFigure>
+
+London lands on the model and the other three sit 6 to 8 ms under it. The two sets
+come from different tools, so a shared city name is not proof of a shared network
+position. Treat it as a working approximation that survived a check. It was accurate
+enough for the decision in front of us: an origin costing around 20 milliseconds is
+2.6% of Delhi's 775, so a week spent profiling queries would have moved Delhi to
+roughly 755 ms. The rest was distance.
+
+## Moving the compute was already foreclosed
+
+The instinctive fix is to run the app in more regions, and the reason we could not is
+worth stating because the shape is common. Identity and tenancy live in managed
+Postgres with row level security behind a managed auth service, which cannot be
+pointed at an external database. Both are single region by construction.
+
+A request arriving in Singapore and hitting an app tier in Singapore would still make
+four to six sequential calls back to `eastus` to work out who the user is and which
+org they are acting in. We projected roughly 1,320 ms for that, worse than doing
+nothing: three long round trips traded for six. That left one lever we could actually
+pull, the number of long round trips before the first byte.
+
+## One address, announced from many places
+
+Anycast is the part of this worth being exact about, because the word suggests
+something cleverer than what happens.
+
+An ordinary address is unicast. It belongs to one interface on one machine, every
+router along the way agrees about where that machine is and a packet addressed to it
+is carried there, however far there turns out to be. Our origin's address is unicast.
+Virginia is where it lives, and Singapore pays 221.84 milliseconds a round trip
+because that is how far away Virginia is from Singapore.
+
+An anycast address is announced from many places at once. The same address, inside the
+same advertised prefix, originated into BGP by every point of presence in the network.
+A router some hops away therefore holds more than one route to it and forwards along
+whichever one it already prefers. Nothing picks a destination for the packet. The
+destination is wherever it stops.
+
+<ThemeFigure
+  src="/blog/figures/anycast-routing"
+  width={1600}
+  height={900}
+  alt="Two panels. Unicast: Delhi, London, Virginia and Santiago all reach one origin box in eastus holding the address 20.9.x.x. Anycast: the same four reach points of presence in Mumbai, London and Ashburn that each announce 104.21.x.x, while Santiago is routed to a distant Madrid, and dashed lines run from the points of presence back to the unchanged origin."
+>
+  The origin is the same machine in the same region in both panels. What changes is
+  that the address in front of it is answered in more than one place, and that nothing
+  in Santiago gets a say in which place answers it.
+</ThemeFigure>
+
+Cloudflare's glossary entry on
+[anycast networks](https://www.cloudflare.com/learning/cdn/glossary/anycast-network/)
+is the short version, and it describes the network we ended up sitting behind.
+[Wikipedia's article](https://en.wikipedia.org/wiki/Anycast) is the one to read for the
+detail: RFC 1546 in 1993 and the thirteen DNS root server addresses that are each
+served by clusters of hosts in many places at once. It also carries the old objection
+to running TCP over anycast at all, that a long lived connection could be re-routed to
+another instance mid-flight, which measurement has since put below 0.017% of
+connections.
+
+Two things follow from "whichever one it already prefers".
+
+The first is what we were after. If the address is answered in Singapore then the
+three round trips before the first byte are three short ones, and the origin has not
+moved an inch.
+
+The second is what it cost us. Preferred is not nearest. BGP compares AS path length
+and then whatever local policy an operator has configured, and that policy answers to
+what transit and peering cost in a given market. A location with no nearby
+announcement, or with a cheaper path to a distant one, gets the distant one. Nothing
+in the protocol has ever looked at a map. That is the shape of the explanation we
+reach for in South America later, and it is also why we cannot settle it without
+knowing which point of presence answered.
+
+## An edge in front of an unchanged origin
+
+So we put an anycast edge in front of the origin and changed nothing behind it. No
+second region, no second cloud, no application code. TLS now terminates at a point of
+presence near the visitor, so all three handshake round trips become short ones. The
+long leg to `eastus` runs over a connection the edge already holds open, and requests
+the edge can answer by itself never make that leg at all.
+
+## Four things the edge is not allowed to get wrong
+
+An edge in front of an application is a cache, a TLS terminator and a place to answer
+requests early. Each of those is a way to serve the wrong person the wrong bytes. We
+wrote down four rules before touching anything.
+
+### The certificate moves before the record does
+
+Our origin held a cloud-managed certificate, and that kind revalidates by resolving
+its own hostname. Once the edge answers for that hostname, revalidation can fail. The
+certificate does not break then. It stops renewing and expires months later, at which
+point an edge set to verify the origin strictly refuses every request at once. So the
+origin moved to a long lived certificate from the edge's own authority, which has no
+such dependency.
+
+The order matters in the other direction too, since that certificate is trusted by the
+edge and by nobody else. Bind it while the hostname still resolves to the origin and
+every visitor gets a certificate error until the record flips. So the rollout uploads
+in one step, which moves no traffic, then does the bind and the proxy back to back in
+a second.
+
+### The redirect fails closed
+
+Signed out visitors asking for a console page get redirected to the login page, and
+that redirect used to cross to `eastus`, call the auth service and come back to say
+"log in". Moving it to the edge is safe in one direction only. The rule is conditioned
+on the absence of a session cookie and on nothing else, because absence proves a
+request cannot be authenticated while presence proves very little: the edge verifies
+no signatures. A request carrying a cookie goes to the origin untouched, valid or
+forged, so the origin stays the only thing that decides anything.
+
+Disable the rule and nothing gets weaker, since signed out visitors still cannot reach
+a console page: the server side check never moved. We wrote that into the spec so
+nobody later mistakes a saved round trip for an authorization boundary. Verifying
+session tokens at the edge would answer more requests locally and move identity out of
+server code, which is an architectural decision rather than a routing change.
+
+### The cache is a list, not a policy
+
+Static assets are cached at the edge for a year. HTML never is. The tempting shape is
+"cache everything, except the things that must not be cached". We wrote the inverse:
+an enumerated list of content hashed, immutable paths, everything else uncached by
+default. The failure modes decided it. A narrow list missing an entry serves from the
+origin something that could have come from cache. A broad policy missing an exclusion
+serves one org's rendered page to another org's viewer.
+
+### The origin stops answering the public internet
+
+An edge that applies rules to `app.copperhead.sh` while the origin's own cloud
+hostname keeps answering everyone is advisory at best. Anyone who finds that hostname
+bypasses the redirect rules, the cache policy and the content protections in a single
+request. So the origin's ingress is restricted to the edge's published address ranges,
+and that restriction is what collided with everything else.
+
+## The lockdown broke our own deploy pipeline
+
+Our production deploys are gated. A new revision is created at zero traffic weight,
+addressed by its own unique hostname, smoke tested and only then given traffic, so a
+bad build never serves a user. No edge answers for that candidate hostname. The moment
+we restricted the origin to edge addresses, our deploy pipeline could no longer reach
+the thing it was about to ship.
+
+The fix admits the deploy runner for the length of the gate and then takes the
+allowance away. Three details of it matter more than they look. It has to skip when no
+restriction exists, because Container Apps ingress fails open on an empty rule list
+and closed at the first Allow rule: adding one rule to an unrestricted app denies
+everyone else instantly. It has to write the allow list in a single request, since one
+range at a time leaves every point of presence whose range has not landed yet denied
+until the fifteenth call returns, a rolling 403 produced by the command meant to
+protect the origin. And the removal has to run whether the gate passed or failed. A
+failed smoke test is precisely the case where a runner's address would otherwise stay
+admitted, and cloud runner addresses get recycled to somebody else within minutes.
+
+## What broke, and why it took an hour to see
+
+The edge redirect needs to carry the visitor's original path in a query parameter, so
+they land where they were going after signing in. That means percent encoding it. We
+wrote `url_encode(...)`, and the rules language has no encoder on any plan. Every
+attempt to create the rule returned a 400, so the rule never existed. Nothing looked
+broken, because the origin went on serving that redirect as it always had. The console
+redirected correctly. It redirected from Virginia.
+
+There is no workaround on our plan: `regex_replace` would do it and needs a business
+tier. Emitting the raw path would have been wrong rather than merely lossy, since an
+unencoded `&` ends the parameter and starts another, so `/runs?a=1&b=2` arrives as
+`next=/runs?a=1` with the rest discarded. The rule now excludes requests carrying a
+query string, and those fall through to the origin, which encodes correctly and always
+has. A first time visitor arriving at `/` or `/projects` is answered at the point of
+presence. A parameterised deep link pays the round trip it was already paying.
+
+The hour went to the error message. Our API helper used `curl -f`, which discards the
+response body on a 4xx, so a 400 naming the identifier the vendor could not resolve
+reached the operator as "failed at the transport". Four other checks in the rollout
+reported a failed read as a definitive negative: a zone setting it could not read was
+reported as not offered, a branch it could not read as a branch missing a step. The
+dangerous one failed permissively. With the DNS tool absent, the IPv6 guard passed and
+would have locked the origin down having verified nothing.
+
+A fifth appeared on the first real lockdown. The read back asked the cloud API for
+`length(ipSecurityRestrictions)` before its read model had caught up and got `null`,
+which is a type error rather than an empty list, so the script printed this:
+
+<FileBlock
+  name="output"
+  code={`edge lockdown failed; origin ingress not changed`}
+/>
+
+The rules were in place, the origin was refusing everyone but the edge and the site
+was serving normally. If you build operator tooling, give "I could not check" its own
+branch and its own message.
+
+## What it measured
+
+Same probe set and same target, seven days after the baseline.
+
+| Region       | 16 August | 23 August  |                  |
+| ------------ | --------- | ---------- | ---------------- |
+| Asia Pacific | 627 ms    | **138 ms** | **4.5x**         |
+| Europe       | 293 ms    | **58 ms**  | **5.1x**         |
+| America      | 172 ms    | **221 ms** | **0.78x, worse** |
+
+The average across all locations went from 373 ms to 139, and the report's own grade
+from C to A.
+
+<figure>
+  <Image
+    src={summaryAfter}
+    alt="SpeedVitals multi-run report for app.copperhead.sh on 23 August 2026: grade A, score 97%, average TTFB 139 ms, with Europe at 58 ms, Asia Pacific at 138 ms and America at 221 ms."
+  />
+  <figcaption>
+    The same report a week later. The map that was red across Asia is green, and
+    the two coloured dots in South America are the probes that went backwards.
+  </figcaption>
+</figure>
+
+By location, from that run:
+
+| Location          | 16 August | 23 August |          |
+| ----------------- | --------- | --------- | -------- |
+| Mumbai            | 707 ms    | 37 ms     | 19.1x    |
+| Sydney            | 609 ms    | 36 ms     | 16.9x    |
+| Delhi             | 775 ms    | 89 ms     | 8.7x     |
+| London            | 253 ms    | 42 ms     | 6.0x     |
+| Northern Virginia | 35 ms     | 93 ms     | **0.4x** |
+| Iowa              | 107 ms    | 231 ms    | **0.5x** |
+| Santiago          | 363 ms    | 534 ms    | **0.7x** |
+| Sao Paulo         | 373 ms    | 712 ms    | **0.5x** |
+
+<figure>
+  <Image
+    src={scoresAfter}
+    alt="Per-location TTFB on 23 August 2026: Europe from London 42 ms to Finland 113 ms, Asia Pacific from Sydney 36 ms to South Africa 382 ms, America from Las Vegas 65 ms to Sao Paulo 712 ms."
+  />
+  <figcaption>
+    All thirty one locations in that run. The badges that are not green are
+    Santiago, Sao Paulo and South Africa.
+  </figcaption>
+</figure>
+
+Asia Pacific and Europe beat our own projection of roughly 2.5x. The probes closest to
+the origin went the other way, which we expected in direction: next door to Virginia
+the edge is one more hop rather than one fewer. We did not expect Northern Virginia to
+lose 58 ms or Iowa to lose 124.
+
+Static assets serve warm from cache without touching the origin.
+
+<FileBlock
+  name="output"
+  code={`cf-cache-status: HIT
+age: 18211
+cache-control: public, max-age=31536000, immutable`}
+/>
+
+The report cannot show that, which is why its cache hit rate reads as a dash on both
+screenshots. It requests `app.copperhead.sh`, which now answers a 302 at the edge. A
+302 carries no cache status, so reading the hit rate needs a separate run against a
+cacheable URL. The edge tier itself runs on a free plan.
+
+## The second run disagreed
+
+We ran the same probe set again on 24 August, against an unchanged system.
+
+| Region       | 23 August | 24 August |
+| ------------ | --------- | --------- |
+| Asia Pacific | 138 ms    | 160 ms    |
+| Europe       | 58 ms     | 90 ms     |
+| America      | 221 ms    | 197 ms    |
+
+Per location the spread is wider than those averages suggest. Delhi came back in 89 ms
+and then 219. Finland 113 and then 316. Santiago 534 and then 756. Sao Paulo went the
+other way, 712 and then 451. London barely moved, 42 and then 32.
+
+The two runs agree on direction: a large win across Asia Pacific and Europe, a loss in
+South America, a smaller loss near the origin. Neither pins down the size of any of
+it. What moves between them is which point of presence answers a given probe. The 24
+August run recorded Belgium as answered from Paris at 168 ms while Paris itself came
+back in 44, and Finland from Stockholm at 316 while Sweden came back in 71. Where the
+nearest point of presence is not the one used, the edge adds a leg instead of removing
+one.
+
+## The part that got worse
+
+Santiago and Sao Paulo were slower after the change in both runs, and they pull the
+America average below its own baseline. Our proposal did not predict that. It called
+the change "neutral near the origin" and did not consider any location getting
+materially worse.
+
+The explanation we have is a hypothesis. If the edge answers those probes without
+fetching the origin, the model above puts Santiago's 534 ms at around 170 ms of round
+trip and Sao Paulo's 712 at around 230. Santiago to Miami is roughly 120 ms, to Los
+Angeles roughly 160, to Madrid roughly 230. Both cities have a point of presence of
+their own, so implied round trips in that range are consistent with the probe being
+answered a long way off, plausibly from North America or Europe. Consistent is as far
+as we can take it: we captured no responding colo and ran no traceroute from either
+city, and either would settle it.
+
+Free plan anycast does not guarantee the nearest point of presence, and Latin America
+is often named as a case where it does not, since transit and peering there cost more
+than in Europe. That is a guess at the cause rather than a finding. Until the colo is
+captured we cannot say whether this is the plan we are on or something we configured.
+
+## What this does not fix
+
+The summary is a large win across Asia Pacific and Europe, a real loss in South
+America and a smaller one beside the origin. We are recording it that way rather than
+folding it into a regional average, because an average that hides a doubled latency is
+not a result. That loss is cheap to accept while almost nobody there uses the product,
+and it stops being cheap the moment that changes. Smart routing is the lever, deferred
+on the grounds that it should follow a measurement. This is that measurement.
+
+Nothing here made the application faster, either. The origin still contributes its 20
+milliseconds and still resolves identity in `eastus`, so an authenticated page pays
+for that single region on every request the edge cannot answer alone. The three round
+trips are shorter now. There are still three of them.
+
+Both open questions need a measurement rather than a decision: one probe run against a
+cacheable URL, and one from Santiago that records which colo answered.
+
+---
+
+_copperhead is a hosted platform for hardware design agents. The edge tier described
+here is deployed on `app.copperhead.sh`._

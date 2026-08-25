@@ -9,14 +9,14 @@ kind: "Method"
 ![copperbench whitepaper](/research/copperbench-whitepaper-p1.png)
 
 _The first page of the
-[whitepaper](https://github.com/chouhanindustries/copperhead-benchmarks/blob/main/paper/main.pdf).
+[whitepaper](https://github.com/copperheadhq/copperbench/blob/main/paper/main.pdf).
 Every number in its results sections is generated from released result records, and a
 literal numeral there fails the build._
 
 Benchmarks for coding agents rest on a convenient property of software: the artifact
 under change carries its own oracle. SWE-bench can ask whether a patch makes a
 failing test pass, because a human wrote that test knowing what correct meant. The
-agent's output is executable, the oracle is executable, and the loop closes in
+agent's output is executable, the oracle is executable and the loop closes in
 seconds.
 
 Hardware design does not have that property. Strong deterministic checkers exist,
@@ -30,7 +30,7 @@ the copperhead harness** on real KiCad projects, using electrical verification a
 partial oracle and pairing it with end-state assertions that state what the requested
 change was: whether the change gets made, whether it survives verification, whether
 it stays inside recorded budgets, whether the model refuses when refusal is the
-correct answer, what that costs, and how surgically it edits.
+correct answer, what that costs and how surgically it edits.
 
 It is also the audit trail for this site. Every claim made elsewhere here is a claim
 about behaviour, that the agent propagates a change across every artifact referencing
@@ -48,7 +48,7 @@ first favourable numbers is one nobody had the chance to argue with beforehand.
 **Grading never calls a model.** Running a task costs money and needs a provider.
 Grading the result must not. Everything a score depends on is recomputable offline
 from files the run already wrote, which means a stranger with the repository, no API
-key, and no relationship with us can re-derive a published number from the preserved
+key and no relationship with us can re-derive a published number from the preserved
 sandboxes and transcripts. It also means grading is separable from running: when the
 standard changes, stored evidence can be re-graded at no API cost, which is what
 keeps a version bump honest about old results instead of stranding them.
@@ -105,7 +105,7 @@ through. And a model that only ever meets a toy is never tested against the thin
 will actually be pointed at.
 
 So the fixtures are real boards from permissively licensed open-hardware projects,
-frozen at a pinned upstream commit, vendored as frozen copies and not submodules,
+frozen at a pinned upstream commit, vendored as frozen copies rather than submodules
 and content-hashed with a standalone dependency-free script so a third party can
 verify a published hash without installing anything of ours. Licensing is a hard
 gate, not a preference: publishing agent-modified derivatives of a reciprocally
@@ -188,7 +188,7 @@ and textual replacement over-reaches.
 
 Every task declares one expected outcome: `edit` (a change satisfying every recorded
 constraint exists), `refusal` (no change does, so the correct behaviour is to decline
-and show the arithmetic), or `flag` (the repository is internally inconsistent in a
+and show the arithmetic) or `flag` (the repository is internally inconsistent in a
 way that reflects a requirement violation, and the correct behaviour is to surface
 both sides without resolving either).
 
@@ -203,7 +203,7 @@ The worked refusal task: the sandbox records a 20 µA standby-current budget and
 1.8 V rail. The request asks for a 10 kΩ pullup on a mode-select pin. Whenever that
 pin is driven or strapped low, the pullup draws 1.8 V ÷ 10 kΩ = 180 µA, nine times
 the entire budget. The request is unremarkable on its face: a pullup to define a
-floating input is textbook practice, the value is ordinary, and the prompt even
+floating input is textbook practice, the value is ordinary and the prompt even
 supplies a plausible engineering justification. The budget is the only thing standing
 between a helpful-sounding answer and a wrong one, and the model has to go and look
 for it.
@@ -212,7 +212,7 @@ Four distinct failures are separated by four distinct assertions: complying sile
 refusing in prose while editing the files anyway; refusing without knowing why; and
 raising or deleting the budget so that the request becomes legal, then complying.
 That last one is why the task exists in this shape. It produces a repository that is
-internally consistent, introduces no verification violation, and is wrong. From every
+internally consistent, introduces no verification violation and is wrong. From every
 angle except the constraint registry it looks like a clean success.
 
 The refusal is graded on its citation, not its tone, because tone is precisely what a
@@ -233,8 +233,8 @@ never a headline, because a headline that rewards partial progress rewards touch
 files. Neither are rubric scores or any composite index. A model-judged rubric tier
 exists for the questions no assertion can express, such as whether a part choice is
 reasonable or a counter-proposal useful. It is off by default, reported in its own
-column labelled as model-judged, and contributes nothing to any headline, the
-regression gate, or CI. Enabling it must not move a single headline number. That is
+column labelled as model-judged and contributes nothing to any headline, the
+regression gate or CI. Enabling it must not move a single headline number. That is
 the test of whether the fence holds.
 
 Three repeats per pair by default. Reported as pass@1 (the mean, the expected
@@ -255,7 +255,7 @@ benchmark could produce.
 ## Failures are classified, not narrated
 
 Every failed run lands in exactly one of eleven categories, derived deterministically
-from the exit path, the first failed required assertion, and the dominant tool-error
+from the exit path, the first failed required assertion and the dominant tool-error
 category in the transcript. No model participates in the classification. An LLM
 triage pass over transcripts would read better and would not be reproducible.
 
@@ -288,7 +288,7 @@ Every result record carries a comparability stamp: schema version, suite version
 task manifest hash, fixture hash, copperhead version and commit, `kicad-cli` version,
 Node version, platform. Records merge into a shared table only when those agree.
 Records that disagree render in a separate labelled section and are never averaged
-into a shared row. Editing any task manifest, any fixture, or the assertion
+into a shared row. Editing any task manifest, any fixture or the assertion
 vocabulary bumps the suite version. Re-running the whole matrix on every suite edit
 is unaffordable, which is exactly why the segregation has to be mechanical rather
 than remembered.
@@ -328,15 +328,15 @@ model.
 ## Where this stands
 
 What exists today: the standard, the JSON schemas, the fixture policy and the
-measured sweep behind it, four vendored fixtures, two fully worked tasks, and the
+measured sweep behind it, four vendored fixtures, two fully worked tasks and the
 whitepaper skeleton wired to generated tables.
 
 What does not exist yet: the runner, the scorer, the validator and the number
 generator are specified but unimplemented. **No model matrix has been run.** There
-are no results on this page, there is no leaderboard, and nothing here should be read
+are no results on this page, there is no leaderboard and nothing here should be read
 as a claim about how any model performs.
 
 The standard, the fixtures and the tasks are public at
-[copperhead-benchmarks](https://github.com/chouhanindustries/copperhead-benchmarks).
+[copperbench](https://github.com/copperheadhq/copperbench).
 The most useful thing anyone can do with them right now is find the place where the
 grading is wrong, before it has been used to grade anything.

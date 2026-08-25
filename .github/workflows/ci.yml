@@ -15,6 +15,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+
+      # blog-post skill rules 1 and 2: no em dashes, no serial comma, across the
+      # blog and research collections. Runs before the build so a style failure
+      # is not buried under a page render.
+      - name: prose lint
+        run: npm run lint:prose
+
       - run: npm run build
 
       # W-6: no em-dashes anywhere in rendered copy
@@ -34,14 +41,23 @@ jobs:
                    -A "Mozilla/5.0 (compatible; copperhead-linkcheck)" "$url")
             printf '%-64s %s\n' "$url" "$code"
             # 999 is LinkedIn's bot-block response, not a dead link. npmjs.com
-            # is the same story with a different number: it serves 403 to every
-            # non-browser client, so the hero's install-count link trips this
-            # while the package is live. Scoped to that host, because a 403
-            # anywhere else is still worth failing on. registry.npmjs.org is
-            # the machine-readable endpoint if this ever needs a real check.
+            # and reddit.com are the same story with a different number: both
+            # serve 403 to every non-browser client, so the hero's install-count
+            # link and the footer's subreddit trip this while both are live.
+            # Reddit answers 200 from a residential address and 403 from a
+            # runner, which is the tell that it is the client being judged and
+            # not the URL. Scoped to those hosts, because a 403 anywhere else is
+            # still worth failing on. registry.npmjs.org and reddit's own
+            # /r/<name>/about.json are the machine-readable endpoints if this
+            # ever needs a real check.
             case "$code" in
               2*|3*|999) ;;
-              403) case "$url" in *//www.npmjs.com/*) ;; *) fail=1 ;; esac ;;
+              403)
+                case "$url" in
+                  *//www.npmjs.com/*|*//www.reddit.com/*) ;;
+                  *) fail=1 ;;
+                esac
+                ;;
               *) fail=1 ;;
             esac
           done

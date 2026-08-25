@@ -1,0 +1,27 @@
+{
+  "note": [
+    "Sentences where the comma before and/or joins clauses or a two-item pair",
+    "rather than closing a series, which the house style keeps. The linter cannot",
+    "tell those two shapes apart, so each accepted sentence is recorded here",
+    "verbatim. Rewriting a sentence retires its entry and the check asks again,",
+    "which is the point. Read the sentence before you add it: if the comma is",
+    "closing a list of three or more, the fix is to delete the comma, not to land",
+    "here. Regenerate candidates with: node scripts/lint-prose.mjs --json"
+  ],
+  "allow": [
+    "So immediately before stage 4, the pipeline drops an empty schematic, a blank board with a default outline and a project file into place, and wires them into the config.",
+    "A failed attempt's rollback deletes it, because at that point it is still untracked, and a retry against a missing schematic fails worse than the failure it was recovering from.",
+    "Wait for the reset, run the same command, and the completed turns replay at roughly zero tokens.",
+    "On one recorded run, the schematic stage took 65 minutes, and five of its forty turns emitted 89% of the run's 170,920 output tokens.",
+    "The two older control boards came back byte-identical, so nothing regressed, and the buck converter is now a third pinned reference.",
+    "It has local repair moves, the router tries several trunk positions before falling back to labels, and a colliding label will walk itself outward along its stub, but there is no draft-check-redraft cycle inside the engine.",
+    "The draft layout is correct, not optimal, and it says so itself, in a that lists exactly what a specialist should redo before fab.",
+    "The draft layout is correct, not optimal, and it says so itself.",
+    "Edits are targeted changes to the s-expression source, which means your diffs stay readable and reviewable, and the parts of the file nobody asked about stay byte-identical.",
+    "Every claim made elsewhere here is a claim about behaviour, that the agent propagates a change across every artifact referencing it, that it refuses a request which breaks a recorded budget and cites the arithmetic, and none of that can be checked by reading the tool.",
+    "The alternative was a checker function per task, which is what most agent benchmarks do, and it was rejected.",
+    "(a change satisfying every recorded constraint exists), (no change does, so the correct behaviour is to decline and show the arithmetic) or (the repository is internally inconsistent in a way that reflects a requirement violation, and the correct behaviour is to surface both sides without resolving either).",
+    "Cost is computed from a dated, pinned price table, and the record stores both the figure and the table version so a later price change never rewrites history.",
+    "A model whose score collapses on variants is recalling, not reasoning, and that becomes a number instead of a suspicion."
+  ]
+}

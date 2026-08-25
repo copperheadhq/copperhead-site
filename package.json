@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "shots": "node scripts/shots.mjs"
+    "shots": "node scripts/shots.mjs",
+    "lint:prose": "node scripts/lint-prose.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.3",

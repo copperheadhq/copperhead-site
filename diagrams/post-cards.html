@@ -1,0 +1,419 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>copperhead post cards</title>
+  <style>
+    /* Title cards for the blog index, the post header and the link preview.
+       One 1200x630 card per post, rendered by scripts/render-cards.mjs into
+       public/blog/cards/<slug>-{light,dark}.png.
+
+       The reference is supermemory.ai/blog: paper, a wordmark and a rule along
+       the top, the title set large in the display face, and one small piece of
+       geometry. Nothing here is illustration. The motif is the site's own PCB
+       language — a trace, a pad, a via — drawn in copper hairlines at the same
+       stroke weight as the brand mark, so a card is a diagram of the argument
+       rather than a picture about it.
+
+       Every card is the same layout with two variables: the title and the
+       motif. That is the whole design. Resist adding a third. */
+
+    @font-face {
+      font-family: 'Space Grotesk';
+      src: url('../public/fonts/space-grotesk-var.woff2') format('woff2-variations');
+      font-weight: 300 700;
+    }
+
+    @font-face {
+      font-family: 'JetBrains Mono';
+      src: url('../public/fonts/jetbrains-mono-400.woff2') format('woff2');
+      font-weight: 400;
+    }
+
+    /* the 700 mono file is subset to the glyphs of "copperhead" only, so it is
+       loaded under its own name and used for exactly that word */
+    @font-face {
+      font-family: 'JBM Word';
+      src: url('../public/fonts/jetbrains-mono-700.woff2') format('woff2');
+      font-weight: 700;
+    }
+
+    :root {
+      color-scheme: light dark;
+      --bg: light-dark(#FDFCFC, #09090B);
+      --line: light-dark(#E5E5E8, #26262C);
+      --copper: light-dark(#A75F14, #D08F39);
+      --text: light-dark(#0A0A0A, #EDEDEF);
+      --text-dim: light-dark(#57575E, #9B9BA5);
+      --sans: 'Space Grotesk', -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .card {
+      position: relative;
+      width: 1200px;
+      height: 630px;
+      background: var(--bg);
+      font-family: var(--sans);
+      color: var(--text);
+      /* Generous, and deliberately so. The card is rendered at 1200x630 to
+         serve as the link preview at native size, but its main job is a 405px
+         grid cell, where everything on it is at a third of the size drawn
+         here. Two consequences run through the whole layout: nothing may be
+         set small, and the content needs real margin or it reads as pinned to
+         the edges once it shrinks. 88px is 7.3%, which also clears the 3.6%
+         each side that object-fit: cover crops off in the 16/9 slot.
+
+         There is no masthead row and no footer row. Both were tried and both
+         failed the same test: at a third of this size their text lands under
+         nine pixels and reads as noise. The card is the title and one piece of
+         geometry, and the kind, date and byline are real text on the page
+         directly beneath it. */
+      padding: 64px 88px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+
+    /* ---------- masthead: mark, name, kind ---------- */
+
+    /* Absolute, so it does not push the title down. With the masthead in the
+       flow the title centres in the space below it and the card reads
+       top-heavy with a dead band along the bottom.
+
+       No connecting rule between the name and the kind. A hairline is the
+       first thing to disappear when the card is painted at a third of this
+       size, and a line you cannot see is just a gap. Everything that stays is
+       sized to still be legible there: at 405px the card scales by 0.34, so
+       the 42px name lands at 14px and the 28px kind at 9.5px. */
+    .head {
+      position: absolute;
+      top: 60px;
+      left: 88px;
+      right: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand svg {
+      display: block;
+      flex: none;
+    }
+
+    .word {
+      font-family: 'JBM Word', var(--mono);
+      font-weight: 700;
+      font-size: 42px;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .kind {
+      font-family: var(--mono);
+      font-size: 28px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--copper);
+    }
+
+    /* ---------- body: title left, motif right ---------- */
+
+    .body {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .title {
+      flex: 1;
+      font-size: 92px;
+      font-weight: 500;
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+      text-wrap: balance;
+    }
+
+    /* A long title steps down rather than wrapping into five lines. */
+    .card[data-size='sm'] .title {
+      font-size: 74px;
+    }
+
+    .card[data-size='xs'] .title {
+      font-size: 62px;
+    }
+
+    .motif {
+      flex: none;
+      width: 250px;
+      height: 250px;
+    }
+
+    .motif svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* One stroke weight across every motif, matching the brand mark's ring. */
+    .motif [data-trace] {
+      fill: none;
+      stroke: var(--copper);
+      stroke-width: 3;
+      stroke-linecap: square;
+    }
+
+    .motif [data-dim] {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 3;
+      stroke-linecap: square;
+    }
+
+    /* A via reads as a ring on the page colour, not a filled dot: the hole is
+       the point. */
+    .motif [data-via] {
+      fill: var(--bg);
+      stroke: var(--copper);
+      stroke-width: 3;
+    }
+
+    .motif [data-pad] {
+      fill: none;
+      stroke: var(--copper);
+      stroke-width: 3;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- meet-copperhead · Product.
+       The brand mark at size: a via with four traces breaking out of it. The
+       introduction post gets the identity itself and no argument geometry. -->
+  <article class="card" data-slug="meet-copperhead">
+    <div class="head">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">Product</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">Meet copperhead.</h1>
+      <div class="motif">
+        <svg viewBox="0 0 200 200">
+          <path data-trace d="M100 24v46M100 130v46M24 100h46M130 100h46" />
+          <circle data-via cx="100" cy="100" r="30" />
+        </svg>
+      </div>
+    </div>
+  </article>
+
+  <!-- drift-is-a-build-failure · Problem.
+       Two traces leave the same pad and do not arrive at the same place. The
+       grey one is where the document stayed; the copper one is the board. -->
+  <article class="card" data-slug="drift-is-a-build-failure">
+    <div class="head">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">Problem</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">Drift is a build failure.</h1>
+      <div class="motif">
+        <svg viewBox="0 0 200 200">
+          <path data-trace d="M16 100h48l28-28h92" />
+          <path data-dim d="M64 100l28 28h92" />
+          <circle data-via cx="16" cy="100" r="11" />
+          <circle data-via cx="184" cy="72" r="11" />
+          <circle data-dim cx="184" cy="128" r="11" />
+        </svg>
+      </div>
+    </div>
+  </article>
+
+  <!-- spec-gated-in-verification-gated-out · Engineering.
+       One trace, two gates. Nothing enters without passing the first pad and
+       nothing leaves without passing the second. -->
+  <article class="card" data-slug="spec-gated-in-verification-gated-out" data-size="xs">
+    <div class="head">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">Engineering</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">Spec-gated in,<br>verification-gated out.</h1>
+      <div class="motif">
+        <svg viewBox="0 0 200 200">
+          <path data-trace d="M0 100h34M74 100h52M166 100h34" />
+          <rect data-pad x="34" y="70" width="40" height="60" />
+          <rect data-pad x="126" y="70" width="40" height="60" />
+          <circle data-via cx="100" cy="100" r="11" />
+        </svg>
+      </div>
+    </div>
+  </article>
+
+  <!-- antler-crackathon · Submission.
+       A trace routed round two corners into a via: the shape of a submission
+       that had to get somewhere by a deadline. -->
+  <article class="card" data-slug="antler-crackathon">
+    <div class="head">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">Submission</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">Cursor for circuit boards.</h1>
+      <div class="motif">
+        <svg viewBox="0 0 200 200">
+          <path data-trace d="M16 168h56l56-56h56" />
+          <path data-dim d="M16 112h28l56-56h56" />
+          <circle data-via cx="16" cy="168" r="11" />
+          <circle data-via cx="184" cy="112" r="11" />
+          <circle data-dim cx="184" cy="56" r="11" />
+        </svg>
+      </div>
+    </div>
+  </article>
+
+  <!-- from-brief-to-gerbers · Engineering.
+       Eight vias on one trace: the eight gated stages, in order, with the gate
+       between each pair drawn as the gap the trace has to cross. -->
+  <article class="card" data-slug="from-brief-to-gerbers">
+    <div class="head">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">Engineering</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">From brief.md<br>to gerbers.</h1>
+      <div class="motif">
+        <svg viewBox="0 0 200 200">
+          <path data-trace d="M18 148h46v-48h46V52h72" />
+          <circle data-via cx="18" cy="148" r="10" />
+          <circle data-via cx="64" cy="148" r="10" />
+          <circle data-via cx="64" cy="100" r="10" />
+          <circle data-via cx="110" cy="100" r="10" />
+          <circle data-via cx="110" cy="52" r="10" />
+          <circle data-via cx="182" cy="52" r="10" />
+        </svg>
+      </div>
+    </div>
+  </article>
+
+  <!-- ttfb-anycast · Engineering.
+       Three arcs of decreasing radius closing on one via: the round trips the
+       edge removes, and the origin they were all travelling to. -->
+  <article class="card" data-slug="ttfb-anycast" data-size="sm">
+    <div class="head">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">Engineering</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">Improving TTFB<br>with Anycast.</h1>
+      <div class="motif">
+        <svg viewBox="0 0 200 200">
+          <path data-dim d="M182 12A170 170 0 0 0 12 182" />
+          <path data-dim d="M148 46A122 122 0 0 0 26 168" />
+          <path data-trace d="M114 80A74 74 0 0 0 40 154" />
+          <circle data-via cx="26" cy="168" r="11" />
+        </svg>
+      </div>
+    </div>
+  </article>
+
+  <!-- faq · the hand-built page listed on the index alongside the posts.
+       One trace in, three out: a question and the answers it forks into. -->
+  <article class="card" data-slug="faq">
+    <div class="head">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">FAQ</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">Frequently asked questions.</h1>
+      <div class="motif">
+        <svg viewBox="0 0 200 200">
+          <path data-trace d="M16 100h48" />
+          <path data-trace d="M64 100v-56h56M64 100h56M64 100v56h56" />
+          <circle data-via cx="16" cy="100" r="11" />
+          <circle data-via cx="132" cy="44" r="11" />
+          <circle data-via cx="132" cy="100" r="11" />
+          <circle data-via cx="132" cy="156" r="11" />
+        </svg>
+      </div>
+    </div>
+  </article>
+
+</body>
+
+</html>

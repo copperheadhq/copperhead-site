@@ -1,9 +1,9 @@
 # GitHub only keeps repository traffic (views, clones, referrers, popular paths)
 # for a rolling 14 days, and serves nothing older through any API. The only way
 # to have a year of it is to have been writing it down all along. This workflow
-# is that: once a day it snapshots the traffic API for
-# chouhanindustries/copperhead, appends the new rows to a long-lived time series,
-# and commits the result to this repo's `github-repo-stats` branch.
+# is that: once a day it snapshots the traffic API for the copperhead repo,
+# appends the new rows to a long-lived time series, and commits the result to
+# this repo's `github-repo-stats` branch.
 #
 # The data lands as CSV under <owner>/<repo>/ghrs-data/ on that branch, which is
 # what src/repo-stats.ts reads at build time to render /stats/. The action also
@@ -20,8 +20,8 @@
 # and the traffic being read belongs to a different one (copperhead).
 #
 # Least privilege is a fine-grained PAT covering both repos:
-#   chouhanindustries/copperhead       Administration: read   (traffic endpoints)
-#   chouhanindustries/copperhead-site  Contents: read + write (push the data branch)
+#   copperheadhq/copperhead       Administration: read   (traffic endpoints)
+#   copperheadhq/copperhead-site  Contents: read + write (push the data branch)
 # Administration:read is a read permission, so the measured repo does not need to
 # grant push. A classic PAT with `repo` scope also works and is what upstream
 # documents, but `repo` is far broader than anything here needs.
@@ -50,8 +50,15 @@ jobs:
       - name: Collect and analyse
         uses: jgehrcke/github-repo-stats@306db38ad131cab2aa5f2cd3062bf6f8aa78c1aa
         with:
-          # The tracked repo, not the data repo. Kept in sync by hand with
-          # `repo` in src/config.ts, which is what the site reads the data under.
+          # The tracked repo, not the data repo — and deliberately the
+          # pre-rename slug rather than `repo` in src/config.ts, which now says
+          # copperheadhq/copperhead. GitHub 301s this to the new owner, so the
+          # traffic read still resolves, while the action keeps filing its output
+          # under the <owner>/<repo>/ directory the existing series already lives
+          # in. Pointing it at the new slug would start an empty series beside the
+          # old one. Kept in sync by hand with `trackedDataSlug` in
+          # src/repo-stats.ts; moving the data means renaming that directory on
+          # the data branch and changing both in one commit.
           repository: chouhanindustries/copperhead
           ghtoken: ${{ secrets.GHRS_GITHUB_API_TOKEN }}
           databranch: github-repo-stats

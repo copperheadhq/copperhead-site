@@ -8,7 +8,7 @@
  * Every fetch is guarded the same way assets.ts gates on file presence: if the
  * repo or package is not published yet (or an API is down), the value is null
  * and the UI hides that stat rather than shipping a broken control. Nothing to
- * render until `chouhanindustries/copperhead` and the `copperhead` npm package
+ * render until `copperheadhq/copperhead` and the `copperhead` npm package
  * are public — the numbers appear on the first build after that.
  *
  * ES modules are singletons, so the two fetches run once for the whole build

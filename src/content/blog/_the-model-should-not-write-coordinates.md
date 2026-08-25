@@ -8,7 +8,7 @@ kind: 'Engineering'
 There is a failure mode that looks like success. The schematic passes ERC. Every net
 is right, every part is real, the pin types check out. And then you open it and the
 refdes text sits on top of a symbol body, the whole design is crammed into 40% of
-the page, nothing flows left to right, and the title block is empty.
+the page, nothing flows left to right and the title block is empty.
 
 Nothing caught that, because nothing was looking. ERC checks the net graph. It has
 no opinion about the drawing.
@@ -26,13 +26,13 @@ observed failure in that run, provider error, budget exhaustion, stall, landed o
 one of them.
 
 It is also expensive in a less obvious way. If placement is sampled, it is different
-every time. There is nothing to regression-test, nothing to pin, and no way to say
+every time. There is nothing to regression-test, nothing to pin and no way to say
 that a fix stayed fixed.
 
 ## Intent in, geometry out
 
 The model no longer writes geometry. It writes a netlist intent file: parts, nets,
-group assignments, declared no-connects, and a few hints. No coordinates, and not by
+group assignments, declared no-connects and a few hints. No coordinates, and not by
 convention. The schema has no field for one.
 
 ```json
@@ -46,7 +46,7 @@ A rule-based engine turns that into the sheet. It classifies nets by pin electri
 type, works out which capacitor decouples which chip, tiles the subsystem groups
 left to right, places parts within a group by layering and barycenter ordering on an
 integer 1.27mm grid, hangs rails up and grounds down, decides per net whether a
-short local wire or a pair of labels reads better, and sizes the paper to the
+short local wire or a pair of labels reads better, then sizes the paper to the
 content.
 
 For the DC-DC converter we drafted this week, the model's authored surface is 45
@@ -56,13 +56,13 @@ copied verbatim out of the KiCad libraries, authored by nobody.
 ## Determinism is the whole point
 
 Identical intent produces a byte-identical file. That is a hard guarantee, and it
-took some care to hold: identifiers are UUIDv5 derived from stable semantic paths
-rather than generated fresh, the title block date comes from the intent file instead
-of the wall clock, and symbol definitions are vendored into a committed project
-cache on first use so a KiCad library upgrade cannot silently change your output.
+took some care to hold. Identifiers are UUIDv5 derived from stable semantic paths
+rather than generated fresh. The title block date comes from the intent file instead
+of the wall clock. Symbol definitions are vendored into a committed project cache
+on first use, so a KiCad library upgrade cannot silently change your output.
 
 Which means a drafted board can be a test fixture. We keep control boards in the
-repository: an LDO, a transistor switch, and now a buck converter. CI re-drafts each
+repository: an LDO, a transistor switch and now a buck converter. CI re-drafts each
 one and compares it to a committed reference byte for byte. A single changed
 coordinate fails the build.
 
@@ -87,7 +87,7 @@ authored, regeneration from intent is the mechanism, not a fallback.
 The two original control boards were tame. So we pointed the engine at a 12V to 5V,
 20W buck converter: a TPS54560B with an enable-divider lockout, a compensation
 network, a bootstrap capacitor, a Schottky catch diode, a feedback divider with a
-feedforward capacitor, 24 parts and 11 nets, and 18 endpoints on ground.
+feedforward capacitor, 24 parts and 11 nets and 18 endpoints on ground.
 
 It produced a schematic that passed ERC with zero violations and failed the
 legibility checker with three errors.
@@ -108,7 +108,7 @@ reference.
 ## Why that is worth something
 
 An engine that makes a mistake makes it the same way every time. That is not a
-consolation, it is the property that makes the mistake findable, fixable, and
+consolation, it is the property that makes the mistake findable, fixable and
 provably gone. A model that samples placement can produce the same three defects and
 you would never be able to tell, because it would not produce the same file twice.
 
@@ -122,7 +122,7 @@ the engine.
 
 That boundary has a consequence worth stating plainly. The agent's only lever is the
 intent file, so a legibility error caused by the engine's own placement is not
-something the agent can repair. It would keep the obligation open, refuse to finish,
+something the agent can repair. It would keep the obligation open, refuse to finish
 and eventually stop for a human, correctly and uselessly. All three defects above
 were of exactly that kind. They needed an engine change, not a better prompt.
 
