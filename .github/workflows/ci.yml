@@ -63,6 +63,23 @@ jobs:
           done
           exit $fail
 
+      # Every published page (the sitemap, plus the 404) rendered against the
+      # built dist at seven widths spanning the stylesheet's breakpoint bands,
+      # failing on horizontal scroll, viewport bleed, console errors or a
+      # wrong HTTP status. This is the gate for the class of bug that shipped
+      # from-brief-to-gerbers with a 220px rail column on phones: a
+      # media-query collapse that one page's higher-specificity rule quietly
+      # outranked. One theme only — every audited metric is geometry, and the
+      # theme CSS swaps colours and equal-size image pairs, never boxes. Off-
+      # origin requests are blocked inside the audit, so these ~100 page loads
+      # never reach the production analytics. Uses the runner's own Chrome;
+      # curl --retry fails this step outright if preview never comes up.
+      - name: layout audit
+        run: |
+          npx astro preview &
+          curl -sf --retry 30 --retry-connrefused --retry-delay 1 -o /dev/null http://localhost:4321/
+          npm run check:layout
+
       # W-10: total transfer excluding video stays under 100 KB
       - name: transfer budget
         run: |

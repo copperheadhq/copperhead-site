@@ -18,6 +18,10 @@ interface Props {
   ogImageAlt?: string;
   /** ISO date for article:published_time (blog posts only). */
   publishedTime?: string;
+  /** Emit <meta name="robots" content="noindex">. The 404 page: Cloudflare
+      serves dist/404.html with a 200 at /404 itself, and a 200 page titled
+      "Page not found" that declares itself canonical is a textbook soft 404. */
+  noindex?: boolean;
 }
 
 const {
@@ -29,6 +33,7 @@ const {
   ogImage: ogImagePath = siteCard,
   ogImageAlt = 'copperhead: an open-source AI agent for circuit board design',
   publishedTime,
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(path, site).href;
@@ -61,6 +66,7 @@ const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
 
     {/* Above the theme script, not down with the other <link>s: the script
