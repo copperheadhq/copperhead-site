@@ -53,6 +53,9 @@ export const links = {
   // TODO(launch): confirm the real inbox before launch; copperhead.sh has no MX
   // record yet, so this address may bounce.
   contact: 'mailto:hello@copperhead.sh',
+  // This website's own repo, distinct from the product repo above; the 404
+  // page points a reader who followed a broken internal link at its issues.
+  siteIssues: 'https://github.com/copperheadhq/copperhead-site/issues',
   discord: 'https://discord.gg/24zYXuR3Pq',
   x: 'https://x.com/copperheadhq',
   linkedin: 'https://www.linkedin.com/company/copperheadhq',

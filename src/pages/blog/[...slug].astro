@@ -449,8 +449,14 @@ const jsonLd = {
   /* A post that delegates its body to an imported partial returns no headings
      from render(), so there is no outline to rail. The column goes with it
      rather than standing there ruled and empty: from-brief-to-gerbers is that
-     post, and it was holding 220px for nothing. */
-  .post-layout.no-toc {
+     post, and it was holding 220px for nothing.
+
+     :where() keeps the variant at one class of specificity. A media query
+     adds none, so a bare two-class selector here outranks the single-class
+     collapse at 1080px and the no-toc post keeps its rail column on phones —
+     that bug shipped once. Any future .post-layout variant must take the same
+     :where() shape. */
+  .post-layout:where(.no-toc) {
     grid-template-columns: 220px minmax(0, 1fr);
   }
 
@@ -870,12 +876,10 @@ const jsonLd = {
 
   /* ---- Collapse ---- */
 
-  /* Both selectors, because a media query adds no specificity: without the
-     second, the two-class .no-toc rule above outranks this collapse and the
-     one no-toc post keeps its 220px rail column on phones. */
+  /* Wins over every variant by source order alone, because the variants are
+     declared with :where() and so never exceed this rule's one class. */
   @media (max-width: 1080px) {
-    .post-layout,
-    .post-layout.no-toc {
+    .post-layout {
       grid-template-columns: minmax(0, 1fr);
     }
 

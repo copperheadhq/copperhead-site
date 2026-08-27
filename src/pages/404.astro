@@ -14,6 +14,7 @@ import { links } from '../config';
   title="Page not found · copperhead"
   description="This page does not exist. The rest of the site does."
   path="/404"
+  noindex
 >
   <Navbar home={false} />
   <main>
@@ -24,7 +25,7 @@ import { links } from '../config';
         <p class="sub">
           Nothing lives at this address. If a link on this site sent you here,
           that is a bug worth{" "}
-          <a href="https://github.com/copperheadhq/copperhead-site/issues">reporting</a>.
+          <a href={links.siteIssues}>reporting</a>.
         </p>
         <nav class="routes" aria-label="Places that do exist">
           <a href="/">Home</a>
