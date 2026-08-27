@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { links } from '../config';
+
+// Built to dist/404.html; wrangler.jsonc's `not_found_handling: "404-page"` is
+// what makes Cloudflare serve it for a miss instead of an empty 404. The audit
+// in scripts/shots.mjs reaches it the same way, through a route that does not
+// exist.
+---
+
+<Base
+  title="Page not found · copperhead"
+  description="This page does not exist. The rest of the site does."
+  path="/404"
+>
+  <Navbar home={false} />
+  <main>
+    <article class="notfound">
+      <div class="wrap">
+        <p class="kind">404</p>
+        <h1>Page not found</h1>
+        <p class="sub">
+          Nothing lives at this address. If a link on this site sent you here,
+          that is a bug worth{" "}
+          <a href="https://github.com/copperheadhq/copperhead-site/issues">reporting</a>.
+        </p>
+        <nav class="routes" aria-label="Places that do exist">
+          <a href="/">Home</a>
+          <a href={links.blog}>Blog</a>
+          <a href={links.docs}>Docs</a>
+        </nav>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .notfound {
+    padding-block: 150px 120px;
+  }
+
+  .kind {
+    margin: 0 0 1.1rem;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    letter-spacing: -0.045em;
+  }
+
+  .sub {
+    margin: 0.75rem 0 0;
+    max-width: 48ch;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .routes {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .routes a {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+    padding: 0.55rem 1rem;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .routes a:hover {
+    color: var(--copper);
+    border-color: var(--copper);
+  }
+
+  @media (max-width: 640px) {
+    .notfound {
+      padding-block: 110px 80px;
+    }
+  }
+</style>
