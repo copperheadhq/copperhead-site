@@ -63,6 +63,21 @@ jobs:
           done
           exit $fail
 
+      # Every published page (the sitemap, plus the 404) rendered at phone,
+      # tablet and desktop widths against the built dist, failing on horizontal
+      # scroll, elements bleeding past the viewport, or console errors. This is
+      # the gate for the class of bug that shipped from-brief-to-gerbers with a
+      # 220px rail column on phones: a media-query collapse that one page's
+      # higher-specificity rule quietly outranked. Uses the runner's own Chrome.
+      - name: layout audit
+        run: |
+          npx astro preview &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:4321/ > /dev/null && break
+            sleep 1
+          done
+          npm run check:layout
+
       # W-10: total transfer excluding video stays under 100 KB
       - name: transfer budget
         run: |

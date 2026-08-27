@@ -86,7 +86,9 @@ const commitments = [
     <p class="index">02 · Compare</p>
     <h2 class="section-title">The whole ladder, side by side.</h2>
 
-    <div class="table-scroll">
+    {/* data-bleed-ok: the 720px table scrolls inside this box by design, so
+        the shots.mjs audit should not report it as page overflow. */}
+    <div class="table-scroll" data-bleed-ok>
       <table>
         <thead>
           <tr>

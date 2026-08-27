@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "shots": "node scripts/shots.mjs",
+    "check:layout": "node scripts/shots.mjs --audit --all --only iphone-se,pixel-7,ipad-mini,laptop-720,fhd",
     "lint:prose": "node scripts/lint-prose.mjs"
   },
   "dependencies": {

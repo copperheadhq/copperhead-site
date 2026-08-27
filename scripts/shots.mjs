@@ -3,6 +3,14 @@
 //   npm run shots                     every viewport, both themes
 //   npm run shots -- --only fhd,2k    just those viewports
 //   npm run shots -- --audit          no images, print the measurement table
+//   npm run shots -- --all            every path in the server's sitemap, plus
+//                                     a route that does not exist (the 404 page)
+//
+// Exits non-zero when any page overflows sideways, bleeds past the viewport or
+// logs a console error, so `--audit --all` doubles as the CI layout gate. In
+// audit mode pages load with reduced motion and skip the animation wait — the
+// finished layout is the same one, it just arrives without the 13-second
+// terminal replay.
 //
 // The point of this over eyeballing a browser window is the audit table: it
 // answers the two questions the hero's layout is actually built around — does
@@ -26,8 +34,25 @@ const flag = n => argv.includes(`--${n}`);
 const opt = n => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] : null; };
 
 const AUDIT_ONLY = flag('audit');
-const PATHS = (opt('path') ?? '/').split(',');
 const THEMES = (opt('themes') ?? 'light,dark').split(',');
+
+// --all reads the page list from the sitemap the site itself publishes, so a
+// new post is covered here for the same reason it cannot be forgotten there
+// (sitemap.xml.ts generates both from the collections). The one route the
+// sitemap will never carry is appended by hand: a miss, which is how the 404
+// page gets the same layout audit as every page that exists.
+const MISS = '/this-route-does-not-exist/';
+
+async function resolvePaths() {
+  if (!flag('all')) return (opt('path') ?? '/').split(',');
+  const res = await fetch(`${BASE}/sitemap.xml`);
+  if (!res.ok) throw new Error(`GET ${BASE}/sitemap.xml: ${res.status}`);
+  const paths = [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map(m => new URL(m[1]).pathname);
+  if (!paths.length) throw new Error('sitemap.xml listed no pages');
+  return [...paths, MISS];
+}
+const PATHS = await resolvePaths();
 
 // Named so `--only` reads well. Heights are the usable viewport, not the panel:
 // a "1080p" desktop browser shows ~980px once chrome is subtracted, which is
@@ -83,6 +108,11 @@ for (const theme of THEMES) {
       isMobile: !!v.mobile,
       hasTouch: !!v.mobile,
       colorScheme: theme,
+      // Audit measures the finished layout, not the take: reduced motion makes
+      // every timed component render its end state immediately (the same state
+      // a screenshot waits the whole run for), which is what keeps a
+      // full-sitemap audit at seconds per page rather than fifteen.
+      reducedMotion: AUDIT_ONLY ? 'reduce' : 'no-preference',
     });
     // The site stamps <html data-theme> from this key before first paint, so
     // setting it here is what actually pins the theme; colorScheme above only
@@ -94,7 +124,19 @@ for (const theme of THEMES) {
     for (const path of PATHS) {
       const page = await ctx.newPage();
       const errors = [];
-      page.on('console', m => m.type() === 'error' && errors.push(m.text()));
+      page.on('console', m => {
+        if (m.type() !== 'error') return;
+        const at = m.location()?.url ?? '';
+        // An off-origin resource failing (a status API refusing a CI runner)
+        // is that service's weather, not this site's; outbound URLs have the
+        // link check. Script errors carry no such excuse and arrive through
+        // pageerror below regardless of where the script was served from.
+        if (at && !at.startsWith(BASE)) return;
+        // On the deliberate miss, the document itself answering 404 is the
+        // behaviour under test, not a failure of it.
+        if (path === MISS && at === BASE + path) return;
+        errors.push(m.text());
+      });
       page.on('pageerror', e => errors.push(`pageerror: ${e.message}`));
 
       await page.goto(BASE + path, { waitUntil: 'networkidle' });
@@ -103,13 +145,17 @@ for (const theme of THEMES) {
       // The hero transcript is a ~10.4s timed run. Let every finite animation
       // finish so a shot shows the completed readout — the `done · verified
       // erc …` line — rather than an empty window. The spinner never ends, so
-      // it is filtered out by its iteration count.
-      await page.evaluate(() => Promise.all(
-        document.getAnimations()
-          .filter(a => a.effect?.getComputedTiming?.().iterations !== Infinity)
-          .map(a => a.finished.catch(() => {}))
-      ));
-      await page.waitForTimeout(400);
+      // it is filtered out by its iteration count. Audit mode skips the wait:
+      // reduced motion (set on the context above) already landed every page on
+      // its finished state.
+      if (!AUDIT_ONLY) {
+        await page.evaluate(() => Promise.all(
+          document.getAnimations()
+            .filter(a => a.effect?.getComputedTiming?.().iterations !== Infinity)
+            .map(a => a.finished.catch(() => {}))
+        ));
+      }
+      await page.waitForTimeout(AUDIT_ONLY ? 150 : 400);
 
       rows.push({
         theme, path, viewport: v.name, size: `${v.w}x${v.h}`,
@@ -191,6 +237,9 @@ if (problems.length) {
     if (r.bleed.length) console.log(`  ${r.viewport} ${r.path} overflows: ${r.bleed.join(', ')}`);
     for (const e of r.errors) console.log(`  ${r.viewport} ${r.path} console: ${e}`);
   }
+  // A problem is a failure, not a table entry: this is what lets CI run the
+  // audit as a gate rather than as a report someone has to remember to read.
+  process.exitCode = 1;
 } else {
   console.log('\nNo horizontal overflow or console errors.');
 }
