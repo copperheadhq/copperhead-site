@@ -870,8 +870,12 @@ const jsonLd = {
 
   /* ---- Collapse ---- */
 
+  /* Both selectors, because a media query adds no specificity: without the
+     second, the two-class .no-toc rule above outranks this collapse and the
+     one no-toc post keeps its 220px rail column on phones. */
   @media (max-width: 1080px) {
-    .post-layout {
+    .post-layout,
+    .post-layout.no-toc {
       grid-template-columns: minmax(0, 1fr);
     }
 
