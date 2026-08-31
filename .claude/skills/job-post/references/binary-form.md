@@ -4,7 +4,7 @@ One form per published role, built by hand at binary.so and linked from that rol
 `applyUrl` in [src/careers.ts](../../../../src/careers.ts), plus one general intake form
 behind `careersApply`. The specs are here, ready to enter field by field:
 
-- [form-founding-ai-engineer.md](form-founding-ai-engineer.md), live at [binary.so/ejd7Mkv](https://binary.so/ejd7Mkv)
+- [form-founding-ai-engineer.md](form-founding-ai-engineer.md), live at [binary.so/ejd7Mkv](https://binary.so/ejd7Mkv), and the live form is behind the spec
 - [form-ai-research-intern.md](form-ai-research-intern.md), live at [binary.so/lazoJrH](https://binary.so/lazoJrH)
 - [form-forward-deployed-hardware-engineer.md](form-forward-deployed-hardware-engineer.md), live at [binary.so/3sX6dXu](https://binary.so/3sX6dXu)
 - [form-general-application.md](form-general-application.md), the open application
