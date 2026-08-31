@@ -26,11 +26,15 @@ export const GET: APIRoute = async () => {
     // listing cannot be advertised here while having no page to land on. This
     // is also what enrols the section in `npm run check:layout`, which takes its
     // page list from this file.
+    // No lastmod: `posted` is the date the listing went up, and a role is
+    // edited in place afterwards. Reporting it here tells a crawler the page
+    // has not changed since it was posted, which is how a rewritten listing
+    // gets recrawled late. The posts above can use their own date because a
+    // post's content is fixed at publication; a role's is not.
     ...openRoles.map((r) => ({
       loc: rolePath(r.slug),
       changefreq: 'monthly',
       priority: '0.5',
-      ...(r.posted ? { lastmod: r.posted } : {}),
     })),
     ...posts.map((p) => ({
       loc: postPath(p.id),

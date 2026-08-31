@@ -7,16 +7,16 @@ description: Add, edit or close a role on this site's careers section, in the ho
 
 ## Where a role lives
 
-Everything is one array in [src/careers.ts](src/careers.ts). There is no content
+Everything is one array in [src/careers.ts](../../../../src/careers.ts). There is no content
 collection for roles and there should not be: every field lands in a fixed slot on the
 card and on the role page, so two roles cannot end up making different promises about
 what a role page contains.
 
-- [src/careers.ts](src/careers.ts) is the `Role` interface, the array and the helpers.
+- [src/careers.ts](../../../../src/careers.ts) is the `Role` interface, the array and the helpers.
   Read the interface first. Every field carries a comment saying what it is for.
-- [src/pages/careers/index.astro](src/pages/careers/index.astro) is the index: role
+- [src/pages/careers/index.astro](../../../../src/pages/careers/index.astro) is the index: role
   cards, the "how we work" block, the open application at the foot.
-- [src/pages/careers/[...slug].astro](src/pages/careers/%5B...slug%5D.astro) is one
+- [src/pages/careers/[...slug].astro](../../../../src/pages/careers/%5B...slug%5D.astro) is one
   page per role.
 
 Adding a role means adding one object to `roles`. The route, the card, the sitemap
@@ -119,7 +119,7 @@ role select, plus a general intake form for people who do not know which role th
 specs; each spec is complete on its own and is entered field by field into binary.
 
 `applyHref` resolves most specific first: the role's own `applyUrl`, then
-`careersApply` in [src/config.ts](src/config.ts), then `careers@copperhead.sh` with the
+`careersApply` in [src/config.ts](../../../../src/config.ts), then `careers@copperhead.sh` with the
 subject line pre-filled. The button label follows, so a mailto is never dressed up as
 an application form.
 
@@ -161,12 +161,18 @@ and remember the URL is now a 404 for anyone holding the link.
 ```bash
 npm run build            # the routes and the sitemap follow from the array
 npx astro dev --background
-npm run check:layout     # every viewport, sitemap-driven, so it now covers /careers
+npm run check:layout     # sitemap-driven, so it now covers /careers
 npx astro dev stop
 ```
 
 If you added or closed a role, its binary.so form needs the matching change. That work
 is not in this repository and nothing here will fail without it.
+
+`check:layout` is not every viewport. The npm script pins seven of the sixteen
+and one theme, which is a deliberate CI cost trade and not a claim of full
+coverage. A long role title that only overflows at `ipad-pro`, or anything that
+moves in dark mode alone, passes this gate. Run `npm run shots -- --audit --all`
+if a listing is unusually long.
 
 Then read the built page. Two things worth checking with your eyes rather than a
 grep: that the meta row reads correctly for the workplace you set, and that no

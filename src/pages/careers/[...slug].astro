@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
+import RoleMeta from "../../components/RoleMeta.astro";
 import { site, links } from "../../config";
 import {
   openRoles,
@@ -47,12 +48,15 @@ const external = isExternalApply(role);
     <article>
       <div class="wrap">
         <header>
-          <div class="meta">
-            <span class="kind">{role.discipline}</span>
-            <span>{role.location}</span>
-            <span>{role.workplace}</span>
-            <span>{role.commitment}</span>
-          </div>
+          <RoleMeta
+            accent
+            items={[
+              role.discipline,
+              role.location,
+              role.workplace,
+              role.commitment,
+            ]}
+          />
           <h1>{role.title}</h1>
           <p class="standfirst">{role.summary}</p>
         </header>
@@ -154,48 +158,12 @@ const external = isExternalApply(role);
     max-width: 760px;
   }
 
-  .meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--text-dim);
-    margin-bottom: 1.5rem;
+  /* The role page gives the fact row more air beneath it than a card does.
+     RoleMeta reads this; see the note there on why it is a custom property. */
+  header {
+    --role-meta-gap: 1.5rem;
   }
 
-  /* Drawn, not typed: a middot between the three facts keeps them one string to
-     a screen reader while still reading as a separated row. */
-  .meta span + span::before {
-    content: "";
-    display: inline-block;
-    width: 3px;
-    height: 3px;
-    margin-right: 14px;
-    vertical-align: 2px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.5;
-  }
-
-  /* The separator is drawn on the span rather than in the gap, so a row that
-     wraps would otherwise start its second line with a leading dot. Hidden
-     below the width where four facts stop fitting on one line. */
-  @media (max-width: 460px) {
-    .meta span + span::before {
-      display: none;
-    }
-
-    .meta {
-      gap: 6px 14px;
-    }
-  }
-
-  .kind {
-    color: var(--copper);
-  }
 
   h1 {
     font-size: clamp(2rem, 5vw, 3rem);

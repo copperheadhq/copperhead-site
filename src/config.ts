@@ -62,6 +62,10 @@ export const links = {
   // different person without moving everything else with it. It is the fallback
   // behind every "Apply" button until `careersApply` and the per-role
   // `applyUrl`s are filled in: see `applyHref` in src/careers.ts.
+  // TODO(careers): confirm a routing rule (or a catch-all) exists for this
+  // address before the roles are announced anywhere. It is the destination of
+  // every apply button while `careersApply` is null, so if nothing routes it,
+  // applications bounce and nothing here reports it.
   careersEmail: 'mailto:careers@copperhead.sh',
   // This website's own repo, distinct from the product repo above; the 404
   // page points a reader who followed a broken internal link at its issues.

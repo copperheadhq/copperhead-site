@@ -1,4 +1,4 @@
-import { links, careersApply } from './config';
+import { links, careersApply, site } from './config';
 
 /**
  * Open roles, and the helpers the two /careers routes share.
@@ -20,7 +20,43 @@ export interface RoleAddress {
   country: string;
 }
 
-export interface Role {
+/**
+ * schema.org spelling of `commitment`, and the set `commitment` may take.
+ *
+ * Declared above `Role` so the field can be typed against it instead of being
+ * a bare string. A free string compiles a typo like 'Full time' straight
+ * through: the meta row prints it, the lookup below misses it, and the posting
+ * loses `employmentType` with nothing failing anywhere to say so.
+ */
+const EMPLOYMENT_TYPE = {
+  'Full-time': 'FULL_TIME',
+  'Part-time': 'PART_TIME',
+  Contract: 'CONTRACTOR',
+  Internship: 'INTERN',
+} as const;
+
+/**
+ * Pay: the sentence a candidate reads, and optionally the numbers Google wants.
+ *
+ * `text` is the only part that renders. The rest exists because a band written
+ * for a person, '40L to 60L plus equity', cannot be parsed back into currency,
+ * value and unit without guessing at precisely the fields a stranger may act
+ * on. Fill the numbers in and the page and the posting agree. Fill in only
+ * `text` and the page states a band the markup stays silent about, which is
+ * incomplete rather than wrong, and is the right way round of the two.
+ */
+export interface RolePay {
+  /** The sentence under the Pay heading. Required whenever pay is stated. */
+  text: string;
+  /** ISO 4217, e.g. 'INR'. Emits `baseSalary` together with `unit` and a bound. */
+  currency?: string;
+  min?: number;
+  max?: number;
+  unit?: 'HOUR' | 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
+}
+
+/** Everything about a role except where it is worked. See `Role`. */
+interface RoleBase {
   /** URL segment. Stable once posted: it is what a candidate bookmarks. */
   slug: string;
   title: string;
@@ -28,25 +64,8 @@ export interface Role {
   discipline: string;
   /** Display string for the meta row, e.g. 'Bengaluru, India'. */
   location: string;
-  /**
-   * Where the work happens. Shown beside `location`, and it decides which
-   * branch of the JobPosting markup applies: a remote role is described by the
-   * region it can be worked from, anything else by a real address.
-   */
-  workplace: 'On-site' | 'Hybrid' | 'Remote';
-  /**
-   * The address behind `location`. Required for an On-site or Hybrid role:
-   * schema.org wants a jobLocation for one, and 'Bengaluru, India' as a display
-   * string is not one.
-   */
-  address?: RoleAddress;
-  /**
-   * Where a Remote role may be worked from, as a country name. Google wants
-   * `applicantLocationRequirements` on a TELECOMMUTE posting, so a remote role
-   * with `posted` set and this left off produces an incomplete one.
-   */
-  hiringRegion?: string;
-  commitment: string;
+  /** Matched against EMPLOYMENT_TYPE for the schema, so it is typed against it. */
+  commitment: keyof typeof EMPLOYMENT_TYPE;
   /** One sentence. Shown on the card and used as the role page's meta description. */
   summary: string;
   /** Why the role exists, in the team's own words rather than a requirements preamble. */
@@ -71,7 +90,7 @@ export interface Role {
    * The section is omitted when this is unset, because an empty Pay heading is
    * worse than no heading. Leaving it unset is a choice, not a default.
    */
-  pay?: string;
+  pay?: RolePay;
   /**
    * False keeps a role out of the index, out of getStaticPaths and out of the
    * sitemap. Same idea as the underscore prefix on a draft post: a half-written
@@ -87,6 +106,15 @@ export interface Role {
    * second flag to forget.
    */
   posted?: string;
+  /**
+   * ISO date the posting stops being true, if one is known.
+   *
+   * Google keeps serving a posting it has ingested until it expires or the URL
+   * stops answering, so a role closed by flipping `published` to false leaves
+   * a listing in the index pointing at a 404. Setting this is how a closing
+   * date announces itself in advance. It is a date, so it is never guessed.
+   */
+  validThrough?: string;
   /** Per-role override of the application destination. `applyHref` explains the order. */
   applyUrl?: string;
   /**
@@ -102,6 +130,33 @@ export interface Role {
    */
   applySend?: string[];
 }
+
+/**
+ * A role, with `workplace` and the field describing where it is worked bound
+ * together rather than left as three fields that happen to agree.
+ *
+ * They were optional and independent, which let an on-site role with no
+ * `address` compile, build and render a normal-looking page while emitting a
+ * JobPosting carrying neither `jobLocation` nor `jobLocationType`. Google
+ * requires one of the two, so that posting is invalid, and nothing on the page
+ * looks wrong. The union makes the two bad pairings unwriteable instead.
+ *
+ * On-site and hybrid are described by the place you would go. Remote is
+ * described by where it may be worked from: sending TELECOMMUTE for a role
+ * with an address is how a Bengaluru job turns up in a search for remote work.
+ */
+export type Role =
+  | (RoleBase & {
+      workplace: 'On-site' | 'Hybrid';
+      address: RoleAddress;
+      hiringRegion?: never;
+    })
+  | (RoleBase & {
+      workplace: 'Remote';
+      /** Country name. Google wants it on a TELECOMMUTE posting. */
+      hiringRegion: string;
+      address?: never;
+    });
 
 export const roles: Role[] = [
   {
@@ -213,7 +268,7 @@ export const roles: Role[] = [
     ],
     applyUrl: 'https://binary.so/lazoJrH',
     applyNote:
-      'Send your GitHub, your portfolio, your publications or a technically ambitious project you have built. That is the part we read first.',
+      'The form asks for your GitHub, your portfolio and your publications, so have them to hand. That is the part we read first.',
     // TODO(careers): no stipend was given for this role, so the Pay section does
     // not render. Set it to the figure you are willing to state.
     published: true,
@@ -293,19 +348,74 @@ export const roles: Role[] = [
   },
 ];
 
-/** schema.org spelling of `commitment`. Anything unmapped is simply left off. */
-const EMPLOYMENT_TYPE: Record<string, string> = {
-  'Full-time': 'FULL_TIME',
-  'Part-time': 'PART_TIME',
-  Contract: 'CONTRACTOR',
-  Internship: 'INTERN',
-};
+/** Canonical path for a role page. */
+export const rolePath = (slug: string) => `/careers/${slug}/`;
+
+/**
+ * Role copy, escaped for embedding in the description's HTML.
+ *
+ * The description is the one JSON-LD value that carries markup, and Base.astro
+ * writes the serialised block with set:html, so an unescaped angle bracket in
+ * a listing is the only thing standing between role copy and the page's own
+ * script tag. Nothing in `roles` contains one today. This is so that staying
+ * true is not a thing anyone has to remember while writing a job ad.
+ */
+const esc = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const htmlList = (items: string[]) =>
+  `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>`;
+
+/**
+ * The posting's description, as the full HTML Google asks for.
+ *
+ * Not `summary`. Google's JobPosting guidance wants the complete description
+ * and rules out a summary or a restatement of the title, so sending the card
+ * blurb is how a listing that renders four sections of real copy enters a job
+ * index describing itself in one sentence. The headings below are the role
+ * page's own headings, so the posting and the page cannot drift into
+ * describing different jobs.
+ */
+function jobDescriptionHtml(role: Role): string {
+  return [
+    `<p>${esc(role.context)}</p>`,
+    '<h2>What you would own</h2>',
+    htmlList(role.work),
+    `<h2>${esc(role.fitHeading ?? 'What we look for')}</h2>`,
+    htmlList(role.fit),
+    role.fitNote ? `<p>${esc(role.fitNote)}</p>` : '',
+    role.extra.length ? `<h2>Nice to have</h2>${htmlList(role.extra)}` : '',
+    role.pay ? `<h2>Pay</h2><p>${esc(role.pay.text)}</p>` : '',
+  ].join('');
+}
+
+/**
+ * `baseSalary`, and only for a band whose numbers were actually given.
+ *
+ * A role may state pay as prose alone. That renders a Pay section and emits no
+ * salary, which is a posting that says less than the page rather than one that
+ * says something different, and only the second of those misleads anybody.
+ */
+function baseSalary(pay: RolePay | undefined) {
+  if (!pay?.currency || !pay.unit) return null;
+  if (pay.min === undefined && pay.max === undefined) return null;
+  return {
+    '@type': 'MonetaryAmount',
+    currency: pay.currency,
+    value: {
+      '@type': 'QuantitativeValue',
+      ...(pay.min !== undefined ? { minValue: pay.min } : {}),
+      ...(pay.max !== undefined ? { maxValue: pay.max } : {}),
+      unitText: pay.unit,
+    },
+  };
+}
 
 /**
  * JobPosting node for a role, or null for one that has no `posted` date.
  *
  * Null is the normal answer for a role that is not open yet, and both routes
- * are written to take it: the index drops the role from `hasPart` and the role
+ * are written to take it: the index drops the role from its list and the role
  * page emits no job markup at all. That is the whole reason the gate is a date
  * rather than a boolean. A boolean can be set on a listing nobody has actually
  * published; `datePosted` is required by schema.org and by Google's job
@@ -315,50 +425,58 @@ const EMPLOYMENT_TYPE: Record<string, string> = {
 export function jobPostingJsonLd(role: Role): Record<string, unknown> | null {
   if (!role.posted) return null;
 
-  const employmentType = EMPLOYMENT_TYPE[role.commitment];
-
-  // Two different claims, not two spellings of one. A remote role is described
-  // by where it may be worked from; an on-site or hybrid role is described by
-  // the place you would go. Sending TELECOMMUTE for a role with an address is
-  // how a Bengaluru job turns up in a search for remote work.
+  // The union on Role guarantees the field each branch reads, so neither can
+  // fall through to a posting with no location.
   const where =
     role.workplace === 'Remote'
       ? {
           jobLocationType: 'TELECOMMUTE',
-          ...(role.hiringRegion
-            ? {
-                applicantLocationRequirements: {
-                  '@type': 'Country',
-                  name: role.hiringRegion,
-                },
-              }
-            : {}),
+          applicantLocationRequirements: {
+            '@type': 'Country',
+            name: role.hiringRegion,
+          },
         }
-      : role.address
-        ? {
-            jobLocation: {
-              '@type': 'Place',
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: role.address.locality,
-                ...(role.address.region ? { addressRegion: role.address.region } : {}),
-                addressCountry: role.address.country,
-              },
+      : {
+          jobLocation: {
+            '@type': 'Place',
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: role.address.locality,
+              ...(role.address.region ? { addressRegion: role.address.region } : {}),
+              addressCountry: role.address.country,
             },
-          }
-        : {};
+          },
+        };
+
+  const salary = baseSalary(role.pay);
 
   return {
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
     title: role.title,
-    description: role.summary,
+    description: jobDescriptionHtml(role),
     datePosted: role.posted,
-    ...(employmentType ? { employmentType } : {}),
+    ...(role.validThrough ? { validThrough: role.validThrough } : {}),
+    // Stable across every edit to the listing. Without it a retitled role reads
+    // as a second job rather than the same one, which is how one opening ends
+    // up in a job index twice.
+    identifier: {
+      '@type': 'PropertyValue',
+      name: 'copperhead',
+      value: role.slug,
+    },
+    url: new URL(rolePath(role.slug), site).href,
+    employmentType: EMPLOYMENT_TYPE[role.commitment],
+    ...(salary ? { baseSalary: salary } : {}),
     hiringOrganization: {
       '@type': 'Organization',
       name: 'Chouhan Industries',
-      url: links.chouhan,
+      // The URL Google reconciles the posting against is the site serving it.
+      // chouhan.ai is the same organisation and belongs in sameAs, which is the
+      // property for exactly that: naming it as the canonical url is what
+      // produces a hiringOrganization that does not match the host.
+      url: site,
+      sameAs: links.chouhan,
     },
     ...where,
     // The application is off-site wherever `careersApply` points, and it stays
@@ -367,11 +485,24 @@ export function jobPostingJsonLd(role: Role): Record<string, unknown> | null {
   };
 }
 
-/** Canonical path for a role page. */
-export const rolePath = (slug: string) => `/careers/${slug}/`;
-
 /** The roles that actually render. Everything downstream reads this, not `roles`. */
 export const openRoles = roles.filter((r) => r.published);
+
+/**
+ * A published role with no `posted` date is announced by every means the site
+ * has, the navbar, the index, the sitemap and llms.txt, and emits no
+ * JobPosting, so it cannot be found in a job index at all. That is the right
+ * state for a listing being staged and the wrong one for a listing that is
+ * live, and the two are indistinguishable from the page. Say which roles are
+ * in it at build time rather than leaving it to be noticed.
+ */
+const unposted = openRoles.filter((r) => !r.posted).map((r) => r.slug);
+if (unposted.length) {
+  console.warn(
+    `[careers] published with no \`posted\` date, so no JobPosting markup and ` +
+      `no entry in a job index: ${unposted.join(', ')}`,
+  );
+}
 
 /**
  * Where an application goes, most specific first: a role's own link, then the
