@@ -1,0 +1,343 @@
+---
+import Base from "../../layouts/Base.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import { site, links } from "../../config";
+import {
+  openRoles,
+  rolePath,
+  applyHref,
+  applyLabel,
+  isExternalApply,
+  jobPostingJsonLd,
+  type Role,
+} from "../../careers";
+
+// One page per published role. Unpublished roles produce no route at all, so a
+// draft in src/careers.ts cannot be reached by guessing its slug either.
+export async function getStaticPaths() {
+  return openRoles.map((role) => ({ params: { slug: role.slug }, props: { role } }));
+}
+
+interface Props {
+  role: Role;
+}
+
+const { role } = Astro.props;
+const path = rolePath(role.slug);
+
+// Null for a role with no `posted` date, which is every draft. See the note on
+// Role.posted in src/careers.ts: a listing that is not open yet must not turn up
+// in a job index, and the date is the field that cannot be faked into existence.
+const posting = jobPostingJsonLd(role);
+const jsonLd = posting ? { ...posting, url: new URL(path, site).href } : undefined;
+
+const external = isExternalApply(role);
+---
+
+<Base
+  title={`${role.title} · copperhead`}
+  description={role.summary}
+  path={path}
+  ogImageAlt={`${role.title} at copperhead`}
+  jsonLd={jsonLd}
+>
+  <Navbar home={false} />
+  <main id="top">
+    <article>
+      <div class="wrap">
+        <header>
+          <div class="meta">
+            <span class="kind">{role.discipline}</span>
+            <span>{role.location}</span>
+            <span>{role.workplace}</span>
+            <span>{role.commitment}</span>
+          </div>
+          <h1>{role.title}</h1>
+          <p class="standfirst">{role.summary}</p>
+        </header>
+
+        <p class="context">{role.context}</p>
+
+        <h2>What you would own</h2>
+        <ul>
+          {role.work.map((w) => <li>{w}</li>)}
+        </ul>
+
+        <h2>{role.fitHeading ?? "What we look for"}</h2>
+        <ul>
+          {role.fit.map((f) => <li>{f}</li>)}
+        </ul>
+        {
+          /* Sits under the list it qualifies rather than at the foot of the
+             page: a requirement someone has already talked themselves out of is
+             not walked back by a line they reach two headings later. */
+          role.fitNote && <p class="aside after">{role.fitNote}</p>
+        }
+
+        {
+          role.extra.length > 0 && (
+            <>
+              <h2>Nice to have</h2>
+              {/* Genuinely optional, and said so: a list like this is otherwise
+                  read as a second set of requirements, which is how a good
+                  candidate talks themselves out of applying. */}
+              <p class="aside">
+                None of this is required. It is what would make the work easier
+                from the first day, not what decides the first email.
+              </p>
+              <ul>
+                {role.extra.map((e) => (
+                  <li>{e}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+
+        {
+          role.pay && (
+            <>
+              <h2>Pay</h2>
+              <p>{role.pay}</p>
+            </>
+          )
+        }
+
+        <div class="apply">
+          <a
+            class="btn btn-primary"
+            href={applyHref(role)}
+            {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          >
+            {applyLabel(role)}
+          </a>
+          {/* A role that asks for something specific replaces this line rather
+              than being followed by it: two paragraphs of application advice is
+              one more than anybody reads. */}
+          <p class="note">
+            {role.applyNote ??
+              "Send whatever shows the work best. A repository, a board you have built or a design you have argued with beats a covering letter, and it is what we would ask for next anyway."}
+          </p>
+          {
+            /* A role that names what an application must carry gets a list, not
+               a longer sentence. Each line is something the sender will be
+               judged on remembering, and prose is where one of six gets lost. */
+            role.applySend && (
+              <ul class="send">
+                {role.applySend.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+
+        <footer class="end">
+          <a href={links.careers}>All roles</a>
+          <a href={links.repo}>View on GitHub</a>
+        </footer>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  article {
+    padding-block: 179px var(--pad-y);
+  }
+
+  /* Measure on the column rather than per element, so the lists line up with the
+     paragraphs instead of running wide. Same as the research article route. */
+  .wrap {
+    max-width: 760px;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Drawn, not typed: a middot between the three facts keeps them one string to
+     a screen reader while still reading as a separated row. */
+  .meta span + span::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    margin-right: 14px;
+    vertical-align: 2px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  /* The separator is drawn on the span rather than in the gap, so a row that
+     wraps would otherwise start its second line with a leading dot. Hidden
+     below the width where four facts stop fitting on one line. */
+  @media (max-width: 460px) {
+    .meta span + span::before {
+      display: none;
+    }
+
+    .meta {
+      gap: 6px 14px;
+    }
+  }
+
+  .kind {
+    color: var(--copper);
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    color: var(--text-dim);
+    font-size: 1.12rem;
+    line-height: 1.55;
+    margin: 1.5rem 0 0;
+    max-width: 58ch;
+  }
+
+  .context {
+    margin: 2.5rem 0 0;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 1.03rem;
+    line-height: 1.7;
+  }
+
+  h2 {
+    margin: 3rem 0 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Copper markers rather than bullets, at the same scale as the dot in the meta
+     row, so the two dotted things on the page agree with each other. */
+  li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.85rem;
+    line-height: 1.7;
+  }
+
+  li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--copper);
+  }
+
+  p {
+    line-height: 1.7;
+  }
+
+  .aside {
+    margin: -0.5rem 0 1.25rem;
+    max-width: 62ch;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  /* This one follows a list rather than a heading, so it needs the space back
+     that the negative top margin above takes away. */
+  .aside.after {
+    margin-top: 1.25rem;
+    margin-bottom: 0;
+  }
+
+  .apply {
+    margin-top: 3rem;
+    padding: 32px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+
+  .apply .note {
+    margin: 1.25rem 0 0;
+    max-width: 56ch;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  /* Inside the apply panel, so it takes the panel's dimmer ink and a tighter
+     rhythm than the page's own lists. The markers stay copper: they are the
+     same kind of item, one step quieter. */
+  .send {
+    margin: 1rem 0 0;
+    max-width: 56ch;
+  }
+
+  .send li {
+    margin-bottom: 0.45rem;
+    padding-left: 1.25rem;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .send li::before {
+    top: 0.66em;
+    width: 4px;
+    height: 4px;
+    opacity: 0.75;
+  }
+
+  .end {
+    display: flex;
+    gap: 28px;
+    margin-top: 3.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 720px) {
+    article {
+      padding-block: 130px 72px;
+    }
+
+    .standfirst {
+      font-size: 1.02rem;
+    }
+
+    .apply {
+      padding: 24px;
+    }
+
+    .end {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+</style>

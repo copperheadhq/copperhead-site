@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { site } from '../config';
 import { postPath } from '../blog';
 import { articlePath } from '../research';
+import { openRoles, rolePath } from '../careers';
 
 // Generated rather than kept in public/, so a new post cannot be forgotten here.
 export const GET: APIRoute = async () => {
@@ -20,6 +21,17 @@ export const GET: APIRoute = async () => {
     { loc: '/stats/', changefreq: 'daily', priority: '0.5' },
     // Its content is live in the browser; the page itself hardly changes.
     { loc: '/status/', changefreq: 'monthly', priority: '0.5' },
+    { loc: '/careers/', changefreq: 'monthly', priority: '0.6' },
+    // Unpublished roles are already filtered out of `openRoles`, so a draft
+    // listing cannot be advertised here while having no page to land on. This
+    // is also what enrols the section in `npm run check:layout`, which takes its
+    // page list from this file.
+    ...openRoles.map((r) => ({
+      loc: rolePath(r.slug),
+      changefreq: 'monthly',
+      priority: '0.5',
+      ...(r.posted ? { lastmod: r.posted } : {}),
+    })),
     ...posts.map((p) => ({
       loc: postPath(p.id),
       changefreq: 'monthly',
