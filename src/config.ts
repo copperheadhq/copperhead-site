@@ -48,11 +48,25 @@ export const links = {
   // Service status, drawn on this domain from UptimeRobot's public record
   // (src/status.ts). Their hosted copy is the fallback linked from the page.
   status: '/status/',
+  // Open roles. In the navbar and in the footer's Company column: it replaced
+  // Discord in the bar, which keeps that row at five links.
+  careers: '/careers/',
   // The Antler write-up, on chouhan.ai rather than this site's own /blog copy.
   antler: 'https://chouhan.ai/antler-crackathon',
-  // TODO(launch): confirm the real inbox before launch; copperhead.sh has no MX
-  // record yet, so this address may bounce.
+  // General enquiries. copperhead.sh now has MX records on Cloudflare Email
+  // Routing, so the domain receives mail; whether this particular address does
+  // still depends on a routing rule (or a catch-all) existing for it there.
   contact: 'mailto:hello@copperhead.sh',
+  // Applications. Separate from `contact` so a careers reply-to never lands in
+  // the same thread as a sales enquiry, and so this address can be routed to a
+  // different person without moving everything else with it. It is the fallback
+  // behind every "Apply" button until `careersApply` and the per-role
+  // `applyUrl`s are filled in: see `applyHref` in src/careers.ts.
+  // TODO(careers): confirm a routing rule (or a catch-all) exists for this
+  // address before the roles are announced anywhere. It is the destination of
+  // every apply button while `careersApply` is null, so if nothing routes it,
+  // applications bounce and nothing here reports it.
+  careersEmail: 'mailto:careers@copperhead.sh',
   // This website's own repo, distinct from the product repo above; the 404
   // page points a reader who followed a broken internal link at its issues.
   siteIssues: 'https://github.com/copperheadhq/copperhead-site/issues',
@@ -65,6 +79,27 @@ export const links = {
   openspec: 'https://github.com/Fission-AI/OpenSpec',
   license: `${repo}/blob/main/LICENSE`,
 };
+
+/**
+ * The external application form every "Apply" button on /careers points at.
+ *
+ * Applications are collected on binary.so, one form per role. Each role's form
+ * URL belongs in its own `applyUrl` in src/careers.ts; this is the general
+ * form behind the index page's "Introduce yourself" button, and the fallback
+ * for any role that has no form yet. Its spec is
+ * .claude/skills/job-post/references/form-general-application.md, and the
+ * per-role specs sit beside it.
+ *
+ * Null until that form exists. It is deliberately not a placeholder URL: a
+ * button wired to a guessed address is a broken application nobody finds out
+ * about, whereas null makes `applyHref` in src/careers.ts fall back to
+ * `careersEmail` with the subject line already filled in. Set this to the real
+ * form and every button on the section, index and role pages both, follows it
+ * in one edit, labels included.
+ *
+ * TODO(careers): fill in with the binary.so form URL once it is built.
+ */
+export const careersApply: string | null = null;
 
 /**
  * Quickstart block (acceptance W-3: the copy button copies exactly these lines).

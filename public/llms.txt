@@ -48,4 +48,5 @@ Key facts:
 - [Building open hardware with Claude](https://chouhan.ai/building-with-claude): the longer story of how Open Telegraph and copperhead came together
 - [Repository stats](https://copperhead.sh/stats/): the long record of traffic to the copperhead repository, collected daily because GitHub keeps only fourteen days of it
 - [Status](https://copperhead.sh/status/): current status and ninety-day uptime of copperhead's hosted services
+- [Careers](https://copperhead.sh/careers/): open roles at Chouhan Industries, the team building copperhead, and how that team works
 - [KiCad](https://www.kicad.org/): the open source ECAD tool copperhead works on

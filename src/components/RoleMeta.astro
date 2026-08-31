@@ -1,0 +1,81 @@
+---
+/**
+ * The mono fact row above a role title: discipline, location, workplace and
+ * commitment on a role page and on a card, three plainer facts on the open
+ * application at the foot of the index.
+ *
+ * A component because it was the same thirty-six lines of CSS in both careers
+ * routes. The separator, the dot size and the width the row wraps at are one
+ * decision, and two copies of a decision drift the first time one of them is
+ * fixed. Both copies also still called it a three-fact row long after it grew
+ * a fourth.
+ *
+ * The two callers want different space beneath it, so the margin reads
+ * `--role-meta-gap` from whatever sets it and falls back to the card's value.
+ * A custom property inherits into scoped styles, which a class could not.
+ */
+interface Props {
+  items: string[];
+  /**
+   * Copper the first item, which on a role row is the discipline. Off for the
+   * open application, which has no discipline and must not read as a fourth
+   * opening.
+   */
+  accent?: boolean;
+}
+
+const { items, accent = false } = Astro.props;
+---
+
+<div class="meta">
+  {
+    items.map((item, i) => (
+      <span class={accent && i === 0 ? "accent" : undefined}>{item}</span>
+    ))
+  }
+</div>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin-bottom: var(--role-meta-gap, 1rem);
+  }
+
+  /* Drawn, not typed: a middot between the facts keeps the row one string to a
+     screen reader while still reading as a separated row. */
+  .meta span + span::before {
+    content: "";
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    margin-right: 14px;
+    vertical-align: 2px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  /* The separator is drawn on the span rather than in the gap, so a row that
+     wraps would otherwise start its second line with a leading dot. Hidden
+     below the width where four facts stop fitting on one line. */
+  @media (max-width: 460px) {
+    .meta span + span::before {
+      display: none;
+    }
+
+    .meta {
+      gap: 6px 14px;
+    }
+  }
+
+  .accent {
+    color: var(--copper);
+  }
+</style>
