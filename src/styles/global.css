@@ -560,6 +560,31 @@ section {
   margin: 0 0 1.4rem;
 }
 
+/* A bare URL in a references list is one unbreakable word, up to 580px of
+   it, and on a phone it pushed the whole document sideways. break-word, not
+   anywhere: anywhere feeds soft-wrap points into min-content sizing, so an
+   auto-layout table would break "PDF, 0.9 MB" mid-word before it scrolled. */
+.prose a {
+  overflow-wrap: break-word;
+}
+
+/* A table too wide for a phone scrolls inside this box; the attribute is what
+   tells scripts/shots.mjs the overflow is meant, the same pairing as the
+   pricing table's .table-scroll. Wrap the markdown table in
+   <div data-bleed-ok>, with a blank line either side. */
+.prose [data-bleed-ok] {
+  overflow-x: auto;
+}
+
+/* Third-party embeds are light-scheme documents that never say so. On the
+   dark theme the page's color-scheme is pinned to dark, and Chrome paints an
+   iframe whose scheme differs from its embedder's on an opaque white canvas,
+   which showed round the corners of an X post. Matching the element to its
+   document keeps the canvas transparent. */
+iframe {
+  color-scheme: light;
+}
+
 .prose figcaption {
   margin-top: 0.6rem;
   font-size: 0.85rem;

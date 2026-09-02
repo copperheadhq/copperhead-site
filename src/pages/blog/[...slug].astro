@@ -764,14 +764,6 @@ const jsonLd = {
     font-size: 0.85em;
   }
 
-  /* A bare URL in the references is one unbreakable word, up to 580px of it,
-     and on a phone it pushed the whole document sideways. `anywhere` only
-     breaks a word that would otherwise overflow, so ordinary link text is
-     untouched. */
-  .prose :global(a) {
-    overflow-wrap: anywhere;
-  }
-
   .prose :global(.notice) {
     border-left: 3px solid var(--copper);
     background: var(--panel);
@@ -792,15 +784,6 @@ const jsonLd = {
   .prose :global(.embed .twitter-tweet) {
     margin-left: auto;
     margin-right: auto;
-  }
-
-  /* The embedded document is light-scheme and never declares otherwise. On
-     the dark theme the page's own color-scheme is pinned to dark, and Chrome
-     paints an iframe whose scheme differs from its embedder's on an opaque
-     white canvas, which shows round the tweet's rounded corners. Matching the
-     element to its document keeps the canvas transparent. */
-  .prose :global(.embed iframe) {
-    color-scheme: light;
   }
 
   /* Two pages side by side, each an anchor round its image. Markdown puts the

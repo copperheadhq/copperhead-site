@@ -17,7 +17,12 @@
        rather than a picture about it.
 
        Every card is the same layout with two variables: the title and the
-       motif. That is the whole design. Resist adding a third. */
+       motif. That is the whole design. Resist adding a third.
+
+       One deliberate exception: hardware-as-fast-as-software carries a traced
+       silhouette rather than board geometry, because the post is about speed
+       and the author chose the picture. It uses the data-fill style and
+       nothing else changes. It is an exception, not a precedent. */
 
     @font-face {
       font-family: 'Space Grotesk';
@@ -394,9 +399,11 @@
 
   <!-- hardware-as-fast-as-software · Engineering.
        The one picture in the set: a Formula 1 car in profile, traced from
-       src/assets/f1.jpg with potrace (threshold 55%, turd size 4) into one
-       path and filled copper, so it is monochrome and follows the theme. The
-       inner transform is potrace's own; the outer fits the ink to 200 wide. -->
+       diagrams/f1.jpg (a working file, ignored like the rest of diagrams/)
+       with potrace (threshold 55%, turd size 4) into one path and filled
+       copper, so it is monochrome and follows the theme. The path below is
+       the whole source the card needs. The inner transform is potrace's own;
+       the outer fits the ink to 200 wide. -->
   <article class="card" data-slug="hardware-as-fast-as-software" data-size="sm">
     <div class="head">
       <div class="brand">
