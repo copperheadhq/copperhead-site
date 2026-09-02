@@ -764,6 +764,72 @@ const jsonLd = {
     font-size: 0.85em;
   }
 
+  /* A bare URL in the references is one unbreakable word, up to 580px of it,
+     and on a phone it pushed the whole document sideways. `anywhere` only
+     breaks a word that would otherwise overflow, so ordinary link text is
+     untouched. */
+  .prose :global(a) {
+    overflow-wrap: anywhere;
+  }
+
+  .prose :global(.notice) {
+    border-left: 3px solid var(--copper);
+    background: var(--panel);
+    padding: 0.85rem 1.1rem;
+    margin: 1.6rem 0;
+  }
+  .prose :global(.notice p) {
+    margin: 0;
+  }
+
+  /* An X post embedded in the body. widgets.js swaps the blockquote for an
+     iframe of its own, with inline margins, so the figure is the hook the
+     prose rhythm hangs on; the post itself is centred and capped at the
+     widget's own width. */
+  .prose :global(.embed) {
+    margin: 1.6rem 0;
+  }
+  .prose :global(.embed .twitter-tweet) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* The embedded document is light-scheme and never declares otherwise. On
+     the dark theme the page's own color-scheme is pinned to dark, and Chrome
+     paints an iframe whose scheme differs from its embedder's on an opaque
+     white canvas, which shows round the tweet's rounded corners. Matching the
+     element to its document keeps the canvas transparent. */
+  .prose :global(.embed iframe) {
+    color-scheme: light;
+  }
+
+  /* Two pages side by side, each an anchor round its image. Markdown puts the
+     two links in one paragraph, and that paragraph is the row. Under 560px
+     the pages would be too small to read as pages, so they stack. */
+  .prose :global(figure.two-up p) {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+  }
+  .prose :global(figure.two-up a) {
+    flex: 1 1 0;
+    min-width: 0;
+    text-decoration: none;
+    border: 0;
+  }
+  .prose :global(figure.two-up img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border: 1px solid var(--hairline);
+    background: #fff;
+  }
+  @media (max-width: 560px) {
+    .prose :global(figure.two-up p) {
+      flex-direction: column;
+    }
+  }
   .prose :global(strong) {
     color: var(--text);
     font-weight: 500;
@@ -818,6 +884,14 @@ const jsonLd = {
     height: auto;
     border: 1px solid var(--hairline);
     margin: 0 0 1.4rem;
+  }
+
+  /* Stroke-only figures (the SVG drawings) sit on their own white plate:
+     padding keeps the linework off the border, in both themes. */
+  .prose :global(img[src$=".svg"]) {
+    box-sizing: border-box;
+    padding: 1.1rem 1.4rem;
+    background: #fff;
   }
 
   .prose :global(table) {

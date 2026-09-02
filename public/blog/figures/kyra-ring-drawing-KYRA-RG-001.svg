@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 297 210">
+<title>Kyra R1 — ring, engineering drawing</title>
+<rect x="0" y="0" width="297" height="210" fill="#fff"/>
+<rect x="5.00" y="5.00" width="287.00" height="200.00" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<rect x="10.00" y="10.00" width="277.00" height="190.00" rx="0" fill="none" stroke="#000" stroke-width="0.7"/>
+<path d="M64,86.84 A24.5,24.5 0 1 0 80,86.84 Z" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="72.00" cy="110.00" r="18.90" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="64.00" y="86.34" width="16.00" height="0.50" rx="0" fill="none" stroke="#000" stroke-width="0.2" stroke-dasharray="0.5 0.5"/>
+<circle cx="72.00" cy="110.00" r="21.70" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M89.31,124.53 A22.6,22.6 0 0 1 54.69,124.53 L56.99,122.60 A19.6,19.6 0 0 0 87.01,122.60 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M51.56,121.80 A23.6,23.6 0 0 1 53.92,94.83 L56.37,96.89 A20.4,20.4 0 0 0 54.33,120.20 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M53.11,119.62 A21.2,21.2 0 0 1 55.07,97.24" fill="none" stroke="#000" stroke-width="0.18"/>
+<path d="M52.40,119.99 A22.0,22.0 0 0 1 54.43,96.76" fill="none" stroke="#000" stroke-width="0.18"/>
+<path d="M51.69,120.35 A22.8,22.8 0 0 1 53.79,96.28" fill="none" stroke="#000" stroke-width="0.18"/>
+<path d="M65.80,88.37 A22.5,22.5 0 0 1 78.20,88.37 L77.37,91.26 A19.5,19.5 0 0 0 66.63,91.26 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M93.87,102.89 A23.0,23.0 0 0 1 93.87,117.11 L90.55,116.03 A19.5,19.5 0 0 0 90.55,103.97 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<rect x="91.60" y="108.80" width="3.40" height="2.40" rx="0" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M81.70,126.80 A19.4,19.4 0 0 1 62.30,126.80 L62.55,126.37 A18.9,18.9 0 0 0 81.45,126.37 Z" fill="none" stroke="#000" stroke-width="0.18"/>
+<path d="M49.20,103.89 A23.6,23.6 0 0 1 62.03,88.61" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="38.00" y1="110.00" x2="106.00" y2="110.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="72.00" y1="74.00" x2="72.00" y2="146.00" fill="none" stroke="#000" stroke-width="0.6" stroke-dasharray="6 1.5 1.5 1.5"/>
+<line x1="72.00" y1="74.00" x2="65.00" y2="74.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="65.00" y1="74.00" x2="67.20" y2="73.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="65.00" y1="74.00" x2="67.20" y2="74.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="62.50" y="75.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">A</text>
+<line x1="72.00" y1="146.00" x2="65.00" y2="146.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="65.00" y1="146.00" x2="67.20" y2="145.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="65.00" y1="146.00" x2="67.20" y2="146.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="62.50" y="147.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">A</text>
+<line x1="93.22" y1="122.25" x2="105.00" y2="130.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="93.22" y1="122.25" x2="95.47" y2="122.83" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="93.22" y1="122.25" x2="94.64" y2="124.09" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="105.00" y1="130.00" x2="108.00" y2="130.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="108.80" y="130.80" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">Ø24.5</text>
+<line x1="55.63" y1="119.45" x2="66.00" y2="116.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="55.63" y1="119.45" x2="57.48" y2="118.04" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="55.63" y1="119.45" x2="57.96" y2="119.47" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="66.00" y1="116.00" x2="69.00" y2="116.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="69.80" y="116.80" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">Ø18.9 (US 9)</text>
+<line x1="64.00" y1="85.84" x2="64.00" y2="78.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="80.00" y1="85.84" x2="80.00" y2="78.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="64.00" y1="80.00" x2="80.00" y2="80.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="64.00" y1="80.00" x2="66.20" y2="79.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="64.00" y1="80.00" x2="66.20" y2="80.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="80.00" y1="80.00" x2="77.80" y2="80.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="80.00" y1="80.00" x2="77.80" y2="79.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="72.00" y="79.10" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">8 FLAT</text>
+<text x="72.00" y="154.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" font-weight="bold">FRONT VIEW</text>
+<rect x="47.50" y="37.00" width="49.00" height="16.00" rx="1.6" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="64.00" y1="37.00" x2="64.00" y2="53.00" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="80.00" y1="37.00" x2="80.00" y2="53.00" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="58.50" y="39.00" width="27.00" height="12.00" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<rect x="60.00" y="40.50" width="7.00" height="9.00" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<rect x="68.50" y="40.50" width="7.00" height="9.00" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<rect x="77.00" y="40.50" width="7.00" height="9.00" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="72.00" y1="32.00" x2="72.00" y2="58.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="42.00" y1="45.00" x2="102.00" y2="45.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="60.00" y1="40.50" x2="42.00" y2="33.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="60.00" y1="40.50" x2="57.68" y2="40.35" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="60.00" y1="40.50" x2="58.26" y2="38.96" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="42.00" y1="33.00" x2="39.00" y2="33.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="38.20" y="33.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="end">PADS 3.5 × 4.5</text>
+<text x="72.00" y="29.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" font-weight="bold">TOP VIEW</text>
+<rect x="144.00" y="86.84" width="16.00" height="47.66" rx="1.6" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="145.00" y="122.60" width="14.00" height="10.00" rx="0" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<rect x="146.00" y="87.50" width="12.00" height="3.00" rx="0" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<rect x="150.30" y="108.80" width="3.40" height="2.40" rx="0" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<line x1="136.00" y1="110.00" x2="168.00" y2="110.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="152.00" y1="80.00" x2="152.00" y2="141.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="144.00" y1="135.50" x2="144.00" y2="147.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="160.00" y1="135.50" x2="160.00" y2="147.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="144.00" y1="146.00" x2="160.00" y2="146.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="144.00" y1="146.00" x2="146.20" y2="145.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="144.00" y1="146.00" x2="146.20" y2="146.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="160.00" y1="146.00" x2="157.80" y2="146.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="160.00" y1="146.00" x2="157.80" y2="145.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="152.00" y="145.10" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">8</text>
+<text x="152.00" y="154.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" font-weight="bold">RIGHT SIDE VIEW</text>
+<defs><pattern id="h45" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="#000" stroke-width="0.15"/></pattern><pattern id="h135" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(135)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="#000" stroke-width="0.15"/></pattern></defs>
+<rect x="227.00" y="86.84" width="16.00" height="47.66" rx="1.6" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="227.00" y="86.84" width="16.00" height="1.26" fill="url(#h45)" stroke="#000" stroke-width="0.5"/>
+<rect x="228.50" y="88.10" width="13.00" height="0.96" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="227.00" y="89.06" width="16.00" height="2.04" fill="url(#h135)" stroke="#000" stroke-width="0.5"/>
+<rect x="227.00" y="86.84" width="16.00" height="4.26" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="227.00" y="128.90" width="16.00" height="0.80" fill="url(#h45)" stroke="#000" stroke-width="0.5"/>
+<rect x="228.00" y="129.70" width="14.00" height="3.00" fill="url(#h135)" stroke="#000" stroke-width="0.5"/>
+<rect x="228.00" y="129.70" width="14.00" height="3.00" fill="url(#h45)" stroke="#000" stroke-width="0.5"/>
+<rect x="227.50" y="132.70" width="15.00" height="0.44" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="227.00" y="133.14" width="16.00" height="1.36" fill="url(#h45)" stroke="#000" stroke-width="0.5"/>
+<rect x="227.00" y="128.90" width="16.00" height="5.60" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="235.00" y1="80.00" x2="235.00" y2="141.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="244.00" y1="128.90" x2="250.50" y2="128.90" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="244.00" y1="134.50" x2="250.50" y2="134.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="249.00" y1="128.90" x2="249.00" y2="134.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="249.00" y1="128.90" x2="249.75" y2="131.10" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="249.00" y1="128.90" x2="248.25" y2="131.10" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="249.00" y1="134.50" x2="248.25" y2="132.30" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="249.00" y1="134.50" x2="249.75" y2="132.30" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="248.10" y="131.70" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" transform="rotate(-90 248.10 131.70)">2.8</text>
+<line x1="241.00" y1="88.58" x2="251.00" y2="80.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="241.00" y1="88.58" x2="242.18" y2="86.58" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="241.00" y1="88.58" x2="243.16" y2="87.72" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="251.00" y1="80.00" x2="254.00" y2="80.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="254.80" y="80.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">RIGID 0.48 / FLEX 0.22</text>
+<line x1="240.00" y1="131.20" x2="252.00" y2="146.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="240.00" y1="131.20" x2="241.97" y2="132.44" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="240.00" y1="131.20" x2="240.80" y2="133.38" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="252.00" y1="146.00" x2="255.00" y2="146.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="255.80" y="146.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">CELL 1.5</text>
+<line x1="231.00" y1="87.44" x2="221.00" y2="80.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="231.00" y1="87.44" x2="228.79" y2="86.73" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="231.00" y1="87.44" x2="229.68" y2="85.53" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="221.00" y1="80.00" x2="218.00" y2="80.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="217.20" y="80.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="end">SHELL</text>
+<text x="235.00" y="154.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" font-weight="bold">SECTION A-A</text>
+<text x="235.00" y="158.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">SCALE 2:1</text>
+<line x1="54.68" y1="92.68" x2="37.53" y2="88.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="54.68" y1="92.68" x2="52.36" y2="92.90" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="54.68" y1="92.68" x2="52.71" y2="91.44" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="35.00" cy="88.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="35.00" y="88.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">1</text>
+<line x1="85.00" y1="45.00" x2="109.40" y2="45.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="85.00" y1="45.00" x2="87.20" y2="44.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="85.00" y1="45.00" x2="87.20" y2="45.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="112.00" cy="45.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="112.00" y="45.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">2</text>
+<line x1="72.00" y1="129.20" x2="44.33" y2="142.85" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="72.00" y1="129.20" x2="70.36" y2="130.85" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="72.00" y1="129.20" x2="69.70" y2="129.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="42.00" cy="144.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="42.00" y="144.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">3</text>
+<line x1="72.00" y1="89.00" x2="57.29" y2="63.26" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="72.00" y1="89.00" x2="70.26" y2="87.46" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="72.00" y1="89.00" x2="71.56" y2="86.72" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="56.00" cy="61.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="56.00" y="61.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">4</text>
+<line x1="51.61" y1="102.58" x2="38.59" y2="103.76" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="51.61" y1="102.58" x2="49.49" y2="103.52" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="51.61" y1="102.58" x2="49.35" y2="102.03" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="36.00" cy="104.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="36.00" y="104.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">5</text>
+<line x1="72.00" y1="131.10" x2="99.67" y2="144.84" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="72.00" y1="131.10" x2="74.30" y2="131.41" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="72.00" y1="131.10" x2="73.64" y2="132.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="102.00" cy="146.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="102.00" y="146.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">6</text>
+<line x1="48.49" y1="107.94" x2="37.87" y2="118.19" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="48.49" y1="107.94" x2="47.43" y2="110.01" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="48.49" y1="107.94" x2="46.39" y2="108.93" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="36.00" cy="120.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="36.00" y="120.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">7</text>
+<line x1="93.30" y1="110.00" x2="103.96" y2="118.39" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="93.30" y1="110.00" x2="95.49" y2="110.77" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="93.30" y1="110.00" x2="94.56" y2="111.95" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="106.00" cy="120.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="106.00" y="120.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">8</text>
+<line x1="58.46" y1="90.67" x2="31.71" y2="59.96" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="58.46" y1="90.67" x2="56.45" y2="89.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="58.46" y1="90.67" x2="57.58" y2="88.52" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="30.00" cy="58.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="30.00" y="58.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">9</text>
+<rect x="118.00" y="14.00" width="169.00" height="54.00" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="118.00" y1="19.40" x2="287.00" y2="19.40" fill="none" stroke="#000" stroke-width="0.7"/>
+<text x="119.20" y="17.60" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">ITEM</text>
+<text x="129.20" y="17.60" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">DESCRIPTION</text>
+<text x="241.20" y="17.60" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">REF</text>
+<line x1="128.00" y1="14.00" x2="128.00" y2="68.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="240.00" y1="14.00" x2="240.00" y2="68.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="23.00" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">1</text>
+<text x="129.20" y="23.00" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">SHELL, ZIRCONIA OR Ti, POTTED, NO INDICATOR</text>
+<text x="241.20" y="23.00" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">D6</text>
+<line x1="118.00" y1="24.80" x2="287.00" y2="24.80" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="28.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">2</text>
+<text x="129.20" y="28.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">TOUCH STRIP, 3 CH + GUARD, OUTER FACE</text>
+<text x="241.20" y="28.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYR-201/202</text>
+<line x1="118.00" y1="30.20" x2="287.00" y2="30.20" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="33.80" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">3</text>
+<text x="129.20" y="33.80" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">WEAR ELECTRODE, INNER FACE</text>
+<text x="241.20" y="33.80" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYR-202/206</text>
+<line x1="118.00" y1="35.60" x2="287.00" y2="35.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="39.20" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">4</text>
+<text x="129.20" y="39.20" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">RIGID ISLAND: nRF52833 · AT42QT1070 · KX022</text>
+<text x="241.20" y="39.20" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYR-101/201/301</text>
+<line x1="118.00" y1="41.00" x2="287.00" y2="41.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="44.60" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">5</text>
+<text x="129.20" y="44.60" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">FLEX LOOP 0.22 mm, RIGID-FLEX</text>
+<text x="241.20" y="44.60" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">D0</text>
+<line x1="118.00" y1="46.40" x2="287.00" y2="46.40" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="50.00" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">6</text>
+<text x="129.20" y="50.00" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">CELL, CURVED Li-Po 20 mAh</text>
+<text x="241.20" y="50.00" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYR-501</text>
+<line x1="118.00" y1="51.80" x2="287.00" y2="51.80" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="55.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">7</text>
+<text x="129.20" y="55.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">RECEIVE COIL, 6.78 MHz</text>
+<text x="241.20" y="55.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYR-601</text>
+<line x1="118.00" y1="57.20" x2="287.00" y2="57.20" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="60.80" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">8</text>
+<text x="129.20" y="60.80" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">LRA + DRV2605L, HAPTIC</text>
+<text x="241.20" y="60.80" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYR-401/403</text>
+<line x1="118.00" y1="62.60" x2="287.00" y2="62.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="119.20" y="66.20" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">9</text>
+<text x="129.20" y="66.20" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">NFC TAG ANTENNA</text>
+<text x="241.20" y="66.20" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYR-701</text>
+<text x="12.00" y="160.00" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">NOTES</text>
+<text x="12.00" y="164.00" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">1. DIMENSIONS IN MM. SCALE 2:1 ON A4. THIRD-ANGLE PROJECTION.</text>
+<text x="12.00" y="167.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">2. US SIZE 9 SHOWN: ID 18.9. BAND 2.8 × 8.0. SIZES 6–13 (A8).</text>
+<text x="12.00" y="170.80" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">3. NO MICROPHONE, NO CAMERA, NO OPTICAL OR ELECTRICAL BIOSENSOR (KYR-002).</text>
+<text x="12.00" y="174.20" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">4. PRODUCTION FORM FACTOR FOR CONTEXT ONLY; EV1 IS A 20 × 20 RIGID</text>
+<text x="12.00" y="177.60" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">   BOARD (BRIEF-ring-ev1.md §MECHANICAL). HIDDEN LINES: PARTS IN THE BAND.</text>
+<rect x="180.00" y="172.00" width="107.00" height="28.00" rx="0" fill="none" stroke="#000" stroke-width="0.7"/>
+<line x1="180.00" y1="183.20" x2="287.00" y2="183.20" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="180.00" y1="191.60" x2="287.00" y2="191.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="202.00" y1="172.00" x2="202.00" y2="200.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="188.00" cy="177.88" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="188.00" cy="177.88" r="1.30" fill="none" stroke="#000" stroke-width="0.18"/>
+<path d="M193.0,176.5 L199.0,175.3 L199.0,180.5 L193.0,179.3 Z" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.00" y1="177.88" x2="201.00" y2="177.88" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<text x="191.00" y="188.40" font-size="1.7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">THIRD ANGLE</text>
+<text x="191.00" y="196.80" font-size="1.7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">PROJECTION</text>
+<text x="204.00" y="175.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">COPPERHEAD</text>
+<text x="204.00" y="179.80" font-size="3.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">KYRA R1 — RING</text>
+<text x="204.00" y="183.00" font-size="1.8" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">PRODUCTION FORM FACTOR · REFERENCE ONLY</text>
+<text x="203.50" y="186.00" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DWG NO</text>
+<text x="203.50" y="190.20" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYRA-RG-001</text>
+<line x1="223.25" y1="183.20" x2="223.25" y2="200.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="224.75" y="186.00" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">REV</text>
+<text x="224.75" y="190.20" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">A</text>
+<line x1="244.50" y1="183.20" x2="244.50" y2="200.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="246.00" y="186.00" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">SCALE</text>
+<text x="246.00" y="190.20" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">2:1</text>
+<line x1="265.75" y1="183.20" x2="265.75" y2="200.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="267.25" y="186.00" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">SHEET</text>
+<text x="267.25" y="190.20" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">1 / 1</text>
+<text x="203.50" y="194.40" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DATE</text>
+<text x="203.50" y="198.60" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">2026-09-02</text>
+<text x="224.75" y="194.40" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">STATUS</text>
+<text x="224.75" y="198.60" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DRAFT</text>
+<text x="246.00" y="194.40" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">UNITS</text>
+<text x="246.00" y="198.60" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">mm</text>
+<text x="267.25" y="194.40" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DRAWN</text>
+<text x="267.25" y="198.60" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">copperhead / claude</text>
+</svg>

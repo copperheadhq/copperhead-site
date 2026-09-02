@@ -1,0 +1,260 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420mm" height="297mm" viewBox="0 0 420 297">
+<title>Kyra R1 — glasses, engineering drawing</title>
+<rect x="0" y="0" width="420" height="297" fill="#fff"/>
+<rect x="5.00" y="5.00" width="410.00" height="287.00" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<rect x="10.00" y="10.00" width="400.00" height="277.00" rx="0" fill="none" stroke="#000" stroke-width="0.7"/>
+<path d="M50,221 Q50,215 56,215 L94,215 Q100,215 100,221 L100,245 Q100,257 88,257 L62,257 Q50,257 50,245 Z" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M120,221 Q120,215 126,215 L164,215 Q170,215 170,221 L170,245 Q170,257 158,257 L132,257 Q120,257 120,245 Z" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M100,223 Q110,217 120,223" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M100,227 Q110,221.5 120,227" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M103,235 q-3,3.5 0,7" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M117,235 q3,3.5 0,7" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="43.00" y="217.00" width="7.00" height="8.00" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="170.00" y="217.00" width="7.00" height="8.00" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="46.50" cy="221.00" r="1.10" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="173.50" cy="221.00" r="1.10" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="110.00" y1="207.00" x2="110.00" y2="265.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="43.00" y1="216.00" x2="43.00" y2="199.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="177.00" y1="216.00" x2="177.00" y2="199.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="43.00" y1="201.00" x2="177.00" y2="201.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="43.00" y1="201.00" x2="45.20" y2="200.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="43.00" y1="201.00" x2="45.20" y2="201.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="177.00" y1="201.00" x2="174.80" y2="201.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="177.00" y1="201.00" x2="174.80" y2="200.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="110.00" y="200.10" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">134</text>
+<line x1="50.00" y1="258.00" x2="50.00" y2="267.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="100.00" y1="258.00" x2="100.00" y2="267.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="50.00" y1="266.00" x2="100.00" y2="266.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="50.00" y1="266.00" x2="52.20" y2="265.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="50.00" y1="266.00" x2="52.20" y2="266.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="100.00" y1="266.00" x2="97.80" y2="266.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="100.00" y1="266.00" x2="97.80" y2="265.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="75.00" y="265.10" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">50</text>
+<line x1="100.00" y1="251.00" x2="100.00" y2="267.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="120.00" y1="251.00" x2="120.00" y2="267.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="100.00" y1="266.00" x2="120.00" y2="266.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="100.00" y1="266.00" x2="102.20" y2="265.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="100.00" y1="266.00" x2="102.20" y2="266.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="120.00" y1="266.00" x2="117.80" y2="266.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="120.00" y1="266.00" x2="117.80" y2="265.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="110.00" y="265.10" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">20</text>
+<line x1="171.00" y1="215.00" x2="185.50" y2="215.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="171.00" y1="257.00" x2="185.50" y2="257.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.00" y1="215.00" x2="184.00" y2="257.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.00" y1="215.00" x2="184.75" y2="217.20" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.00" y1="215.00" x2="183.25" y2="217.20" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.00" y1="257.00" x2="183.25" y2="254.80" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.00" y1="257.00" x2="184.75" y2="254.80" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="183.10" y="236.00" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" transform="rotate(-90 183.10 236.00)">42</text>
+<text x="110.00" y="278.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" font-weight="bold">FRONT VIEW</text>
+<path d="M42,172 Q110,182 178,172" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M46,168 Q110,178 174,168" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="41.00" y="160.00" width="5.00" height="12.00" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="174.00" y="160.00" width="5.00" height="12.00" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="43.50" cy="162.00" r="1.00" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="176.50" cy="162.00" r="1.00" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M102,177.6 a2,1.8 0 0 1 4,0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M114,177.6 a2,1.8 0 0 1 4,0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="110.00" y1="12.00" x2="110.00" y2="190.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<path d="M41.38,158.68 L29.00,17.22 A1.5,1.5 0 0 1 30.36,15.60 L31.36,15.51 A1.5,1.5 0 0 1 32.99,16.87 L45.36,158.33 A1.5,1.5 0 0 1 44.00,159.96 L43.00,160.04 A1.5,1.5 0 0 1 41.38,158.68 Z" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M34.02,65.47 L36.42,65.26 L43.65,147.94 L41.26,148.15 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M30.34,25.64 L33.13,25.39 L36.18,60.26 L33.39,60.50 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<line x1="37.30" y1="66.18" x2="38.50" y2="66.08" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="37.56" y1="69.17" x2="38.76" y2="69.07" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="37.82" y1="72.16" x2="39.02" y2="72.06" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M35.68,100.45 L36.28,100.40 L39.76,140.25 L39.17,140.30 Z" fill="none" stroke="#000" stroke-width="0.2" stroke-dasharray="0.5 0.5"/>
+<path d="M38.52,80.13 L39.02,80.09 L40.59,98.02 L40.09,98.06 Z" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="33.20" y1="19.36" x2="34.20" y2="19.28" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="33.46" y1="22.35" x2="34.46" y2="22.26" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="44.02" cy="165.98" r="0.80" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M174.64,158.33 L187.01,16.87 A1.5,1.5 0 0 1 188.64,15.51 L189.64,15.60 A1.5,1.5 0 0 1 191.00,17.22 L178.62,158.68 A1.5,1.5 0 0 1 177.00,160.04 L176.00,159.96 A1.5,1.5 0 0 1 174.64,158.33 Z" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M183.58,65.26 L185.98,65.47 L178.74,148.15 L176.35,147.94 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M186.87,25.39 L189.66,25.64 L186.61,60.50 L183.82,60.26 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<line x1="182.70" y1="66.18" x2="181.50" y2="66.08" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="182.44" y1="69.17" x2="181.24" y2="69.07" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="182.18" y1="72.16" x2="180.98" y2="72.06" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M183.72,100.40 L184.32,100.45 L180.83,140.30 L180.24,140.25 Z" fill="none" stroke="#000" stroke-width="0.2" stroke-dasharray="0.5 0.5"/>
+<path d="M180.98,80.09 L181.48,80.13 L179.91,98.06 L179.41,98.02 Z" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="186.80" y1="19.36" x2="185.80" y2="19.28" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="186.54" y1="22.35" x2="185.54" y2="22.26" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="175.98" cy="165.98" r="0.80" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<line x1="179.49" y1="160.26" x2="186.96" y2="160.92" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="192.13" y1="15.81" x2="199.60" y2="16.47" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="185.47" y1="160.78" x2="198.10" y2="16.34" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="185.47" y1="160.78" x2="184.91" y2="158.53" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="185.47" y1="160.78" x2="186.40" y2="158.66" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="198.10" y1="16.34" x2="198.66" y2="18.59" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="198.10" y1="16.34" x2="197.16" y2="18.46" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="193.98" y="89.55" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">145</text>
+<text x="110.00" y="20.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" font-weight="bold">TOP VIEW</text>
+<rect x="200.00" y="215.00" width="3.00" height="42.00" rx="1.5" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="203.00" y="217.00" width="7.00" height="8.00" rx="0" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="208.00" cy="221.00" r="1.10" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M210,218 L310,218 C325,218 334,224 340,234 L349,250 Q349,254 345,253 L336,238 C330,230 322,224 310,224 L210,224" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="222.00" y="219.50" width="83.00" height="3.00" rx="0" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<path d="M312.00,221.00 L334.25,229.99 L332.75,233.70 L310.50,224.71 Z" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<line x1="297.00" y1="224.00" x2="297.00" y2="225.60" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="299.00" y1="224.00" x2="299.00" y2="225.60" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="301.00" y1="224.00" x2="301.00" y2="225.60" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="303.00" y1="224.00" x2="303.00" y2="225.60" fill="none" stroke="#000" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="213.00" cy="221.00" r="0.80" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<rect x="230.00" y="218.80" width="40.00" height="4.40" rx="0" fill="none" stroke="#000" stroke-width="0.2" stroke-dasharray="0.5 0.5"/>
+<line x1="340.00" y1="247.00" x2="341.50" y2="246.00" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<line x1="343.00" y1="250.00" x2="344.50" y2="249.00" fill="none" stroke="#000" stroke-width="0.25" stroke-dasharray="1.6 0.8"/>
+<line x1="195.00" y1="236.00" x2="215.00" y2="236.00" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<line x1="210.00" y1="217.00" x2="210.00" y2="208.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="310.00" y1="217.00" x2="310.00" y2="208.50" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="210.00" y1="210.00" x2="310.00" y2="210.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="210.00" y1="210.00" x2="212.20" y2="209.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="210.00" y1="210.00" x2="212.20" y2="210.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="310.00" y1="210.00" x2="307.80" y2="210.75" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="310.00" y1="210.00" x2="307.80" y2="209.25" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="260.00" y="209.10" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">100</text>
+<line x1="347.00" y1="251.50" x2="362.00" y2="244.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="347.00" y1="251.50" x2="348.63" y2="249.85" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="347.00" y1="251.50" x2="349.30" y2="251.19" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="362.00" y1="244.00" x2="365.00" y2="244.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="365.80" y="244.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DROP ≈30, TEMPLE 145 DEVELOPED</text>
+<line x1="250.00" y1="224.00" x2="262.00" y2="232.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="250.00" y1="224.00" x2="252.25" y2="224.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="250.00" y1="224.00" x2="251.41" y2="225.84" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="262.00" y1="232.00" x2="265.00" y2="232.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="265.80" y="232.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">TEMPLE SECTION 6 × 4</text>
+<text x="280.00" y="278.00" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle" font-weight="bold">RIGHT SIDE VIEW</text>
+<line x1="75.00" y1="236.00" x2="32.59" y2="232.23" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="75.00" y1="236.00" x2="72.74" y2="236.55" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="75.00" y1="236.00" x2="72.88" y2="235.06" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="30.00" cy="232.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="30.00" y="232.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">1</text>
+<line x1="176.50" y1="162.00" x2="193.79" y2="151.36" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="176.50" y1="162.00" x2="177.98" y2="160.21" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="176.50" y1="162.00" x2="178.77" y2="161.49" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="196.00" cy="150.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="196.00" y="150.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">2</text>
+<line x1="184.59" y1="90.44" x2="202.46" y2="94.43" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.59" y1="90.44" x2="186.90" y2="90.19" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="184.59" y1="90.44" x2="186.58" y2="91.65" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="205.00" cy="95.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="205.00" y="95.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">3</text>
+<line x1="182.28" y1="120.35" x2="202.41" y2="121.81" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="182.28" y1="120.35" x2="184.53" y2="119.76" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="182.28" y1="120.35" x2="184.42" y2="121.26" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="205.00" cy="122.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="205.00" y="122.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">4</text>
+<line x1="176.50" y1="166.00" x2="202.46" y2="160.54" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="176.50" y1="166.00" x2="178.50" y2="164.81" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="176.50" y1="166.00" x2="178.81" y2="166.28" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="205.00" cy="160.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="205.00" y="160.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">5</text>
+<line x1="181.84" y1="69.12" x2="142.57" y2="74.64" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="181.84" y1="69.12" x2="179.77" y2="70.17" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="181.84" y1="69.12" x2="179.56" y2="68.68" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="140.00" cy="75.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="140.00" y="75.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">6</text>
+<line x1="181.29" y1="105.21" x2="142.58" y2="109.70" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="181.29" y1="105.21" x2="179.19" y2="106.21" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="181.29" y1="105.21" x2="179.02" y2="104.72" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="140.00" cy="110.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="140.00" y="110.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">7</text>
+<line x1="186.78" y1="42.45" x2="142.60" y2="40.14" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="186.78" y1="42.45" x2="184.55" y2="43.08" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="186.78" y1="42.45" x2="184.63" y2="41.59" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="140.00" cy="40.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="140.00" y="40.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">8</text>
+<line x1="186.21" y1="20.31" x2="132.60" y2="21.92" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="186.21" y1="20.31" x2="184.03" y2="21.13" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="186.21" y1="20.31" x2="183.99" y2="19.63" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="130.00" cy="22.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="130.00" y="22.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">9</text>
+<line x1="180.50" y1="89.08" x2="114.60" y2="91.89" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="180.50" y1="89.08" x2="178.33" y2="89.92" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="180.50" y1="89.08" x2="178.27" y2="88.42" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="112.00" cy="92.00" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="112.00" y="92.90" font-size="2.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">10</text>
+<rect x="214.00" y="22.00" width="196.00" height="63.80" rx="0" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="214.00" y1="27.80" x2="410.00" y2="27.80" fill="none" stroke="#000" stroke-width="0.7"/>
+<text x="215.20" y="26.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">ITEM</text>
+<text x="225.20" y="26.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">DESCRIPTION</text>
+<text x="353.20" y="26.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">REF</text>
+<line x1="224.00" y1="22.00" x2="224.00" y2="85.80" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="352.00" y1="22.00" x2="352.00" y2="85.80" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="31.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">1</text>
+<text x="225.20" y="31.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">LENS, PLANO. NO DISPLAY</text>
+<text x="353.20" y="31.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">D13 / KYG-005</text>
+<line x1="214.00" y1="33.60" x2="410.00" y2="33.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="37.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">2</text>
+<text x="225.20" y="37.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">HINGE, SPRING, ×2</text>
+<text x="353.20" y="37.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">—</text>
+<line x1="214.00" y1="39.40" x2="410.00" y2="39.40" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="43.40" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">3</text>
+<text x="225.20" y="43.40" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">TEMPLE, RIGID-FLEX CARRIER, ×2</text>
+<text x="353.20" y="43.40" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">D11</text>
+<line x1="214.00" y1="45.20" x2="410.00" y2="45.20" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="49.20" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">4</text>
+<text x="225.20" y="49.20" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">TOUCH STRIP, 3 CH + GUARD, OUTER FACE</text>
+<text x="353.20" y="49.20" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYG-401/402</text>
+<line x1="214.00" y1="51.00" x2="410.00" y2="51.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="55.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">5</text>
+<text x="225.20" y="55.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">MICROPHONE, MEMS, END PIECE, ×2 (POWER SWITCHED)</text>
+<text x="353.20" y="55.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYG-301/303</text>
+<line x1="214.00" y1="56.80" x2="410.00" y2="56.80" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="60.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">6</text>
+<text x="225.20" y="60.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">OPEN-EAR SPEAKER PORT, ×2</text>
+<text x="353.20" y="60.80" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYG-203</text>
+<line x1="214.00" y1="62.60" x2="410.00" y2="62.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="66.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">7</text>
+<text x="225.20" y="66.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">PCB RIGID-FLEX: BM83 (R) · nRF52840 (L)</text>
+<text x="353.20" y="66.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYG-101/102</text>
+<line x1="214.00" y1="68.40" x2="410.00" y2="68.40" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="72.40" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">8</text>
+<text x="225.20" y="72.40" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">CELL, Li-Po 105–160 mAh, ONE PER TEMPLE</text>
+<text x="353.20" y="72.40" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYG-501</text>
+<line x1="214.00" y1="74.20" x2="410.00" y2="74.20" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="78.20" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">9</text>
+<text x="225.20" y="78.20" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">CHARGING CONTACTS, TEMPLE TIP (EV1: USB-C)</text>
+<text x="353.20" y="78.20" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYG-601</text>
+<line x1="214.00" y1="80.00" x2="410.00" y2="80.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="215.20" y="84.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">10</text>
+<text x="225.20" y="84.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">WEAR ELECTRODE, INNER TEMPLE</text>
+<text x="353.20" y="84.00" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYG-402</text>
+<text x="214.00" y="100.00" font-size="2.4" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">NOTES</text>
+<text x="214.00" y="104.10" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">1. DIMENSIONS IN MM. SCALE 1:1 ON A3. THIRD-ANGLE PROJECTION.</text>
+<text x="214.00" y="107.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">2. FRAME 50-20-145 NOMINAL. PRODUCTION FORM FACTOR FOR CONTEXT ONLY;</text>
+<text x="214.00" y="111.10" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">   EV1 IS A 50 × 35 RIGID BOARD (BRIEF-glasses-ev1.md §MECHANICAL).</text>
+<text x="214.00" y="114.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">3. NO DISPLAY (D13). NO CAMERA (D14). MICROPHONE POWER IS A</text>
+<text x="214.00" y="118.10" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">   HARDWARE STATE UNDER THE APPLICATION CONTROLLER (D15).</text>
+<text x="214.00" y="121.60" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">4. HIDDEN LINES SHOW ELECTRONICS INSIDE THE TEMPLES.</text>
+<text x="214.00" y="125.10" font-size="2.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">5. LEFT TEMPLE MIRRORS THE RIGHT; ITEMS 4-10 CALLED OUT ONCE.</text>
+<rect x="290.00" y="257.00" width="120.00" height="30.00" rx="0" fill="none" stroke="#000" stroke-width="0.7"/>
+<line x1="290.00" y1="269.00" x2="410.00" y2="269.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="290.00" y1="278.00" x2="410.00" y2="278.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="312.00" y1="257.00" x2="312.00" y2="287.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="298.00" cy="263.30" r="2.60" fill="none" stroke="#000" stroke-width="0.18"/>
+<circle cx="298.00" cy="263.30" r="1.30" fill="none" stroke="#000" stroke-width="0.18"/>
+<path d="M303.0,261.9 L309.0,260.7 L309.0,265.9 L303.0,264.7 Z" fill="none" stroke="#000" stroke-width="0.18"/>
+<line x1="294.00" y1="263.30" x2="311.00" y2="263.30" fill="none" stroke="#000" stroke-width="0.18" stroke-dasharray="8 1.5 1.5 1.5"/>
+<text x="301.00" y="274.20" font-size="1.7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">THIRD ANGLE</text>
+<text x="301.00" y="283.20" font-size="1.7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="middle">PROJECTION</text>
+<text x="314.00" y="260.40" font-size="1.9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">COPPERHEAD</text>
+<text x="314.00" y="264.80" font-size="3.0" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start" font-weight="bold">KYRA R1 — GLASSES</text>
+<text x="314.00" y="268.00" font-size="1.8" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">PRODUCTION FORM FACTOR · REFERENCE ONLY</text>
+<text x="313.50" y="271.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DWG NO</text>
+<text x="313.50" y="276.00" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">KYRA-GL-001</text>
+<line x1="336.50" y1="269.00" x2="336.50" y2="287.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="338.00" y="271.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">REV</text>
+<text x="338.00" y="276.00" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">A</text>
+<line x1="361.00" y1="269.00" x2="361.00" y2="287.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="362.50" y="271.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">SCALE</text>
+<text x="362.50" y="276.00" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">1:1</text>
+<line x1="385.50" y1="269.00" x2="385.50" y2="287.00" fill="none" stroke="#000" stroke-width="0.18"/>
+<text x="387.00" y="271.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">SHEET</text>
+<text x="387.00" y="276.00" font-size="2.3" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">1 / 1</text>
+<text x="313.50" y="280.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DATE</text>
+<text x="313.50" y="285.00" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">2026-09-02</text>
+<text x="338.00" y="280.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">STATUS</text>
+<text x="338.00" y="285.00" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DRAFT</text>
+<text x="362.50" y="280.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">UNITS</text>
+<text x="362.50" y="285.00" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">mm</text>
+<text x="387.00" y="280.80" font-size="1.6" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">DRAWN</text>
+<text x="387.00" y="285.00" font-size="2.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" fill="#000" text-anchor="start">copperhead / claude</text>
+</svg>
