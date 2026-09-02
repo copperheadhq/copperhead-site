@@ -576,6 +576,20 @@ section {
   overflow-x: auto;
 }
 
+/* The cost table's last column stays in view while the rest scrolls under
+   it: stuck to the right edge of whichever box is scrolling (the wrapper
+   above 720px, the table itself below), on the page ground so the token
+   counts pass beneath, with a hairline and a little padding at the seam.
+   The cells have no left padding of their own. */
+.prose .cost-table th:last-child,
+.prose .cost-table td:last-child {
+  position: sticky;
+  right: 0;
+  padding-left: 0.75rem;
+  background: var(--bg);
+  border-left: 1px solid var(--hairline);
+}
+
 /* Third-party embeds are light-scheme documents that never say so. On the
    dark theme the page's color-scheme is pinned to dark, and Chrome paints an
    iframe whose scheme differs from its embedder's on an opaque white canvas,

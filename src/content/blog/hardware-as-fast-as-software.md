@@ -122,7 +122,7 @@ cache, <span class="cost">$0.50</span> per million read back from it and
 <span class="cost">$25</span> per million output
 tokens<sup><a href="#ref-6">[6]</a></sup>. The model was `claude-opus-5` for every call.
 
-<div data-bleed-ok>
+<div class="cost-table" data-bleed-ok>
 
 | Board and stage            | Wall clock | API calls | Output tokens | Cache write, 1h |    Cache read |                                 Cost |
 | -------------------------- | ---------- | --------: | ------------: | --------------: | ------------: | -----------------------------------: |
