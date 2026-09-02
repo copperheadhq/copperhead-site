@@ -764,9 +764,64 @@ const jsonLd = {
     font-size: 0.85em;
   }
 
+  .prose :global(.notice) {
+    border-left: 3px solid var(--copper);
+    background: var(--panel);
+    padding: 0.85rem 1.1rem;
+    margin: 1.6rem 0;
+  }
+  .prose :global(.notice p) {
+    margin: 0;
+  }
+
+  /* An X post embedded in the body. widgets.js swaps the blockquote for an
+     iframe of its own, with inline margins, so the figure is the hook the
+     prose rhythm hangs on; the post itself is centred and capped at the
+     widget's own width. */
+  .prose :global(.embed) {
+    margin: 1.6rem 0;
+  }
+  .prose :global(.embed .twitter-tweet) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Two pages side by side, each an anchor round its image. Markdown puts the
+     two links in one paragraph, and that paragraph is the row. Under 560px
+     the pages would be too small to read as pages, so they stack. */
+  .prose :global(figure.two-up p) {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+  }
+  .prose :global(figure.two-up a) {
+    flex: 1 1 0;
+    min-width: 0;
+    text-decoration: none;
+    border: 0;
+  }
+  .prose :global(figure.two-up img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border: 1px solid var(--hairline);
+    background: #fff;
+  }
+  @media (max-width: 560px) {
+    .prose :global(figure.two-up p) {
+      flex-direction: column;
+    }
+  }
   .prose :global(strong) {
     color: var(--text);
     font-weight: 500;
+  }
+
+  /* A dollar figure in the prose or a table, <span class="cost">. Green in
+     both themes so the money reads at a glance against the token counts. */
+  .prose :global(.cost) {
+    color: var(--green);
   }
 
   /* A file shown as itself (FileBlock.astro) and the quickstart terminal
@@ -818,6 +873,14 @@ const jsonLd = {
     height: auto;
     border: 1px solid var(--hairline);
     margin: 0 0 1.4rem;
+  }
+
+  /* Stroke-only figures (the SVG drawings) sit on their own white plate:
+     padding keeps the linework off the border, in both themes. */
+  .prose :global(img[src$=".svg"]) {
+    box-sizing: border-box;
+    padding: 1.1rem 1.4rem;
+    background: #fff;
   }
 
   .prose :global(table) {

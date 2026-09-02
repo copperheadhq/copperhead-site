@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560mm" height="300mm" viewBox="0 0 560 300">
+<title>Kyra ring EV1, block diagram</title>
+<rect x="0" y="0" width="560" height="300" fill="#fff"/>
+<text x="14" y="18" font-size="9" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="start" fill="#000" font-weight="bold">RING EV1  ·  BLOCK DIAGRAM</text>
+<text x="546" y="18" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="end" fill="#000">dashed = off the board</text>
+<rect x="14" y="44" width="90" height="44" rx="2" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="4 2.5"/>
+<text x="59.0" y="63.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">PHONE</text>
+<text x="59.0" y="74.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">Mac / iOS app</text>
+<rect x="14" y="150" width="90" height="44" rx="2" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="4 2.5"/>
+<text x="59.0" y="169.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">GLASSES</text>
+<text x="59.0" y="180.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">escalation surface</text>
+<rect x="180" y="40" width="140" height="52" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="250.0" y="58.5" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">nRF52833</text>
+<text x="250.0" y="69.0" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">VDDH from cell, no LDO</text>
+<text x="250.0" y="79.5" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">BLE, 2 links</text>
+<rect x="370" y="28" width="90" height="36" rx="2" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="4 2.5"/>
+<text x="415.0" y="43.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">NFC ANTENNA</text>
+<text x="415.0" y="54.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">pairing</text>
+<rect x="370" y="74" width="90" height="36" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="415.0" y="89.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">AT42QT1070</text>
+<text x="415.0" y="100.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">strip, guard, wear; I2C</text>
+<rect x="470" y="74" width="86" height="36" rx="2" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="4 2.5"/>
+<text x="513.0" y="89.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">ELECTRODES</text>
+<text x="513.0" y="100.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">flat-flex tail</text>
+<rect x="370" y="120" width="90" height="36" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="415.0" y="135.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">KX022</text>
+<text x="415.0" y="146.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">confirm interlock, I2C</text>
+<rect x="370" y="160" width="90" height="40" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="415.0" y="177.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">DRV2605L</text>
+<text x="415.0" y="188.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">haptic driver</text>
+<rect x="470" y="160" width="86" height="40" rx="2" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="4 2.5"/>
+<text x="513.0" y="177.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">LRA</text>
+<text x="513.0" y="188.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">escalation</text>
+<rect x="370" y="208" width="90" height="30" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="415.0" y="220.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">CAP BANK</text>
+<text x="415.0" y="231.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">4 x 220 uF MLCC</text>
+<rect x="14" y="244" width="90" height="32" rx="2" fill="none" stroke="#000" stroke-width="0.9" stroke-dasharray="4 2.5"/>
+<text x="59.0" y="257.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">RX COIL</text>
+<text x="59.0" y="268.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">6.78 MHz</text>
+<rect x="116" y="244" width="84" height="32" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="158.0" y="257.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">RECTIFIER</text>
+<text x="158.0" y="268.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">BAT54S, clamp</text>
+<rect x="212" y="244" width="84" height="32" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="254.0" y="257.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">MCP73831</text>
+<text x="254.0" y="268.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">15 mA</text>
+<rect x="308" y="244" width="96" height="32" rx="2" fill="none" stroke="#000" stroke-width="0.9"/>
+<text x="356.0" y="257.8" font-size="8.5" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000" font-weight="bold">CELL 20 mAh</text>
+<text x="356.0" y="268.2" font-size="7.2" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">AP9101CK protected</text>
+<path d="M104.0,66.0 L180.0,66.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M180.0,66.0 L175.8,67.9 M180.0,66.0 L175.8,64.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M104.0,66.0 L108.2,64.1 M104.0,66.0 L108.2,67.9" fill="none" stroke="#000" stroke-width="0.8"/>
+<text x="142" y="62" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">BLE (L1)</text>
+<path d="M104.0,172.0 L160.0,172.0 L160.0,84.0 L180.0,84.2" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M180.0,84.2 L175.8,86.1 M180.0,84.2 L175.8,82.3" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M104.0,172.0 L108.2,170.1 M104.0,172.0 L108.2,173.9" fill="none" stroke="#000" stroke-width="0.8"/>
+<text x="163" y="139" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="start" fill="#000">BLE (L4, reserved)</text>
+<path d="M320.0,47.8 L345.0,48.0 L345.0,46.0 L370.0,46.0" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round"/>
+<path d="M320.0,66.0 L350.0,66.0 L350.0,92.0 L370.0,92.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M370.0,92.0 L365.8,93.9 M370.0,92.0 L365.8,90.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M320.0,66.0 L324.2,64.1 M320.0,66.0 L324.2,67.9" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M320.0,84.2 L340.0,84.0 L340.0,138.0 L370.0,138.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M370.0,138.0 L365.8,139.9 M370.0,138.0 L365.8,136.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M320.0,84.2 L324.2,82.3 M320.0,84.2 L324.2,86.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M460.0,92.0 L470.0,92.0" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round"/>
+<path d="M299.0,92.0 L299.0,180.0 L370.0,180.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M370.0,180.0 L365.8,181.9 M370.0,180.0 L365.8,178.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<text x="303" y="150" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="start" fill="#000">I2C, EN</text>
+<path d="M460.0,180.0 L470.0,180.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M470.0,180.0 L465.8,181.9 M470.0,180.0 L465.8,178.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M415.0,208.0 L415.0,200.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M415.0,200.0 L416.9,204.2 M415.0,200.0 L413.1,204.2" fill="none" stroke="#000" stroke-width="0.8"/>
+<text x="419" y="206" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="start" fill="#000">supply</text>
+<path d="M104.0,260.0 L116.0,260.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M116.0,260.0 L111.8,261.9 M116.0,260.0 L111.8,258.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M200.0,260.0 L212.0,260.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M212.0,260.0 L207.8,261.9 M212.0,260.0 L207.8,258.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<text x="206" y="240" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="middle" fill="#000">VRECT</text>
+<path d="M296.0,260.0 L308.0,260.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M308.0,260.0 L303.8,261.9 M308.0,260.0 L303.8,258.1" fill="none" stroke="#000" stroke-width="0.8"/>
+<path d="M322.4,244.0 L322.0,222.0 L215.0,222.0 L215.0,92.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M215.0,92.0 L216.9,96.2 M215.0,92.0 L213.1,96.2" fill="none" stroke="#000" stroke-width="0.8"/>
+<text x="219" y="150" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="start" fill="#000">VBAT to VDDH</text>
+<path d="M404.0,260.0 L440.0,260.0 L440.0,238.0" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round"/>
+<path d="M440.0,238.0 L441.9,242.2 M440.0,238.0 L438.1,242.2" fill="none" stroke="#000" stroke-width="0.8"/>
+<text x="444" y="255" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="start" fill="#000">VBAT, series R</text>
+<text x="14" y="296" font-size="7" font-family="'DejaVu Sans Mono','Liberation Mono',Menlo,monospace" text-anchor="start" fill="#000">No microphone, camera, PPG or indicator light. The current jumper in the cell's positive leg is the instrument for KYR-901.</text>
+</svg>
