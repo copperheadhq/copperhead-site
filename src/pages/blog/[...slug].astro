@@ -797,16 +797,13 @@ const jsonLd = {
   .prose :global(figure.two-up a) {
     flex: 1 1 0;
     min-width: 0;
-    text-decoration: none;
-    border: 0;
   }
   .prose :global(figure.two-up img) {
-    display: block;
-    width: 100%;
-    height: auto;
     margin: 0;
-    border: 1px solid var(--hairline);
     background: #fff;
+  }
+  .prose :global(figure.two-up a:hover img) {
+    border-color: var(--copper);
   }
   @media (max-width: 560px) {
     .prose :global(figure.two-up p) {

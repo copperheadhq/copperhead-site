@@ -34,9 +34,10 @@ const partials = import.meta.glob('./content/blog/_*.{md,mdx}', {
 /**
  * Reading time in whole minutes, at 200 words a minute.
  *
- * Counted off the raw source, so fenced code, MDX imports and JSX tags are
- * stripped first: a post whose body is half terminal transcript would
- * otherwise be billed for reading output nobody reads line by line.
+ * Counted off the raw source, so fenced code, table rows, MDX imports and JSX
+ * tags are stripped first: a post whose body is half terminal transcript, or
+ * half bill of materials, would otherwise be billed for reading output nobody
+ * reads line by line.
  */
 export const readingTime = (body: string) => {
   let source = body;
@@ -48,6 +49,7 @@ export const readingTime = (body: string) => {
 
   const words = source
     .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/^\|.*$/gm, ' ')
     .replace(/^import\s.*$/gm, ' ')
     .replace(/<[^>]*>/g, ' ')
     .replace(/[#*_`>[\]()|-]/g, ' ')

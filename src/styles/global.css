@@ -585,6 +585,31 @@ iframe {
   color-scheme: light;
 }
 
+/* A quotation, from markdown or from an embed's fallback markup when the
+   widget does not run: a grey rule down the left, dimmed, no indent. */
+/* Reference marks, [n] in the markup. A superscript at the inherited line
+   height grows its line box by 4px; zero here keeps the paragraph's rhythm.
+   No underline: the brackets already mark it. */
+.prose sup {
+  font-size: 0.75em;
+  line-height: 0;
+}
+
+.prose sup a {
+  text-decoration: none;
+}
+
+.prose blockquote {
+  margin: 0 0 1.4rem;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 2px solid var(--hairline);
+  color: var(--text-dim);
+}
+
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
 .prose figcaption {
   margin-top: 0.6rem;
   font-size: 0.85rem;

@@ -1,6 +1,6 @@
 ---
 title: "Hardware as fast as software"
-description: "On 27 August I replied to Kyra's founder that hardware design should move as fast as software. On 2 September we tried to prove it with Kyra's own public roadmap, which is one sentence. We took two boards to part selection before lunch. This is the record, with the commits."
+description: "Two boards for Kyra, glasses and a ring, taken from a two-sentence public roadmap to part selection in one morning. A test of the claim that hardware design can move as fast as software, with every stage a commit."
 date: 2026-09-02
 kind: "Engineering"
 cover: "hardware-as-fast-as-software"
@@ -10,22 +10,34 @@ coverAlt: "A copperhead title card: a Formula 1 car in side profile as a single 
 On 27 August I [replied](https://x.com/animeshsingh38/status/2093044844423946444) to
 [Kyra](https://kyrainterface.com/)'s founder [Sahil Dhull](https://x.com/_sahildhull)
 that hardware design should move as fast as software<sup><a href="#ref-1">[1]</a></sup>.
-On 2 September we tried to prove it with Kyra's own public roadmap, which is one
-sentence. We took two boards to part selection before lunch. This is the record, with
+On 2 September we tried to prove it with Kyra's own public roadmap, which is two
+sentences. We took two boards to part selection before lunch. This is the record, with
 the commits.
 
 <figure class="embed">
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Rank 27 in JEE Advanced. 230 in JEE Mains out of 1.5 million fellow candidates.<br><br>Nah! Wasn&#39;t enough.<br><br>Raised $1.2M, backed by a16z Speedrun, building AI agents.<br><br>Still Nah! Wasn&#39;t enough.<br><br>I wanted hardware too - the actual thing on your body, not just the software behind it.… <a href="https://t.co/IVbMheUFzZ">pic.twitter.com/IVbMheUFzZ</a></p>&mdash; sahil dhull (@_sahildhull) <a href="https://x.com/_sahildhull/status/2092983875933004244?ref_src=twsrc%5Etfw">August 27, 2026</a></blockquote>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Rank 27 in JEE Advanced. 230 in JEE Mains out of 1.5 million fellow candidates.<br><br>Nah! Wasn&#39;t enough.<br><br>Raised $1.2M, backed by a16z Speedrun, building AI agents.<br><br>Still Nah! Wasn&#39;t enough.<br><br>I wanted hardware too - the actual thing on your body, not just the software behind it.… <a href="https://t.co/IVbMheUFzZ">pic.twitter.com/IVbMheUFzZ</a></p>sahil dhull (@_sahildhull), <a href="https://x.com/_sahildhull/status/2092983875933004244?ref_src=twsrc%5Etfw">August 27, 2026</a></blockquote>
 <script>
-  // The widget reads data-theme once, when it draws, so it is set here from
-  // the page's own resolved theme (Base.astro) before widgets.js loads.
+  // widgets.js reads data-theme once, when it draws, so the quote is stamped
+  // with the page's theme first and redrawn when the toggle changes it.
   (function () {
-    var theme = window.__theme ? window.__theme.resolved() : 'light';
-    var quotes = document.querySelectorAll('.twitter-tweet');
-    for (var i = 0; i < quotes.length; i++) quotes[i].setAttribute('data-theme', theme);
+    var fig = document.currentScript.parentNode;
+    var theme = function () {
+      return document.documentElement.dataset.theme ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    };
+    var redraw = function () {
+      var old = fig.querySelector('.twitter-tweet');
+      if (!old) return;
+      if (!old.querySelector('iframe') || !window.twttr) { old.dataset.theme = theme(); return; }
+      old.remove();
+      window.twttr.widgets.createTweet('2092983875933004244', fig, { theme: theme() });
+    };
+    redraw();
+    new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
   })();
 </script>
-<script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
+<script async src="https://platform.twitter.com/widgets.js"></script>
 </figure>
 
 ## The reports
@@ -52,10 +64,10 @@ the commits.
 
 <aside class="notice">
 <p><strong>DISCLOSURE:</strong> Kyra is not a client. Nobody at Kyra was contacted and
-nobody there has seen any of this. Everything below was derived from Kyra's <a
+nobody there has seen any of this. Everything below was derived from Kyra’s <a
 href="https://kyrainterface.com/">public page</a> and one <a
 href="https://www.linkedin.com/feed/update/urn:li:activity:7500590483107344384/">public
-post</a> by its founder. It demonstrates a process and makes no claim about Kyra's
+post</a> by its founder. It demonstrates a process and makes no claim about Kyra’s
 product.</p>
 </aside>
 
@@ -68,11 +80,11 @@ Kyra's entire public hardware specification, quoted in full from
 > controlled by a ring: reply, dismiss or confirm with your thumb.
 
 Plus a privacy commitment: your data stays with you. No part numbers, no budgets, no
-dimensions, no display or camera decision. The same morning, Sahil Dhull [posted a
-working V0 of the
+dimensions, no display or camera decision. The evening before, Sahil Dhull had
+[posted a working V0 of the
 glasses](https://www.linkedin.com/feed/update/urn:li:activity:7500590483107344384/),
 demonstrated by making a phone call through them<sup><a href="#ref-3">[3]</a></sup>.
-That post settled one question the sentence did not: the glasses have an audio path.
+That post settled one question the roadmap did not: the glasses have an audio path.
 
 ## The record
 
@@ -131,9 +143,9 @@ context into the one hour cache and reads it back on the next turn, so the bill 
 two lines: cache writes at <span class="cost">$18.57</span> and output tokens at
 <span class="cost">$6.59</span>. Reads are <span class="cost">$0.86</span>. Writes cost
 more than output because every turn appends to the context and the appended part is
-written at twice the input price. The five minute cache would have halved that line, but
-stage 3 turns ran past five minutes often enough that the one hour cache is the right
-choice.
+written at twice the input price. The five minute cache, at 1.25 times, would have cut
+that line by more than a third, but stage 3 turns ran past five minutes often enough
+that the one hour cache is the right choice.
 
 Part selection is the largest line on both boards, 45 percent of the ring's bill and 48
 percent of the glasses'. It is also where the wall clock goes: 43 and 49 minutes against
@@ -152,20 +164,19 @@ under half an hour for a specification.
 | Stage-3 turns used, cap 80              | 46                             | 35 then 38                   |
 | Package                                 | 88 pages                       | 102 pages                    |
 
-![FIG. 1, the glasses exploded: frame front, two plano lenses and two temples, with each temple's PCB, cell, speaker, microphone, touch strip, charging contacts, microphone power switch and NFC loop pulled out above it, with reference numerals](/blog/figures/kyra-glasses-exploded.svg)
+<img src="/blog/figures/kyra-glasses-exploded.svg" width="306" height="264" loading="lazy" alt="FIG. 1, the glasses exploded: frame front, two plano lenses and two temples, with each temple's PCB, cell, speaker, microphone, touch strip, charging contacts, microphone power switch and NFC loop pulled out above it, with reference numerals">
 
 _FIG. 1. Glasses, exploded. No display, no camera. Microphone power is a hardware switch
 under the application controller, off unless the wearer opens a call or a reply.
-Reference numerals key to the requirement register. [Download the
-SVG](/blog/figures/kyra-glasses-exploded.svg)._
+Reference numerals key to the requirement register. <a href="/blog/figures/kyra-glasses-exploded.svg" download>Download the SVG</a>._
 
-![FIG. 2, the ring exploded along its axis: inner liner with its electrode window, the rigid-flex loop as an open C carrying the controller island, haptic island, LRA and NFC arc, the curved cell, the receive coil and the outer shell with its three touch pads](/blog/figures/kyra-ring-exploded.svg)
+<img src="/blog/figures/kyra-ring-exploded.svg" width="348" height="276" loading="lazy" alt="FIG. 2, the ring exploded along its axis: inner liner with its electrode window, the rigid-flex loop as an open C carrying the controller island, haptic island, LRA and NFC arc, the curved cell, the receive coil and the outer shell with its three touch pads">
 
 _FIG. 2. Ring, exploded along its axis. No microphone, no camera, no optical or
 electrical biosensor: the one window on the inner liner is a wear-detect electrode.
 Every shipping smart ring is a capture device<sup><a href="#ref-7">[7]</a><a
 href="#ref-8">[8]</a><a href="#ref-9">[9]</a></sup>; this one is a control device. The
-architecture follows the published Open Ring design record<sup><a href="#ref-10">[10]</a></sup>. [Download the SVG](/blog/figures/kyra-ring-exploded.svg)._
+architecture follows the published Open Ring design record<sup><a href="#ref-10">[10]</a></sup>. <a href="/blog/figures/kyra-ring-exploded.svg" download>Download the SVG</a>._
 
 ## The glasses, as designed
 
@@ -175,10 +186,9 @@ module owns the call path and the charger; the controller module owns the sensor
 touch strip, the microphone switch and both BLE links. Everything off the board is
 dashed.
 
-![Block diagram of the glasses EV1: phone and ring on the left, the nRF52840 controller module and BM83 audio module in the centre, touch controller, accelerometer, NFC antenna, amplifiers, speakers, microphone power switch and microphones on the right, USB-C and the protected cell along the bottom](/blog/figures/kyra-glasses-block-diagram.svg)
+<img src="/blog/figures/kyra-glasses-block-diagram.svg" width="560" height="300" loading="lazy" alt="Block diagram of the glasses EV1: phone and ring on the left, the nRF52840 controller module and BM83 audio module in the centre, touch controller, accelerometer, NFC antenna, amplifiers, speakers, microphone power switch and microphones on the right, USB-C and the protected cell along the bottom">
 
-_Glasses EV1 block diagram. [Download the
-SVG](/blog/figures/kyra-glasses-block-diagram.svg)._
+_Glasses EV1 block diagram. <a href="/blog/figures/kyra-glasses-block-diagram.svg" download>Download the SVG</a>._
 
 The 23 parts that are not passives, from the bill of materials committed at `3297c80`.
 Every part number is a proposal, flagged unverified in the BOM itself; the package
@@ -215,7 +225,7 @@ column is the KiCad footprint the symbol was checked against.
 </div>
 
 <details>
-<summary>The other 67 rows: passives, crystals, test points and mounting holes</summary>
+<summary>The other 67 rows: passives and test points</summary>
 
 <div data-bleed-ok>
 
@@ -300,9 +310,9 @@ dedicated touch controller scans on its own and wakes the controller once per ge
 which is the whole power budget. Charging is inductive through a discrete rectifier, and
 the haptic pulse is drawn from a capacitor bank rather than the cell.
 
-![Block diagram of the ring EV1: phone and glasses on the left, the nRF52833 in the centre, NFC antenna, touch controller with its off-board electrodes, accelerometer, haptic driver with the LRA and capacitor bank on the right and the charging chain from receive coil through rectifier and charger to the protected cell along the bottom](/blog/figures/kyra-ring-block-diagram.svg)
+<img src="/blog/figures/kyra-ring-block-diagram.svg" width="560" height="300" loading="lazy" alt="Block diagram of the ring EV1: phone and glasses on the left, the nRF52833 in the centre, NFC antenna, touch controller with its off-board electrodes, accelerometer, haptic driver with the LRA and capacitor bank on the right and the charging chain from receive coil through rectifier and charger to the protected cell along the bottom">
 
-_Ring EV1 block diagram. [Download the SVG](/blog/figures/kyra-ring-block-diagram.svg)._
+_Ring EV1 block diagram. <a href="/blog/figures/kyra-ring-block-diagram.svg" download>Download the SVG</a>._
 
 The 23 parts that are not passives, from the bill of materials committed at `c19ab02`,
 on the same terms.
@@ -338,7 +348,7 @@ on the same terms.
 </div>
 
 <details>
-<summary>The other 67 rows: passives, crystals, test points and mounting holes</summary>
+<summary>The other 67 rows: passives, test points and mounting holes</summary>
 
 <div data-bleed-ok>
 
@@ -431,7 +441,7 @@ came out smaller than the brief assumed, and the pulse it can carry is now an op
 Both are the first things the boards would measure.
 
 - That Kyra wants any of this. The two biggest decisions, no display and no camera, were
-ours, taken from a three-day prototype and a one-sentence roadmap. They are listed as
+ours, taken from a three-day prototype and a two-sentence roadmap. They are listed as
 open items addressed to Kyra, unasked.
 
 ## What it does prove
@@ -454,22 +464,22 @@ Each entry says which claim in the text it carries. Web sources were read on 2 S
 built from.
 
 1. <a id="ref-1"></a>
-   Animesh Chouhan, reply to @_sahildhull on X, 27 August 2026.
-   https://x.com/animeshsingh38/status/2093044844423946444
+   Animesh Chouhan, reply to @_sahildhull on X, 27 August 2026.\
+   https://x.com/animeshsingh38/status/2093044844423946444\
    The claim this page sets out to prove: imagine what you could build if hardware
    design moved as fast as software.
 
 2. <a id="ref-2"></a>
-   Kyra, product page, quoted in full.
-   https://kyrainterface.com/
+   Kyra, product page, quoted in full.\
+   https://kyrainterface.com/\
    The entire public hardware specification (The input) and the privacy commitment
    that became a hardware constraint on both boards. Re-checked the same day the
    boards were designed; unchanged.
 
 3. <a id="ref-3"></a>
-   [Sahil Dhull](https://www.linkedin.com/in/sahildhull-25/), LinkedIn post, 2 September
-   2026.
-   https://www.linkedin.com/feed/update/urn:li:activity:7500590483107344384/
+   [Sahil Dhull](https://www.linkedin.com/in/sahildhull-25/), LinkedIn post, 1 September
+   2026.\
+   https://www.linkedin.com/feed/update/urn:li:activity:7500590483107344384/\
    The glasses V0 built in three days and demonstrated by a phone call, which is the
    only evidence that the glasses carry an audio path. It is the reason the day's
    scope moved from a ring alone to glasses and ring. Nothing else about the product
@@ -477,8 +487,8 @@ built from.
 
 4. <a id="ref-4"></a>
    Kyra R1 EV1, the escalation ring engine: design documentation package, revision
-   c19ab02, 102 pages.
-   [/blog/kyra-ring-ev1-design-package-c19ab02.pdf](/blog/kyra-ring-ev1-design-package-c19ab02.pdf)
+   c19ab02, 102 pages.\
+   [/blog/kyra-ring-ev1-design-package-c19ab02.pdf](/blog/kyra-ring-ev1-design-package-c19ab02.pdf)\
    Every ring figure in The record and What came out: the stage commits, the 90-symbol
    BOM, the itemised 96.9 µA idle draw and the 116.3 µA figure with contingency. Built
    from the workspace at that commit through git archive, so the revision on its cover
@@ -486,43 +496,43 @@ built from.
 
 5. <a id="ref-5"></a>
    Kyra R1 EV1, the escalation glasses engine: design documentation package, revision
-   3297c80, 88 pages.
-   [/blog/kyra-glasses-ev1-design-package-3297c80.pdf](/blog/kyra-glasses-ev1-design-package-3297c80.pdf)
+   3297c80, 88 pages.\
+   [/blog/kyra-glasses-ev1-design-package-3297c80.pdf](/blog/kyra-glasses-ev1-design-package-3297c80.pdf)\
    Every glasses figure: the stage commits, the 90-symbol BOM, the 3.25 mA standby
    ledger and 4.77 mA day average and the note that the audio module's sniff current
    is entered as assumed, which What this does not prove relies on.
 
 6. <a id="ref-6"></a>
-   Anthropic, Claude pricing.
-   https://platform.claude.com/docs/en/about-claude/pricing
+   Anthropic, Claude pricing.\
+   https://platform.claude.com/docs/en/about-claude/pricing\
    The Claude Opus 5 rates behind every cost in What each stage cost, including the
    one hour cache write and cache read multipliers. Token counts are the Claude Agent
    SDK's session records, one usage entry per API call, deduplicated by message id.
 
 7. <a id="ref-7"></a>
-   Becky Stern, Oura Ring teardown (Gen 3 and Gen 2), 2022.
-   https://beckystern.com/2022/04/17/oura-ring-teardown-gen-3-and-gen-2/
+   Becky Stern, Oura Ring teardown (Gen 3 and Gen 2), 2022.\
+   https://beckystern.com/2022/04/17/oura-ring-teardown-gen-3-and-gen-2/\
    The optical heart-rate stack, 16 mAh cell and inductive charging inside a shipping
    ring: one of three teardowns behind every shipping smart ring is a capture device
    (FIG. 2 caption).
 
 8. <a id="ref-8"></a>
-   iFixit, Samsung Galaxy Ring Chip ID.
-   https://www.ifixit.com/Guide/Samsung+Galaxy+Ring+Chip+ID/176114
+   iFixit, Samsung Galaxy Ring Chip ID.\
+   https://www.ifixit.com/Guide/Samsung+Galaxy+Ring+Chip+ID/176114\
    Nordic nRF5340, NFC tag, external NOR flash and wireless charging in the Galaxy
    Ring: the second of the three teardowns and the source for Nordic silicon as the
    default in the ring's part research.
 
 9. <a id="ref-9"></a>
-   DigiKey Maker, Ultrahuman Ring Air teardown, 2024.
-   https://www.digikey.com/en/maker/blogs/2024/ultrahuman-ring-air-teardown
+   DigiKey Maker, Ultrahuman Ring Air teardown, 2024.\
+   https://www.digikey.com/en/maker/blogs/2024/ultrahuman-ring-air-teardown\
    nRF52840, flex PCB, LEDs and photodiode: the third teardown. The optical stack
    these three share is what the Kyra ring omits and what buys its power budget.
 
 10. <a id="ref-10"></a>
    Memfault Interrupt, Smart ring development, parts 1 and 2, with the open-source
-   hardware at github.com/stawiski/open-ring.
-   https://interrupt.memfault.com/blog/smart-ring-development-part-1
+   hardware at https://github.com/stawiski/open-ring.\
+   https://interrupt.memfault.com/blog/smart-ring-development-part-1\
    The published design record the ring's architecture leans on: wafer-level packaging
    forced by a 2.6 to 2.9 mm band, rigid-flex, 6.78 MHz induction charging with a
    discrete rectifier and a capacitor bank for the haptic. It is a design one may
@@ -530,7 +540,7 @@ built from.
    and the second MCU.
 
 11. <a id="ref-11"></a>
-   copperhead.
-   https://copperhead.sh
+   copperhead.\
+   https://copperhead.sh\
    The pipeline that produced the record: copperhead create, version 0.10.0, eight
    stages, of which the first three were run here.
