@@ -835,6 +835,12 @@ const jsonLd = {
     font-weight: 500;
   }
 
+  /* A dollar figure in the prose or a table, <span class="cost">. Green in
+     both themes so the money reads at a glance against the token counts. */
+  .prose :global(.cost) {
+    color: var(--green);
+  }
+
   /* A file shown as itself (FileBlock.astro) and the quickstart terminal
      (InstallBlock.astro) sit in the prose rhythm; each carries its own frame
      and internal metrics. */

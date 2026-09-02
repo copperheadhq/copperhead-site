@@ -104,34 +104,36 @@ materials, decision log, change log and every requirement file.
 ## What each stage cost
 
 Every figure here is read off the Claude Agent SDK's own usage record, one line per API
-call and priced at the published Claude Opus 5 rates: $5 per million input tokens, $10
-per million written to the one hour cache, $0.50 per million read back from it and $25
-per million output tokens<sup><a href="#ref-6">[6]</a></sup>. The model was
-`claude-opus-5` for every call.
+call and priced at the published Claude Opus 5 rates: <span class="cost">$5</span> per
+million input tokens, <span class="cost">$10</span> per million written to the one hour
+cache, <span class="cost">$0.50</span> per million read back from it and
+<span class="cost">$25</span> per million output
+tokens<sup><a href="#ref-6">[6]</a></sup>. The model was `claude-opus-5` for every call.
 
 <div data-bleed-ok>
 
-| Board and stage            | Wall clock | API calls | Output tokens | Cache write, 1h |    Cache read |       Cost |
-| -------------------------- | ---------- | --------: | ------------: | --------------: | ------------: | ---------: |
-| Ring, 1 specification      | 25m 19s    |        16 |        48,022 |         369,825 |        35,848 |      $4.92 |
-| Ring, 2 architecture       | 11m 01s    |        21 |        19,494 |         186,902 |       206,946 |      $2.46 |
-| Ring, 3 part selection     | 43m 28s    |        39 |        60,084 |         409,312 |       676,154 |      $5.93 |
-| **Ring, stages 1 to 3**    | **1h 20m** |    **76** |   **127,600** |     **966,039** |   **918,948** | **$13.31** |
-| Glasses, 1 specification   | 28m 17s    |        24 |        33,360 |         420,245 |        48,267 |      $5.06 |
-| Glasses, 2 architecture    | 7m 51s     |        15 |        13,924 |         108,977 |       111,505 |      $1.49 |
-| Glasses, 3 part selection  | 48m 44s    |        46 |        88,789 |         361,341 |       648,214 |      $6.16 |
-| **Glasses, stages 1 to 3** | **1h 25m** |    **85** |   **136,073** |     **890,563** |   **807,986** | **$12.71** |
-| **Both boards**            | **2h 45m** |   **161** |   **263,673** |   **1,856,602** | **1,726,934** | **$26.02** |
+| Board and stage            | Wall clock | API calls | Output tokens | Cache write, 1h |    Cache read |                                 Cost |
+| -------------------------- | ---------- | --------: | ------------: | --------------: | ------------: | -----------------------------------: |
+| Ring, 1 specification      | 25m 19s    |        16 |        48,022 |         369,825 |        35,848 |      <span class="cost">$4.92</span> |
+| Ring, 2 architecture       | 11m 01s    |        21 |        19,494 |         186,902 |       206,946 |      <span class="cost">$2.46</span> |
+| Ring, 3 part selection     | 43m 28s    |        39 |        60,084 |         409,312 |       676,154 |      <span class="cost">$5.93</span> |
+| **Ring, stages 1 to 3**    | **1h 20m** |    **76** |   **127,600** |     **966,039** |   **918,948** | **<span class="cost">$13.31</span>** |
+| Glasses, 1 specification   | 28m 17s    |        24 |        33,360 |         420,245 |        48,267 |      <span class="cost">$5.06</span> |
+| Glasses, 2 architecture    | 7m 51s     |        15 |        13,924 |         108,977 |       111,505 |      <span class="cost">$1.49</span> |
+| Glasses, 3 part selection  | 48m 44s    |        46 |        88,789 |         361,341 |       648,214 |      <span class="cost">$6.16</span> |
+| **Glasses, stages 1 to 3** | **1h 25m** |    **85** |   **136,073** |     **890,563** |   **807,986** | **<span class="cost">$12.71</span>** |
+| **Both boards**            | **2h 45m** |   **161** |   **263,673** |   **1,856,602** | **1,726,934** | **<span class="cost">$26.02</span>** |
 
 </div>
 
 Uncached input across the six stages is 164 tokens. The harness writes each turn's
 context into the one hour cache and reads it back on the next turn, so the bill sits in
-two lines: cache writes at $18.57 and output tokens at $6.59. Reads are $0.86. Writes
-cost more than output because every turn appends to the context and the appended part
-is written at twice the input price. The five minute cache would have halved that line,
-but stage 3 turns ran past five minutes often enough that the one hour cache is the
-right choice.
+two lines: cache writes at <span class="cost">$18.57</span> and output tokens at
+<span class="cost">$6.59</span>. Reads are <span class="cost">$0.86</span>. Writes cost
+more than output because every turn appends to the context and the appended part is
+written at twice the input price. The five minute cache would have halved that line, but
+stage 3 turns ran past five minutes often enough that the one hour cache is the right
+choice.
 
 Part selection is the largest line on both boards, 45 percent of the ring's bill and 48
 percent of the glasses'. It is also where the wall clock goes: 43 and 49 minutes against
