@@ -576,6 +576,30 @@ section {
   overflow-x: auto;
 }
 
+/* A table whose last column should stay in view while the rest scrolls, a
+   total beside its inputs: <div data-bleed-ok data-pin-last>. The cells stick
+   to the right edge of whichever box is scrolling (the wrapper, or below
+   720px the table itself), on the page ground so the other columns pass
+   beneath. Borders are separate rather than collapsed because a collapsed
+   border belongs to the table's grid and stays put while the cell moves;
+   separate ones travel with it, so the seam and the row rules hold. The
+   cells have no left padding of their own. The element name is there for
+   specificity: the post page's scoped table rule sets collapse at (0,2,1)
+   and comes later, so this one has to outrank it. */
+.prose div[data-pin-last] table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.prose [data-pin-last] th:last-child,
+.prose [data-pin-last] td:last-child {
+  position: sticky;
+  right: 0;
+  padding-left: 0.75rem;
+  background: var(--bg);
+  border-left: 1px solid var(--hairline);
+}
+
 /* Third-party embeds are light-scheme documents that never say so. On the
    dark theme the page's color-scheme is pinned to dark, and Chrome paints an
    iframe whose scheme differs from its embedder's on an opaque white canvas,
@@ -583,6 +607,33 @@ section {
    document keeps the canvas transparent. */
 iframe {
   color-scheme: light;
+}
+
+/* Reference marks, [n] in the markup. A superscript at the inherited line
+   height grows its line box by 4px; zero here keeps the paragraph's rhythm.
+   No underline: the brackets already mark it. */
+.prose sup {
+  font-size: 0.75em;
+  line-height: 0;
+}
+
+.prose sup a {
+  text-decoration: none;
+}
+
+/* A quotation, from markdown or from an embed's fallback markup when the
+   widget does not run: a grey rule down the left in place of the browser's
+   indent, in full ink, since the one other quote on the site is a callout.
+   last-of-type, not last-child: the embed fallback ends in bare text and a
+   link after its paragraph. */
+.prose blockquote {
+  margin: 0 0 1.4rem;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 2px solid var(--hairline);
+}
+
+.prose blockquote p:last-of-type {
+  margin-bottom: 0;
 }
 
 .prose figcaption {
