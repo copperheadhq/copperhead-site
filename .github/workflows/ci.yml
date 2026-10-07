@@ -54,12 +54,21 @@ jobs:
             # link. Scoped to those hosts, because a 403 anywhere else is still
             # worth failing on. registry.npmjs.org and reddit's own
             # /r/<name>/about.json are the machine-readable endpoints if this
-            # ever needs a real check.
+            # ever needs a real check. instagram.com joined the list on
+            # 2026-10-07 with a 429 rather than a 403, after passing on
+            # 2026-09-08 with no change to the link: 200 from a residential
+            # address, 429 from a runner, twice in a row.
             case "$code" in
               2*|3*|999) ;;
               403)
                 case "$url" in
                   *//www.npmjs.com/*|*//www.reddit.com/*|*//x.com/*) ;;
+                  *) fail=1 ;;
+                esac
+                ;;
+              429)
+                case "$url" in
+                  *//www.instagram.com/*) ;;
                   *) fail=1 ;;
                 esac
                 ;;
