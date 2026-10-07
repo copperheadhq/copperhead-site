@@ -61,7 +61,9 @@ const external = isExternalApply(role);
           <p class="standfirst">{role.summary}</p>
         </header>
 
-        <p class="context">{role.context}</p>
+        <div class="context">
+          {role.context.map((para) => <p>{para}</p>)}
+        </div>
 
         <h2>What you would own</h2>
         <ul>
@@ -86,10 +88,7 @@ const external = isExternalApply(role);
               {/* Genuinely optional, and said so: a list like this is otherwise
                   read as a second set of requirements, which is how a good
                   candidate talks themselves out of applying. */}
-              <p class="aside">
-                None of this is required. It is what would make the work easier
-                from the first day, not what decides the first email.
-              </p>
+              <p class="aside">None of this is required.</p>
               <ul>
                 {role.extra.map((e) => (
                   <li>{e}</li>
@@ -103,7 +102,7 @@ const external = isExternalApply(role);
           role.pay && (
             <>
               <h2>Pay</h2>
-              <p>{role.pay}</p>
+              <p>{role.pay.text}</p>
             </>
           )
         }
@@ -121,7 +120,7 @@ const external = isExternalApply(role);
               one more than anybody reads. */}
           <p class="note">
             {role.applyNote ??
-              "Send whatever shows the work best. A repository, a board you have built or a design you have argued with beats a covering letter, and it is what we would ask for next anyway."}
+              "Send whatever shows the work best. A repository or a board you have built beats a covering letter."}
           </p>
           {
             /* A role that names what an application must carry gets a list, not
@@ -185,6 +184,14 @@ const external = isExternalApply(role);
     border-top: 1px solid var(--line);
     font-size: 1.03rem;
     line-height: 1.7;
+  }
+
+  .context p {
+    margin: 0;
+  }
+
+  .context p + p {
+    margin-top: 1.25rem;
   }
 
   h2 {

@@ -54,8 +54,6 @@
     "A hardware design spreads one decision across a schematic, a bill of materials, a power budget and several documents, and nothing breaks when they fall out of sync.",
     "The gerbers are producible and the layout is DRC-clean, but the draft layout is correct rather than optimal, and it says so itself.",
     "The unfurl gets it from og:image above; this is the same file as an absolute URL for the BlogPosting node, because a crawler reading the structured data does not look at the meta tags, and a post whose card and whose schema image disagree is a post with two different thumbnails depending on who is asking.",
-    "A repository, a board you have built or a design you have argued with beats a covering letter, and it is what we would ask for next anyway.\"} </p> { /* A role that names what an application must carry gets a list, not a longer sentence.",
-    "Kept to four, one sentence or two each, and each one is a thing that is already true rather than a value we would like to have.",
     "it has no responsibilities, nothing to verify and no date, and a fabricated Role would sit one `posted` field away from emitting JobPosting markup for a job that does not exist.",
     "The owner/repo prefix is the same on every row, so it is noise in a table about one repo — strip it, and give the bare repo root a name of its own.",
     "Stars, forks and the two snapshot tables are each allowed to be missing on their own — ghrs only writes forks.csv once there is a fork, and stargazers.csv once there is a star — but with no traffic series there is no page.",

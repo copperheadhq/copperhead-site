@@ -8,6 +8,7 @@ behind `careersApply`. The specs are here, ready to enter field by field:
 - [form-ai-research-intern.md](form-ai-research-intern.md), live at [binary.so/lazoJrH](https://binary.so/lazoJrH)
 - [form-forward-deployed-hardware-engineer.md](form-forward-deployed-hardware-engineer.md), live at [binary.so/3sX6dXu](https://binary.so/3sX6dXu)
 - [form-founding-software-engineer.md](form-founding-software-engineer.md), live at [binary.so/evoDv0z](https://binary.so/evoDv0z)
+- [form-senior-ai-pcb-design-engineer.md](form-senior-ai-pcb-design-engineer.md), live at [binary.so/jaa9B4X](https://binary.so/jaa9B4X)
 - [form-general-application.md](form-general-application.md), the open application
 
 Each file is complete on its own. Building a form should not mean reading two documents

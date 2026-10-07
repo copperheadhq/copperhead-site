@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
-import { site, links } from "../../config";
+import { site } from "../../config";
 import {
   openRoles,
   rolePath,
@@ -10,33 +10,6 @@ import {
   isExternalApply,
   jobPostingJsonLd,
 } from "../../careers";
-
-// Roles are cards and everything else on the page is a hairline stack, the same
-// weighting the research index uses for published work against unwritten work.
-// The difference between "there is a job here" and "there is a company here"
-// should not be something you have to read to see.
-
-// How the team works, which is the part a good candidate is actually deciding
-// about. Kept to four, one sentence or two each, and each one is a thing that
-// is already true rather than a value we would like to have.
-const how = [
-  {
-    title: "Open by default",
-    body: "The CLI, the board it was built on and this site are public repositories. Closing something is the decision that needs a reason.",
-  },
-  {
-    title: "Evidence before claims",
-    body: "Everything this site says about the agent is measured or marked as unmeasured.",
-  },
-  {
-    title: "Small, and slow to grow",
-    body: "Every hire is a large fraction of the team. You talk to the people you would work with and the answer comes back quickly either way.",
-  },
-  {
-    title: "Hardware in the loop",
-    body: "One room in Bengaluru, next to the boards. Benches, parts and fab runs are paid for.",
-  },
-];
 
 // An ItemList of role URLs, not the postings themselves. Embedding the full
 // JobPosting nodes here published every posting at two addresses, this page and
@@ -82,8 +55,8 @@ const jsonLd = {
           <p class="kind">Careers</p>
           <h1>Work on copperhead</h1>
           <p class="standfirst">
-            A small team in Bengaluru building an open source agent that designs
-            circuit boards and proves its own work.
+            We are a small team in Bengaluru working at the intersection of AI,
+            electronics engineering and open source software.
           </p>
         </header>
 
@@ -124,9 +97,9 @@ const jsonLd = {
                     and its tag carries no copper, so it reads as the end of the
                     list rather than as one more opening. */}
                 <li class="open-application">
-                  <span class="title">A role we have not written yet</span>
+                  <span class="title">Open application</span>
                   <span class="meta">
-                    <span>Open application</span>
+                    <span />
                     <span>Bengaluru, India</span>
                     <span>On-site</span>
                     <span />
@@ -148,29 +121,11 @@ const jsonLd = {
                most of the time, and saying so plainly is better than a page
                that implies a pipeline it does not have. */
             <p class="none">
-              There are no open roles right now. The section below is still the
-              honest description of the work.
+              There are no open roles right now.
             </p>
           )
         }
 
-        <h2 class="head">How we work</h2>
-
-        <ul class="how">
-          {
-            how.map((h) => (
-              <li>
-                <h3>{h.title}</h3>
-                <p>{h.body}</p>
-              </li>
-            ))
-          }
-        </ul>
-
-        <p class="meanwhile">
-          The <a href={links.repo}>repository</a> is the fastest way to work out
-          whether you would enjoy this.
-        </p>
       </div>
     </article>
   </main>
@@ -207,8 +162,7 @@ const jsonLd = {
     line-height: 1.55;
   }
 
-  /* Every second-level heading on the page is the same tracked mono label, so
-     the three groups read as peers rather than as a hierarchy. */
+  /* Tracked mono label, the same as the research index uses. */
   .head {
     margin: 3rem 0 0;
     font-family: var(--mono);
@@ -309,42 +263,6 @@ const jsonLd = {
     line-height: 1.65;
   }
 
-  /* Hairline stack, not cards: this is context around the roles and should not
-     compete with them. Same treatment as the research index's unwritten list. */
-  .how {
-    list-style: none;
-    max-width: 820px;
-    margin: 1.25rem 0 0;
-    padding: 0;
-    border-top: 1px solid var(--line);
-  }
-
-  .how li {
-    padding: 18px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .how h3 {
-    font-size: 1.0625rem;
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    margin: 0 0 0.3rem;
-  }
-
-  .how p {
-    margin: 0;
-    max-width: 66ch;
-    color: var(--text-dim);
-    font-size: 0.96rem;
-    line-height: 1.65;
-  }
-
-  .meanwhile {
-    margin: 2rem 0 0;
-    max-width: 60ch;
-    color: var(--text-dim);
-  }
-
   /* Six columns stop fitting well before the phone breakpoint, so the rows
      stack here: title and apply on the first line, the facts on the second. */
   @media (max-width: 860px) {
@@ -385,10 +303,6 @@ const jsonLd = {
 
     .roles li {
       padding: 12px 0;
-    }
-
-    .how li {
-      padding: 14px 0;
     }
   }
 </style>
