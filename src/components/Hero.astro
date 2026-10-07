@@ -100,14 +100,15 @@ const showStats = stats.stars !== null || stats.downloads !== null;
         no type size fixes it. The original ran to four lines at 375 and three
         at 390, and reached two only at 9.5-11.5px against 15px body, which is
         why "Built for real hardware" went rather than the font shrinking.
-        As it stands this is three lines from 360 to 430 and two on desktop.
-        Two on phones as well needs one more cut — dropping "is an AI PCB
-        engineer" does it, at the cost of the category label for a first-time
-        reader. Measured, not guessed; re-measure before trading it away. */
+        The line below is 10 characters shorter than the version that measured
+        three lines from 360 to 430 and two on desktop, so it has headroom at
+        every width that one cleared, but the exact counts have not been
+        re-measured since the rewrite. "open source AI agent" is the category
+        label a first-time reader needs; cut anything before you cut that. */
         }
         <p class="sub">
-          Copperhead is an open-source AI engineering platform that helps
-          hardware teams design, verify and ship circuit boards.
+          copperhead is an open source, verification-first AI agent for PCB
+          design.
         </p>
 
         <div class="cta">

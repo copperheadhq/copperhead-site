@@ -15,7 +15,7 @@ what a role page contains.
 - [src/careers.ts](../../../../src/careers.ts) is the `Role` interface, the array and the helpers.
   Read the interface first. Every field carries a comment saying what it is for.
 - [src/pages/careers/index.astro](../../../../src/pages/careers/index.astro) is the index: role
-  cards, the "how we work" block, the open application at the foot.
+  cards and the open application at the foot.
 - [src/pages/careers/[...slug].astro](../../../../src/pages/careers/%5B...slug%5D.astro) is one
   page per role.
 

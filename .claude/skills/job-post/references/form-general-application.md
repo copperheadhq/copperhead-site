@@ -72,6 +72,10 @@ found out by exactly the people worth hiring.
 > **Founding Software Engineer - AI Infrastructure.** The infrastructure underneath the
 > agents: execution loops, sandboxes, job pipelines, evaluation harnesses and tracing.
 >
+> **Senior AI PCB Design Engineer.** Production-grade multilayer boards in KiCad, and
+> turning how you make those decisions into rules copperhead can check. This one has
+> hard requirements and its own form.
+>
 > If none of those is quite you, apply anyway and say so. Roles here get written around a
 > person about as often as the other way round.
 >
@@ -92,7 +96,7 @@ found out by exactly the people worth hiring.
 >
 > An age. Be as young or as old as you are.
 >
-> Existing PCB experience, except on the hardware contract where it is stated plainly.
+> Existing PCB experience, except on the two hardware roles where it is stated plainly.
 > The rate at which you pick up an unfamiliar technical domain matters more.
 >
 > ### Our stack
@@ -117,7 +121,7 @@ found out by exactly the people worth hiring.
 > on this form asks what you made of it.
 
 **Compensation is the one section that cannot be published as written.** No band exists
-in the repository for any of the four roles, every `pay` field is unset and inventing
+in the repository for any of the five roles, every `pay` field is unset and inventing
 one is a promise to a stranger. Fill it in or delete the heading. Do not publish the
 TODO.
 
@@ -153,6 +157,7 @@ Options for question 3, which must match the `title` of every published role in
 - AI Research Intern
 - Forward Deployed Hardware Engineer
 - Founding Software Engineer - AI Infrastructure
+- Senior AI PCB Design Engineer
 - I am not sure, or none of these
 
 Options for question 4:
