@@ -37,3 +37,5 @@ diagrams/*
 !diagrams/post-cards.html
 scripts/.frame-tmp.mjs
 !diagrams/linkedin-banner.html
+!diagrams/*-og.html
+!diagrams/*-social.html

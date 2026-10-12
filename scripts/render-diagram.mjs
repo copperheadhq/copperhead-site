@@ -18,6 +18,13 @@
 //                                size instead of the whole diagram scaled
 //                                down past legibility
 //
+// A page named diagrams/<slug>-og.html is a post's share card and nothing
+// else: one render at 1200x630, dark only like the one above, straight to
+// public/blog/<slug>-og.png for the post's ogImage frontmatter. A page named
+// diagrams/<slug>-social.html is the image for posting the article to X or
+// LinkedIn: the generic 1600x900 render in both themes, also copied to
+// public/blog/<slug>-social-{light,dark}.png.
+//
 // Needs a Chromium, found the same way as shots.mjs.
 
 import { chromium } from 'playwright-core';
@@ -46,6 +53,8 @@ const html = resolve(process.argv[2] ?? 'diagrams/social-flow.html');
 const out = resolve(process.argv[3] ?? html.replace(/\.html$/, ''));
 if (!existsSync(html)) throw new Error(`No such page: ${html}`);
 const isSocialFlow = out === resolve('diagrams/social-flow');
+const ogSlug = html.match(/\/diagrams\/([\w-]+)-og\.html$/)?.[1];
+const socialName = html.match(/\/diagrams\/([\w-]+-social)\.html$/)?.[1];
 
 const browser = await chromium.launch({ executablePath: findChromium() });
 
@@ -71,9 +80,21 @@ async function shoot({ variant, width, height, theme, path }) {
 }
 
 try {
-  for (const theme of ['light', 'dark']) {
+  if (ogSlug) {
+    await shoot({
+      width: 1200, height: 630, theme: 'dark',
+      path: resolve(`public/blog/${ogSlug}-og.png`),
+    });
+  }
+
+  for (const theme of ogSlug ? [] : ['light', 'dark']) {
     const size = isSocialFlow ? { width: 1280, height: 960 } : { width: 1600, height: 900 };
     await shoot({ ...size, theme, path: `${out}-${theme}.png` });
+    if (socialName) {
+      const site = resolve(`public/blog/${socialName}-${theme}.png`);
+      copyFileSync(`${out}-${theme}.png`, site);
+      console.log(site);
+    }
 
     // The blog embeds this diagram (StageFlow.astro), so the copies under
     // public/ have to track the render or the post quietly goes stale.
