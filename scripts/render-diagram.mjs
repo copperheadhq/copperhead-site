@@ -18,11 +18,21 @@
 //                                size instead of the whole diagram scaled
 //                                down past legibility
 //
+// A page named diagrams/<slug>-og.html is a post's share card and nothing
+// else: one render at 1200x630, dark only like the one above, straight to
+// public/blog/<slug>-og.jpg for the post's ogImage frontmatter (the output
+// prefix argument does not apply). It is a 1x JPEG rather than a 2x PNG
+// because a card built around a photograph comes out near a megabyte as a
+// PNG, and some link unfurlers drop a preview that size. A page named
+// diagrams/<slug>-social.html is the image for posting the article to X or
+// LinkedIn: the generic 1600x900 render in both themes, also copied to
+// public/blog/<slug>-social-{light,dark}.png.
+//
 // Needs a Chromium, found the same way as shots.mjs.
 
 import { chromium } from 'playwright-core';
 import { copyFileSync, existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { basename, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 function findChromium() {
@@ -46,16 +56,19 @@ const html = resolve(process.argv[2] ?? 'diagrams/social-flow.html');
 const out = resolve(process.argv[3] ?? html.replace(/\.html$/, ''));
 if (!existsSync(html)) throw new Error(`No such page: ${html}`);
 const isSocialFlow = out === resolve('diagrams/social-flow');
+// Matched on the file name, not the resolved path, so a Windows path matches too.
+const ogSlug = basename(html).match(/^([\w-]+)-og\.html$/)?.[1];
+const socialName = basename(html).match(/^([\w-]+-social)\.html$/)?.[1];
 
 const browser = await chromium.launch({ executablePath: findChromium() });
 
 // One screenshot: the page at `width`x`height` in `theme`, with the body
 // class swapped to `variant` when one is named (generic diagram pages keep
 // whatever class they load with).
-async function shoot({ variant, width, height, theme, path }) {
+async function shoot({ variant, width, height, theme, path, scale = 2 }) {
   const ctx = await browser.newContext({
     viewport: { width, height },
-    deviceScaleFactor: 2,
+    deviceScaleFactor: scale,
     colorScheme: theme,
   });
   try {
@@ -63,7 +76,7 @@ async function shoot({ variant, width, height, theme, path }) {
     await page.goto(pathToFileURL(html).href);
     if (variant) await page.evaluate((v) => { document.body.className = v; }, variant);
     await page.evaluate(() => document.fonts.ready);
-    await page.screenshot({ path });
+    await page.screenshot(path.endsWith('.jpg') ? { path, type: 'jpeg', quality: 88 } : { path });
   } finally {
     await ctx.close();
   }
@@ -71,9 +84,21 @@ async function shoot({ variant, width, height, theme, path }) {
 }
 
 try {
-  for (const theme of ['light', 'dark']) {
+  if (ogSlug) {
+    await shoot({
+      width: 1200, height: 630, theme: 'dark', scale: 1,
+      path: resolve(`public/blog/${ogSlug}-og.jpg`),
+    });
+  }
+
+  for (const theme of ogSlug ? [] : ['light', 'dark']) {
     const size = isSocialFlow ? { width: 1280, height: 960 } : { width: 1600, height: 900 };
     await shoot({ ...size, theme, path: `${out}-${theme}.png` });
+    if (socialName) {
+      const site = resolve(`public/blog/${socialName}-${theme}.png`);
+      copyFileSync(`${out}-${theme}.png`, site);
+      console.log(site);
+    }
 
     // The blog embeds this diagram (StageFlow.astro), so the copies under
     // public/ have to track the render or the post quietly goes stale.

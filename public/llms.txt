@@ -36,6 +36,7 @@ Key facts:
 - [copperhead: Cursor for circuit boards](https://copperhead.sh/blog/antler-crackathon/): the Antler Crackathon submission — problem, product, competitive field, market and go-to-market
 - [From brief.md to gerbers](https://copperhead.sh/blog/from-brief-to-gerbers/): engineering — eight gated stages from a markdown brief to gerbers, firmware and docs, each one gated on what it has to prove before the next begins
 - [Improving TTFB with Anycast](https://copperhead.sh/blog/ttfb-anycast/): infrastructure — an anycast edge in front of an unchanged single-region origin took Asia Pacific from 627 ms to 160 ms and Europe from 293 ms to 90 ms, and made South America worse
+- [Reverse engineering a Crompton LED bulb from photographs](https://copperhead.sh/blog/crompton-led-bulb-teardown/): teardown, where copperhead reverse engineers a dimming and flickering Crompton 9 W bulb from 54 photos, with the full report and summary as PDFs
 
 ## Research
 

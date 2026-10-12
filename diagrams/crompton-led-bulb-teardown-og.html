@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>crompton-led-bulb-teardown share card</title>
+  <style>
+    /* The link preview for crompton-led-bulb-teardown (ogImage in its
+       frontmatter), rendered by scripts/render-diagram.mjs at 1200x630, dark
+       only, into public/blog/crompton-led-bulb-teardown-og.png. Same idea as
+       social-flow.html's og layout: a card designed at native size rather than
+       the title card reused. The text is the post title and nothing else, and
+       the picture is the lamp's own driver board, copper side, labelled the way
+       the teardown labelled it: the annotated fig06 from TD-2026-CRM-001 with its
+       paper background removed, cut to the board's outline and laid out on a
+       transparent canvas (src/assets/crompton-driver-annotated.png), so
+       the same file sits on the light and the dark ground. */
+    @font-face {
+      font-family: 'Space Grotesk';
+      src: url('../public/fonts/space-grotesk-var.woff2') format('woff2-variations');
+      font-weight: 300 700;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      src: url('../public/fonts/jetbrains-mono-400.woff2') format('woff2');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'JBM Word';
+      src: url('../public/fonts/jetbrains-mono-700.woff2') format('woff2');
+      font-weight: 700;
+    }
+    :root {
+      color-scheme: light dark;
+      --bg: light-dark(#FDFCFC, #09090B);
+      --line: light-dark(#E5E5E8, #26262C);
+      --copper: light-dark(#A75F14, #D08F39);
+      --text: light-dark(#0A0A0A, #EDEDEF);
+      --sans: 'Space Grotesk', -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); }
+    .canvas {
+      position: relative;
+      width: 1200px;
+      height: 630px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow: hidden;
+    }
+    .head {
+      position: absolute;
+      left: 56px; right: 56px; top: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand svg { display: block; }
+    .word {
+      font-family: 'JBM Word', var(--mono);
+      font-weight: 700;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+    }
+    .kind {
+      font-family: var(--mono);
+      font-size: 20px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--copper);
+    }
+    .body {
+      position: absolute;
+      left: 56px; right: 56px; top: 118px; bottom: 96px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    .title {
+      flex: 1;
+      font-size: 52px;
+      font-weight: 500;
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+    }
+    .board { flex: none; width: 560px; }
+    .board img { display: block; width: 100%; height: auto; }
+    .foot {
+      position: absolute;
+      left: 56px; right: 56px; bottom: 44px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 20px;
+      color: var(--copper);
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="head">
+      <div class="brand">
+        <svg width="34" height="34" viewBox="0 0 32 32">
+          <circle cx="16" cy="16" r="5.25" fill="none" stroke="#b87333" stroke-width="2.25" />
+          <path d="M16 5.75v5M16 21.25v5M5.75 16h5M21.25 16h5" stroke="#b87333" stroke-width="2.25" />
+        </svg>
+        <span class="word">copperhead</span>
+      </div>
+      <span class="kind">Teardown</span>
+    </div>
+
+    <div class="body">
+      <h1 class="title">Reverse<br>engineering a<br>Crompton LED bulb<br>from photographs</h1>
+      <div class="board">
+        <img src="../src/assets/crompton-driver-annotated.png" alt="">
+      </div>
+    </div>
+
+    <div class="foot">copperhead.sh</div>
+  </div>
+</body>
+</html>
