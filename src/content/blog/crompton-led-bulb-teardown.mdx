@@ -5,7 +5,7 @@ date: 2026-10-12
 kind: "Teardown"
 cover: "crompton-led-bulb-teardown"
 coverAlt: "A copperhead title card: the lamp's driver board, copper side up, with every part boxed and labelled with its role and value."
-ogImage: "/blog/crompton-led-bulb-teardown-og.png"
+ogImage: "/blog/crompton-led-bulb-teardown-og.jpg"
 ogImageAlt: "A copperhead share card: the title Reverse engineering a Crompton LED bulb from photographs beside the lamp's driver board, copper side up, with every part boxed and labelled with its role and value."
 ---
 
@@ -29,10 +29,10 @@ Part of the fun of taking a product apart is that you might not get it back toge
 This one had already been replaced and was headed for the bin, so the worst case was
 that it went there in more pieces.
 
-I decided to work from photos alone with no multimeter and without powering it up
-again. I pulled it apart and shot both sides of each board with my phone. That came to
-54 photos, most of them in ten minutes and the rest a few hours later with a ruler in
-the frame.
+I decided to work from photos alone with no multimeter and without powering it up again.
+I pulled it apart and shot both sides of each board with my phone. That came to 54
+photos, most of them in ten minutes and the rest a few hours later with a ruler in the
+frame.
 
 <figure>
   <Image
@@ -116,9 +116,9 @@ Without one, the controller chip runs straight off the rectified mains and shape
 current it draws to follow the sine wave, which is how the bulb gets the power factor
 above 0.9 printed on its housing. It works because the LED string is low voltage. The
 chip is a buck converter, so it can draw power only while the mains is above the LED
-voltage, about 81 V here against a 325 V peak. It goes quiet for about 14 degrees
-either side of each zero crossing. The lamp's big capacitor, 68 µF at 100 V, sits across
-the LEDs instead and smooths what reaches them.
+voltage, about 81 V here against a 325 V peak. It goes quiet for about 14 degrees either
+side of each zero crossing. The lamp's big capacitor, 68 µF at 100 V, sits across the
+LEDs instead and smooths what reaches them.
 
 <figure>
   <Image
@@ -142,7 +142,8 @@ V a single resistor of that size is rated for.
 Resistors and capacitors carry short codes, and once the photo is sharp enough the
 decoding is mechanical. `2R0` is 2.0 Ω. `124` is 12 followed by four zeros, so 120 kΩ.
 `07D511K` is a 7 mm disc rated 510 V<sup><a href="#ref-5">[5]</a></sup>. The fusible
-resistor uses colour bands instead, and blue, grey, black and gold read as 68 Ω at 5%.
+resistor uses five colour bands instead. Blue, grey, black and gold read as 68 Ω at 5%.
+Nobody decoded the fifth.
 
 <figure>
   <Image
@@ -167,8 +168,8 @@ The LED board's silkscreen says `NBL7W9S1P2835V1.0`, which reads as a 7 W board 
 nine 2835 LEDs in series. Working back from the driver, it's being fed about 8.1 W.
 That's around 16% over the board's own label, close to 0.9 W per LED.
 
-It's a lot of heat for a small square of board. About 5.7 W of it has to leave through
-a smear of thermal grease, into the aluminium cup and out through a plastic housing.
+It's a lot of heat for a small square of board. About 5.7 W of it has to leave through a
+smear of thermal grease, into the aluminium cup and out through a plastic housing.
 Nothing in the circuit watches the LED temperature. copperhead also flags the output
 capacitor, a 105 °C part sealed in the neck, as the part most likely to limit how long
 the bulb lasts.
@@ -186,10 +187,9 @@ the bulb lasts.
 </figure>
 
 The middle LED has a small black burn mark over one of its dies. I can't prove that's
-what made my bulb dim and flicker because I never powered it again to check. But I
-found a repair video of another flickering Crompton
-bulb<sup><a href="#ref-1">[1]</a></sup> that shows the same board with the same kind of
-burn on a different LED.
+what made my bulb dim and flicker because I never powered it again to check. But I found
+a repair video of another flickering Crompton bulb<sup><a href="#ref-1">[1]</a></sup>
+that shows the same board with the same kind of burn on a different LED.
 
 ## Pinning down the chip
 
@@ -214,8 +214,8 @@ matching format only identifies the maker.
     alt="Brightened close-up of the controller chip's three lines of marking. The top line reads roughly BP2885 and is labelled BP2 plus 6 or 8 plus 3 plus 5 or 6, with the note that the fourth character never reads 3. The second line reads 1BD96CS. The third reads H1AM46J and is labelled as ending in J."
   />
   <figcaption>
-    The chip's marking, brightened. Where BP2336 would print a 3 in the top line,
-    the photos and my reads by eye all gave a 6 or an 8.
+    The chip's marking, brightened. Where BP2336 would print a 3 in the top line, every
+    photo gave a 6 or an 8. My reads by eye gave all three.
   </figcaption>
 </figure>
 
@@ -245,10 +245,10 @@ With no big capacitor on the mains side, copperhead also expects 17 to 25% flick
 copperhead's verdict is that the design was built to meet the standards as cheaply as
 possible, with reliability second. It meets the power factor and efficiency it has
 to<sup><a href="#ref-11">[11]</a><a href="#ref-12">[12]</a></sup> on very few parts, and
-the LEDs run hot against the board's label. The changes it suggests are small. Use
-a 160 V output capacitor. Either add a few LEDs or swap the sense resistor for 2.4 Ω,
-which brings the current down to about 83 mA for roughly 15% less light. Run a proper
-surge test at 1 and 2.5 kV before touching the varistor.
+the LEDs run hot against the board's label. The changes it suggests are small. Use a 160
+V output capacitor. Either add a few LEDs or swap the sense resistor for 2.4 Ω, which
+brings the current down to about 83 mA for roughly 15% less light. Run a proper surge
+test at 1 and 2.5 kV before touching the varistor.
 
 Each of these findings also becomes a rule copperhead can check on a new design before
 anyone builds it:
@@ -263,15 +263,15 @@ anyone builds it:
 
 Everything here came from photos, so none of it has been measured yet. The copper is
 hidden under solid green solder mask, so the 16 connections in the circuit come from the
-chip's reference design. Only three of them can be seen in a photo. The LED
-current depends on the chip identification, and the 8.1 W assumes the driver is 90%
-efficient. It's also one bulb from 2019, and Crompton's newer ones may be built
-differently. One of the repair videos already shows a Crompton 9 W driver of a different
+chip's reference design. Only three of them can be seen in a photo. The LED current
+depends on the chip identification, and the 8.1 W assumes the driver is 90% efficient.
+It's also one bulb from 2019, and Crompton's newer ones may be built differently. One of
+the repair videos already shows a Crompton 9 W driver of a different
 design<sup><a href="#ref-3">[3]</a></sup>.
 
-The next step is a multimeter. copperhead has already marked about 40 continuity checks
-on the photos, to be done with the bulb unplugged. It also wants a sharper photo of the
-chip. Measuring it with power on is a job for someone with an isolation transformer.
+The next step is a multimeter. copperhead has already marked about 40 pairs of points to
+probe across the photos, all with the bulb unplugged. It also wants a sharper photo of
+the chip. Measuring it with power on is a job for someone with an isolation transformer.
 Every part of this lamp, the LED board included, sits at mains voltage when it's
 switched on.
 
@@ -281,8 +281,8 @@ switched on.
     alt="The driver's copper face with about thirty probe points circled in seven colours and the controller's pins numbered 1 to 8, pin 7 being an empty pad. Underneath is a printed list of seven continuity checks between named pins and component legs, preceded by an instruction to unplug the lamp and discharge the large capacitor through a 1 k resistor."
   />
   <figcaption>
-    The continuity checks copperhead marked on my own photo. Checks 1 and 5
-    decide what the chip is.
+    The copper side of the probe map copperhead drew on my own photo, carrying checks 1
+    to 7. The rest are on the other photos, and checks 1 and 5 decide what the chip is.
   </figcaption>
 </figure>
 
@@ -393,7 +393,8 @@ October 2026 and checked again on 12 October 2026.
 10. <a id="ref-10"></a>
     Crompton, 9 watt LED bulb collection.\
     [https://www.crompton.co.in/collections/9-watt-led-bulb](https://www.crompton.co.in/collections/9-watt-led-bulb)\
-    The 4 kV surge protection claimed for Crompton's current 9 W bulbs. My 2019 bulb prints
+    The 4 kV surge protection claimed for Crompton's current 9 W bulbs. My 2019 bulb
+    prints
     no surge rating.
 
 11. <a id="ref-11"></a>
@@ -405,7 +406,8 @@ October 2026 and checked again on 12 October 2026.
 12. <a id="ref-12"></a>
     Bureau of Energy Efficiency, Schedule 20, star labelling for LED lamps, 2018.\
     [https://www.beestarlabel.com/Content/Files/LED_schedule.pdf](https://www.beestarlabel.com/Content/Files/LED_schedule.pdf)\
-    The efficacy bands behind the three BEE stars on the housing. 855 lumens from 9 W is 95
+    The efficacy bands behind the three BEE stars on the housing. 855 lumens from 9 W is
+    95
     lumens per watt, inside the three-star band of 90 to 105.
 
 13. <a id="ref-13"></a>
