@@ -179,69 +179,79 @@ for (const theme of THEMES) {
         const ok = path === MISS ? nav.status() === 404 : nav.ok();
         if (!ok) errors.push(`HTTP ${nav.status()} (expected ${path === MISS ? '404' : '2xx'})`);
       }
-      await page.evaluate(() => document.fonts.ready);
+      // Everything from here to the measurement rides in one try: a page
+      // that navigates late (a slow origin whose goto timed out above and
+      // then committed mid-measure destroys the execution context) must
+      // cost one flagged row, never the run. `measured` stays empty on
+      // failure, which the table prints as dashes and the errors explain.
+      let measured = {};
+      try {
+        await page.evaluate(() => document.fonts.ready);
 
-      // The hero transcript is a ~10.4s timed run. Let every finite animation
-      // finish so a shot shows the completed readout — the `done · verified
-      // erc …` line — rather than an empty window. The spinner never ends, so
-      // it is filtered out by its iteration count. Unconditional on purpose:
-      // under the audit's reduced motion every finite animation is already
-      // done and this resolves immediately, but a JS-driven reveal that CSS
-      // cannot short-circuit would still be waited for in both modes.
-      await page.evaluate(() => Promise.all(
-        document.getAnimations()
-          .filter(a => a.effect?.getComputedTiming?.().iterations !== Infinity)
-          .map(a => a.finished.catch(() => {}))
-      ));
-      await page.waitForTimeout(AUDIT_ONLY ? 150 : 400);
+        // The hero transcript is a ~10.4s timed run. Let every finite animation
+        // finish so a shot shows the completed readout — the `done · verified
+        // erc …` line — rather than an empty window. The spinner never ends, so
+        // it is filtered out by its iteration count. Unconditional on purpose:
+        // under the audit's reduced motion every finite animation is already
+        // done and this resolves immediately, but a JS-driven reveal that CSS
+        // cannot short-circuit would still be waited for in both modes.
+        await page.evaluate(() => Promise.all(
+          document.getAnimations()
+            .filter(a => a.effect?.getComputedTiming?.().iterations !== Infinity)
+            .map(a => a.finished.catch(() => {}))
+        ));
+        await page.waitForTimeout(AUDIT_ONLY ? 150 : 400);
 
-      // Measure before assembling the row: object literals evaluate in source
-      // order, so snapshotting the errors first would drop anything the page
-      // logs while the measurement itself runs.
-      const measured = await page.evaluate(() => {
-          const q = s => document.querySelector(s);
-          const box = el => el && Object.fromEntries(
-            ['top', 'bottom', 'width', 'height'].map(k => [k, +el.getBoundingClientRect()[k].toFixed(1)]));
+        // Measure before assembling the row: object literals evaluate in source
+        // order, so snapshotting the errors first would drop anything the page
+        // logs while the measurement itself runs.
+        measured = await page.evaluate(() => {
+            const q = s => document.querySelector(s);
+            const box = el => el && Object.fromEntries(
+              ['top', 'bottom', 'width', 'height'].map(k => [k, +el.getBoundingClientRect()[k].toFixed(1)]));
 
-          // Anything sticking out sideways is a real bug at every width; a page
-          // that scrolls horizontally on a phone is the classic one.
-          //
-          // Except where the page says it meant it. The backer marquee is a
-          // rail deliberately wider than the screen, and reported raw it buried
-          // the real signal under one line per logo per viewport.
-          //
-          // The exemption is an opt-in attribute rather than "has a clipping
-          // ancestor". That test read as though it were about `overflow:
-          // hidden`, but .hero carries `overflow: hidden` too, so every box on
-          // the fold inherited the exemption and the check went quiet over the
-          // whole first screen — a 900px div dropped into .hero .copy at 375px
-          // was reported before and silent after. Intent cannot be inferred
-          // from a computed style; it has to be declared.
-          const vw = document.documentElement.clientWidth;
-          const intentional = el => el.closest('[data-bleed-ok]') !== null;
-          const bleed = [...document.querySelectorAll('body *')]
-            .filter(el => {
-              const b = el.getBoundingClientRect();
-              // Rect tests first: getComputedStyle forces a style resolution,
-              // so it only runs for the handful of candidates that overflow.
-              return (b.width || b.height) && (b.right > vw + 1 || b.left < -1)
-                && getComputedStyle(el).position !== 'fixed' && !intentional(el);
-            })
-            .map(el => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className
-              ? '.' + el.className.trim().split(/\s+/).join('.') : ''));
+            // Anything sticking out sideways is a real bug at every width; a page
+            // that scrolls horizontally on a phone is the classic one.
+            //
+            // Except where the page says it meant it. The backer marquee is a
+            // rail deliberately wider than the screen, and reported raw it buried
+            // the real signal under one line per logo per viewport.
+            //
+            // The exemption is an opt-in attribute rather than "has a clipping
+            // ancestor". That test read as though it were about `overflow:
+            // hidden`, but .hero carries `overflow: hidden` too, so every box on
+            // the fold inherited the exemption and the check went quiet over the
+            // whole first screen — a 900px div dropped into .hero .copy at 375px
+            // was reported before and silent after. Intent cannot be inferred
+            // from a computed style; it has to be declared.
+            const vw = document.documentElement.clientWidth;
+            const intentional = el => el.closest('[data-bleed-ok]') !== null;
+            const bleed = [...document.querySelectorAll('body *')]
+              .filter(el => {
+                const b = el.getBoundingClientRect();
+                // Rect tests first: getComputedStyle forces a style resolution,
+                // so it only runs for the handful of candidates that overflow.
+                return (b.width || b.height) && (b.right > vw + 1 || b.left < -1)
+                  && getComputedStyle(el).position !== 'fixed' && !intentional(el);
+              })
+              .map(el => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className
+                ? '.' + el.className.trim().split(/\s+/).join('.') : ''));
 
-          const term = q('.hero .term');
-          return {
-            innerH: window.innerHeight,
-            hScroll: document.documentElement.scrollWidth - vw,
-            bleed: [...new Set(bleed)].slice(0, 5),
-            hero: box(q('.hero')),
-            chipTop: box(q('.hero .chip'))?.top ?? null,
-            term: box(term),
-            termBase: term ? getComputedStyle(term).fontSize : null,
-            statsBottom: box(q('.hero .proof'))?.bottom ?? null,
-          };
-        });
+            const term = q('.hero .term');
+            return {
+              innerH: window.innerHeight,
+              hScroll: document.documentElement.scrollWidth - vw,
+              bleed: [...new Set(bleed)].slice(0, 5),
+              hero: box(q('.hero')),
+              chipTop: box(q('.hero .chip'))?.top ?? null,
+              term: box(term),
+              termBase: term ? getComputedStyle(term).fontSize : null,
+              statsBottom: box(q('.hero .proof'))?.bottom ?? null,
+            };
+          });
+      } catch (e) {
+        errors.push(`measure: ${e.message.split('\n')[0]}`);
+      }
 
       if (errors.length > 3) errors.splice(3, Infinity, `(+${errors.length - 3} more)`);
       rows.push({
