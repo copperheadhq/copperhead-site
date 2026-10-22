@@ -1,6 +1,6 @@
-# copperhead branding
+# Copperhead branding
 
-The copperhead mark is a fiducial: the circle and crosshair ticks used on a
+The Copperhead mark is a fiducial: the circle and crosshair ticks used on a
 PCB as an optical alignment target. It is the same geometry the site ships in
 its favicon and navbar, extracted here as standalone masters so it can be used
 anywhere without the site's CSS or fonts.
@@ -10,8 +10,8 @@ lowercase, set in JetBrains Mono Bold with -0.02em tracking. The text in the
 SVG masters is outlined to paths, so the files render identically whether or
 not the font is installed.
 
-![copperhead lockup](png/copperhead-lockup-light-h128.png#gh-light-mode-only)
-![copperhead lockup](png/copperhead-lockup-h128.png#gh-dark-mode-only)
+![Copperhead lockup](png/copperhead-lockup-light-h128.png#gh-light-mode-only)
+![Copperhead lockup](png/copperhead-lockup-h128.png#gh-dark-mode-only)
 
 The words that go next to the mark — tagline, one-liner, bios, hero copy —
 live in `COPY.md`.
@@ -54,8 +54,10 @@ These match the `--copper` and `--text` tokens in `src/styles/global.css`.
   (about a quarter of the mark's height).
 - Minimum sizes: 16 px for the mark, 90 px wide for the lockup. Below that,
   the ring closes up.
-- The wordmark is always lowercase. Do not set it in another font, recolor the
-  mark outside the palette above, rotate it or add effects.
+- The wordmark is always lowercase. Everywhere else, in running text, titles
+  and alt text, the name is Copperhead with a capital C (see `COPY.md`). Do
+  not set the wordmark in another font, recolor the mark outside the palette
+  above, rotate it or add effects.
 - On photographs or busy backgrounds, use the tile or the single-color
   white/black versions.
 
@@ -70,5 +72,5 @@ of real fiducials so it does not confuse a pick-and-place camera.
 
 The wordmark is outlined from JetBrains Mono, which is licensed under the
 SIL Open Font License 1.1. The rest of the artwork is original to
-copperhead. The files in this folder are for identifying copperhead and
+Copperhead. The files in this folder are for identifying Copperhead and
 projects built with it; do not use them to imply endorsement or affiliation.

@@ -1,0 +1,323 @@
+---
+import Base from "../layouts/Base.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import Backers from "../components/Backers.astro";
+import HnCard from "../components/HnCard.astro";
+import { site, repo, links } from "../config";
+import { launch } from "../hn";
+
+// The page search engines read the company off. Everywhere else the
+// structured data describes the product; this is the one place the
+// Organization behind it is spelled out, with the profiles that tell it apart
+// from the snake, the comic villain and every other copperhead. The @id is
+// the anchor other nodes can point at instead of restating the company.
+const org = {
+  "@type": "Organization",
+  "@id": `${site}/#organization`,
+  name: "Copperhead",
+  url: site,
+  logo: new URL("/icon-512.png", site).href,
+  description:
+    "Copperhead builds an open source AI agent for circuit board design that edits real KiCad files and runs KiCad's own checks until they pass.",
+  email: links.contact.replace("mailto:", ""),
+  founder: { "@type": "Person", name: "Animesh Chouhan", url: links.chouhan },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Bengaluru",
+    addressRegion: "Karnataka",
+    addressCountry: "IN",
+  },
+  // The GitHub org rather than the repo: sameAs names the company's own
+  // profiles, and the repo is the product's.
+  sameAs: [
+    repo.split("/").slice(0, 4).join("/"),
+    links.x,
+    links.linkedin,
+    links.youtube,
+    links.reddit,
+    links.instagram,
+  ],
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: "About Copperhead",
+  url: new URL("/about/", site).href,
+  mainEntity: org,
+};
+
+const email = links.contact.replace("mailto:", "");
+---
+
+<Base
+  title="About · Copperhead"
+  description="Copperhead is an open source AI agent for KiCad PCB design, built by a small team in Bengaluru."
+  path="/about/"
+  ogImageAlt="About Copperhead"
+  jsonLd={jsonLd}
+>
+  <Navbar home={false} />
+  <main id="top">
+    <article>
+      {/* Each link sits on the same line as the words either side of it:
+          Astro drops the whitespace at a line break next to an element, and
+          "Thelonger story" is what that looks like. */}
+      <div class="wrap">
+        <header>
+          <h1>About Copperhead</h1>
+        </header>
+
+        <div class="body">
+          <p>
+            Copperhead is open-source AI for designing electronic hardware. It
+            works directly with native KiCad files, from choosing components and
+            drawing schematics to PCB layout, routing and generating
+            manufacturing files. Along the way, it checks its work using ERC, DRC
+            and simulation to catch problems before a board gets manufactured.
+          </p>
+          <p>
+            We want building hardware to be as fast as building software.
+          </p>
+
+          <h2>How it started</h2>
+          <p>
+            Copperhead grew out of <a href={links.telegraphRepo}>Open Telegraph</a>, a pocket-sized ESP32-S3
+            Morse key built with Claude's help. The <a href={links.buildStory}>build story</a> documents the process.
+          </p>
+          <p>
+            Claude was good at reasoning about circuits, but turning that
+            reasoning into a board a manufacturer could actually build still
+            required a lot of manual work. Copperhead started as an attempt to
+            close that gap.
+          </p>
+          <p>
+            Today, Copperhead is built by <a href={links.chouhan}>Animesh Chouhan</a> and a small team of engineers
+            and open-source contributors in Bengaluru, India.
+          </p>
+
+          <h2>Open source</h2>
+          <p>
+            Copperhead is open source because we believe engineers should be able
+            to inspect, modify and extend the tools they depend on.
+          </p>
+          <p>
+            Our <a href={links.hn}>Show HN launch</a> reached the Hacker News front page in September 2026.
+          </p>
+          {/* The sentence stands on its own, so a build that cannot reach HN
+              loses the card and nothing else. */}
+          {
+            launch && (
+              <div class="launch">
+                <HnCard story={launch} />
+              </div>
+            )
+          }
+          <p>
+            We're also extending Copperhead beyond PCB design into simulation,
+            verification and domain-specific engineering workflows through <a href={links.fang}>Fang</a>.
+          </p>
+          <p>
+            The goal is to make it possible to go from an idea to verified,
+            manufacturing-ready hardware with far fewer manual steps.
+          </p>
+
+          <h2 id="contact">Get in touch</h2>
+          <p>
+            If you're designing a PCB, exploring AI for your hardware team or
+            interested in contributing, we'd love to hear from you.
+          </p>
+          <p>Tell us what you're building.</p>
+        </div>
+
+        {/* Email leads at full width because it is the one we most want
+            used; the call and the issue tracker share the row under it. */}
+        <div class="ways">
+          <a class="way mail" href={links.contact}>
+            <span class="kind">Email</span>
+            <span class="what">
+              {email}
+              <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false">
+                <path d="M4.5 2.5h5v5M9.5 2.5 3 9" fill="none" stroke="currentColor" stroke-width="1.4"></path>
+              </svg>
+            </span>
+          </a>
+          <a class="way" href={links.getStarted}>
+            <span class="kind">Call</span>
+            <span class="what">
+              Book a demo
+              <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false">
+                <path d="M4.5 2.5h5v5M9.5 2.5 3 9" fill="none" stroke="currentColor" stroke-width="1.4"></path>
+              </svg>
+            </span>
+            <span class="note">See it run and ask anything.</span>
+          </a>
+          <a class="way" href={`${repo}/issues`}>
+            <span class="kind">GitHub</span>
+            <span class="what">
+              Open an issue
+              <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false">
+                <path d="M4.5 2.5h5v5M9.5 2.5 3 9" fill="none" stroke="currentColor" stroke-width="1.4"></path>
+              </svg>
+            </span>
+            <span class="note">Bugs and questions about the agent.</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="backers">
+        <Backers caption="Backed by" />
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  article {
+    padding-block: 130px 96px;
+  }
+
+  /* One centred reading column, as the FAQ sets it. Left at the full site
+     width, a 62ch body hugged the left edge with half the page empty beside
+     it, while the backers strip below sat centred. */
+  .wrap {
+    max-width: 760px;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    letter-spacing: -0.045em;
+  }
+
+  .body {
+    margin-top: 2rem;
+  }
+
+  .body p {
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+
+  .body a {
+    color: var(--copper);
+    text-underline-offset: 3px;
+  }
+
+  .body a:hover {
+    color: var(--copper-hi);
+  }
+
+  .launch {
+    margin: 1.75rem 0;
+  }
+
+  /* A blog post's section heading, so the page reads like the posts it
+     sits beside. */
+  .body h2 {
+    margin: 3.25rem 0 1.25rem;
+    font-family: var(--display);
+    font-size: 1.625rem;
+  }
+
+  .ways {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Panels in HnCard's terms, so the two kinds of card on the page match. */
+  .way {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 18px 20px;
+    border: 2px solid var(--line);
+    background: var(--panel);
+    box-shadow: var(--lift);
+    color: var(--text);
+    text-decoration: none;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s;
+  }
+
+  .way:hover {
+    border-color: var(--line-hi);
+    background: var(--panel-hi);
+  }
+
+  .mail {
+    grid-column: 1 / -1;
+    padding-block: 22px;
+  }
+
+  .kind {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .what {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 1.125rem;
+    letter-spacing: -0.015em;
+  }
+
+  .what svg {
+    flex: none;
+    color: var(--copper);
+  }
+
+  .mail .what {
+    font-size: clamp(1.3rem, 4vw, 1.75rem);
+    letter-spacing: -0.025em;
+    color: var(--copper);
+    overflow-wrap: anywhere;
+  }
+
+  .way:hover .what svg,
+  .mail:hover .what {
+    color: var(--copper-hi);
+  }
+
+  .note {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+  }
+
+  /* The strip is a band and owns no air of its own (Backers.astro), so the
+     page sets it here. */
+  .backers {
+    margin-top: 3.5rem;
+  }
+
+  @media (max-width: 720px) {
+    article {
+      padding-block: 100px 64px;
+    }
+
+    .body p {
+      font-size: 1.0625rem;
+    }
+
+    .body h2 {
+      margin-top: 2.75rem;
+      font-size: 1.375rem;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .ways {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

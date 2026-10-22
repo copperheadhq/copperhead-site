@@ -1,0 +1,547 @@
+---
+title: "Simulating serpentine length matching on a bent differential pair"
+description: "A post on X showed a U-bend skewing a differential pair by 9.5 ps and a serpentine putting it right. I had Copperhead build the bend and six ways of fixing it and solve every one in openEMS. Matching the lengths exactly removed only 44 to 75 % of the skew."
+date: 2026-10-19
+kind: "Simulation"
+keywords: ["signal integrity", "differential pairs", "length matching", "serpentine tuning", "openEMS", "FDTD"]
+# The 14-page report this post is drawn from. Reference 9 in the body links the
+# same file.
+paper: "/blog/diffpair-meanders-report.pdf"
+# The scripts, S-parameter files and raw solver runs, in the public research repo.
+code: "https://github.com/copperheadhq/copperhead-research/tree/main/diffpair-meanders"
+cover: "/research/diffpair-meanders-cover.webp"
+coverAlt: "The top of the report's first page: its title and author line over a figure of board D as openEMS meshes it, beside its receiver waveforms."
+---
+
+import { Image } from "astro:assets";
+import XPost from "../../components/XPost.astro";
+import figBend from "../../assets/diffpair-bend.png";
+import figVariants from "../../assets/diffpair-variants.png";
+import figExcursion from "../../assets/diffpair-excursion.png";
+import figTuningZoom from "../../assets/diffpair-tuning-zoom.png";
+import figXsec from "../../assets/diffpair-xsec.png";
+import figModel3d from "../../assets/diffpair-model3d.png";
+import figFlow from "../../assets/diffpair-flow.png";
+import figModel from "../../assets/diffpair-model.png";
+import figConvergence from "../../assets/diffpair-convergence.png";
+import figCorner from "../../assets/diffpair-corner.png";
+import figSkew from "../../assets/diffpair-skew.png";
+import figWaveforms from "../../assets/diffpair-waveforms.png";
+import figEta from "../../assets/diffpair-eta.png";
+import figStripline from "../../assets/diffpair-stripline.png";
+import figFdSkew from "../../assets/diffpair-fd-skew.png";
+import figTdr from "../../assets/diffpair-tdr.png";
+import figEye from "../../assets/diffpair-eye.png";
+import figPareto from "../../assets/diffpair-pareto.png";
+import reportCover from "../../assets/diffpair-report-p1.png";
+import ieeeCover from "../../assets/diffpair-report-ieee-p1.png";
+
+A post on X<sup><a href="#ref-1">[1]</a></sup> made the rounds with a tidy picture of a
+differential pair going round a U-bend. The inner trace has less distance to cover, so
+it arrives about 9.5 ps early. A serpentine of about 1.6 mm on that trace puts it back
+in step.
+
+<XPost id="2110776676795953595">
+  <p lang="en" dir="ltr">In a differential pair, every bend puts one trace on the inside, which ends up shorter.<br /><br />Two turns at 20 mil pitch ends up being about 63 mil shorter and ~10 ps early. Now the halves don't cancel, and that leaks out as noise and EMI.<br /><br />A small serpentine adds the length back <a href="https://t.co/rLnwI6JNMS">https://t.co/rLnwI6JNMS</a></p>Cornelius Robinson (@CorneliusWrites), <a href="https://x.com/CorneliusWrites/status/2110776676795953595?ref_src=twsrc%5Etfw">October 15, 2026</a>
+</XPost>
+
+The geometry is right. The step I wasn't sure about is the one every layout tool takes
+for granted: equal length means equal delay. Length tuners that report in picoseconds
+still get them from the length. A serpentine adds corners. It pulls one trace away from
+its partner and folds back on itself, and none of that shows up in a length report.
+
+So I asked Copperhead to check it with a field solver instead of a ruler.
+
+## The untuned bend
+
+Two arcs that turn 180 degrees side by side differ in length by π times their spacing,
+whatever the radius. At a 20 mil pitch that's 1.596 mm, or 62.8 mil. Multiply by √ε_eff
+and divide by the speed of light and you have the skew.
+
+Which ε_eff you use matters. At 3.8 it comes to 10.4 ps. The post's 9.5 ps works out to
+ε_eff = 3.18, a perfectly normal number for FR-4 microstrip. Copperhead's stackup is
+0.25 mm traces on 0.2 mm of ε_r 4.3, which has a single-line ε_eff of 3.15 by the
+Hammerstad-Jensen formula<sup><a href="#ref-7">[7]</a></sup>. So geometry says 9.45 ps.
+
+openEMS said 9.3 ps. For the bend on its own, geometry is within 2 % at a 50 ps edge.
+
+<figure>
+  <Image
+    src={figBend}
+    alt="P and N centrelines around the 180-degree bend, P on the inside in copper and N on the outside in teal. The inner arc is labelled pi R with R = 1.5 mm, the outer arc pi (R + s) with R + s = 2.008 mm, and the pitch s = 0.508 mm (20 mil). A note reads: delta L = pi s = 1.596 mm = 62.8 mil, independent of R. Marked analytical."
+  />
+  <figcaption>
+    The bend on its own. The two arcs differ by π times the pitch, whatever the radius.
+  </figcaption>
+</figure>
+
+## Test boards
+
+Copperhead built one fixture and changed nothing but the tuning. Every board has the
+same stackup, the same launches and the same 12 mm legs.
+
+C, D and F are the usual fix in three styles: two sparse excursions, a dense accordion
+of four and one broad trombone. On each, Copperhead solved the amplitude so that P and N
+come out exactly the same length, chamfered corners included. C far is C moved next to
+the launch. E is a control. It swings both traces out together, which adds delay to the
+pair and nothing to the difference between them. KiCad's DRC passed every board before
+any of them went into the solver.
+
+<figure>
+  <Image
+    src={figVariants}
+    alt="Seven boards as openEMS is given them, at one scale: gold copper on a green substrate with the four 50 ohm lumped ports in red on the launch plane. (a) B, the untuned U-bend, L_N minus L_P = 1.596 mm. (b) C, two sparse excursions, N = 2, A = 0.487 mm. (c) D, the dense accordion, N = 4, A = 0.287 mm. (d) F, one broad trombone, N = 1, A = 0.886 mm. (e) C far, C's excursions at the launch. (f) E, the pair-level control, L_N minus L_P = 1.596 mm. (g) A, a straight pair as long as the U-bend's mean centreline."
+  />
+  <figcaption>
+    The boards as openEMS sees them. Every tuned board has P and N exactly equal in centreline length.
+  </figcaption>
+</figure>
+
+<figure>
+  <Image
+    src={figExcursion}
+    alt="Board C's tuning section as a dimensioned drawing. P in copper and N in teal with their centrelines dash-dotted. Two excursions of amplitude A, each a long across the top, b apart, with fold spacing g inside the first. The pitch s between P and N, the tuning section's length, and its distance D to the bend."
+  />
+  <figcaption>
+    Board C. The serpentine makes P exactly as long as N, 30.308 mm each by the length report.
+  </figcaption>
+</figure>
+
+<figure>
+  <Image
+    src={figTuningZoom}
+    alt="Six close-ups of the tuning sections at one scale, drawn as the board above: B with no tuning and a 1 mm scale bar, C's two sparse excursions, D's dense accordion of four, F's one broad trombone, E with the whole pair swung out, and C far's excursions at the launch."
+  />
+  <figcaption>
+    The tuning sections side by side, at one scale.
+  </figcaption>
+</figure>
+
+<figure>
+  <Image
+    src={figXsec}
+    alt="Two cross-sections at true scale. (a) Microstrip: P and N, 0.25 mm wide and 35 micrometres thick, 0.508 mm apart on 0.2 mm of dielectric with epsilon r 4.3 and tan delta 0.02 over a hatched return plane, air above. (b) Stripline: the same traces midway between two planes 0.7 mm apart."
+  />
+  <figcaption>
+    The two stackups, drawn at true scale. Everything below is microstrip until the stripline section.
+  </figcaption>
+</figure>
+
+## Simulation
+
+openEMS<sup><a href="#ref-2">[2]</a></sup> solves Maxwell's equations around the copper
+on a grid of cells. The board sits in a box: the copper on its dielectric, a perfect
+conductor underneath as the return plane and absorbing boundaries on the other five
+faces so the fields leave instead of reflecting back.
+
+<figure>
+  <Image
+    src={figModel3d}
+    alt="Board B's model in three dimensions, its height drawn four times true scale: the green dielectric slab on the PEC floor, the two gold traces, four red lumped ports from the floor to the copper at the launch, and the dashed edges of the air box whose five open faces are Mur boundaries."
+  />
+  <figcaption>
+    The model of board B. The height is drawn four times its true scale, or the slab would be a line.
+  </figcaption>
+</figure>
+
+Each run sends a pulse into one of the four ports, with the other three sitting there as
+50 Ω loads<sup><a href="#ref-3">[3]</a></sup>. Four runs give the full response of the
+board, its 4×4 S-matrix. scikit-rf<sup><a href="#ref-4">[4]</a></sup> turns that into
+differential and common-mode terms, and from there into what a receiver sees for a 50 ps
+edge. All in, Copperhead ran 140 simulations.
+
+<figure>
+  <Image
+    src={figFlow}
+    alt="The pipeline as boxes in three groups. Geometry: the generator (geometry.py, solved lengths) and DRC (kicad-cli, P to N clearance). Stage III, full wave: the model (model.py, graded mesh), FDTD (openEMS, 140 runs) and S-parameters (sparams.py, 4-port, checks). Post-processing: mixed mode (scikit-rf, se2gmm), metrics (analysis.py, skew, TDR, eye) and convergence (convergence.py, error bounds). Under post-processing, Stage II: the line model (mtl.py, modes from A), fed from the mixed-mode step and read beside the metrics."
+  />
+  <figcaption>
+    From copper to waveforms. The line model sits beside the full-wave results, calibrated on the straight board.
+  </figcaption>
+</figure>
+
+## Mesh
+
+The cells are 40 µm across over the copper and grow away from it, 1.24 million of them
+for a bent board. The 45-degree corner cuts come out as staircases at that size, which
+is the first thing to check.
+
+<figure>
+  <Image
+    src={figModel}
+    alt="(a) Board B in its computational domain: the green substrate from x = minus 2 to 16 mm and y = minus 5 to 4 mm, the gold traces, the four red ports on the launch plane at x = 0, and a white box marking the close-up. (b) The 40 micrometre mesh over board D's first excursions, white grid lines on green, with the cells whose centre lies in the copper filled gold, so the chamfers are staircased."
+  />
+  <figcaption>
+    The domain as openEMS gets it, and the 40 µm mesh over board D's corners.
+  </figcaption>
+</figure>
+
+So Copperhead solved the untuned bend, two of the tunings and the serpentines again on
+finer and coarser grids. On a 27 µm mesh the bend's skew moves by only 0.02 ps. The
+bend's skew carries ±0.05 ps, C's ±0.3 ps and the dense accordion's ±0.4 ps.
+
+<figure>
+  <Image
+    src={figConvergence}
+    alt="Skew against the finest cell size, 60, 40, 27 and 18 micrometres, for the untuned bend B near 9.3 ps, C near 3.6 ps and D between 4.4 and 5.2 ps, with the error bound on each board's finest point."
+  />
+  <figcaption>
+    The skew on each mesh. The bend barely moves. The dense accordion needed a fourth mesh.
+  </figcaption>
+</figure>
+
+## Skew after tuning
+
+Every tuned board has P and N exactly the same length. Every one of them still lets P
+arrive first.
+
+<figure>
+  <Image
+    src={figSkew}
+    alt="Horizontal bars of the skew left at the receiver for a 50 ps edge. Untuned bend 9.3 ps and the pair-level swing 9.4 ps in grey. In copper, tuned to exactly equal length: C far 4.4 ps, D 5.2 ps, C 3.6 ps, F 2.3 ps. In light copper, sized from their residual: D 1.9 ps, C 0.56 ps, F 0.15 ps. Teal diamonds mark what a transmission-line model predicts from the lengths, under 1 ps for every length-matched board. A dashed line marks the geometric bend skew."
+  />
+  <figcaption>
+    Skew at the receiver. The teal diamonds are what a model that only knows lengths predicts.
+  </figcaption>
+</figure>
+
+<div data-bleed-ok>
+
+| Board | What it is | Skew left | Share of the bend's skew removed |
+| --- | --- | ---: | ---: |
+| B | untuned bend | 9.3 ps | none |
+| F | one broad trombone | 2.3 ps | 75 % |
+| C | two sparse excursions | 3.6 ps | 61 % |
+| C far | the same, at the launch | 4.4 ps | 53 % |
+| D | dense accordion of four | 5.2 ps | 44 % |
+| E | both traces swung out | 9.4 ps | none, by design |
+
+</div>
+
+The more excursions, the less of the skew came back: 75 % with one, 61 % with two and 44
+% with four. It shows at the receiver too.
+
+<figure>
+  <Image
+    src={figWaveforms}
+    alt="Four scopes of the far-end P and inverted N for a 50 ps edge, with dotted lines at each 50 % crossing: untuned 9.3 ps, two excursions 3.6 ps, four excursions 5.2 ps and the trombone 2.3 ps. Under each, the common-mode pulse at the receiver."
+  />
+  <figcaption>
+    P still leads N on every board, and the common-mode pulse shrinks but never goes away.
+  </figcaption>
+</figure>
+
+## Delay efficiency
+
+The obvious suspect is the lengths. Copperhead built a transmission-line model of every
+board, calibrated on the solver's own straight pair so its coupled lines are the
+solver's coupled lines. It knows every length to the micrometre and predicts 0.2, 0.3
+and 0.3 ps for F, C and D. Length isn't what's missing.
+
+What the line model can't see is the corners and the coupling between folds. To pull
+those apart Copperhead ran one more pair of boards. Each is a straight pair with 6 mm
+added to one trace in three excursions, once with the folds 1.0 mm apart and once at the
+0.15 mm clearance rule. Same corners and same added length. They aren't quite the same
+board, though. The tight one packs its folds into 2.15 mm against 6.40 mm, so P also
+spends less of its run away from N.
+
+Call the delay a tuning actually adds, over what its length says it should add, its
+efficiency. The loose serpentine manages 0.84. Packed to the clearance rule it drops to
+0.68, and it came out 16 to 24 points lower on every mesh. That fits the fold coupling
+Wu and Chao<sup><a href="#ref-5">[5]</a></sup> and Rubin and
+Singh<sup><a href="#ref-6">[6]</a></sup> found in single-ended meanders. It doesn't
+prove it, because of those section lengths.
+
+The loose serpentine's own shortfall I'd put down to its corners, where the current cuts
+across the inside of each turn. That path is shorter than the centre line the length
+report measures. No board here changes the corners on their own, so that's my best guess
+rather than a result.
+
+<figure>
+  <Image
+    src={figCorner}
+    alt="One excursion of board C's P trace. A black dashed line follows the centre line, which the length report measures. A copper line follows the path the current takes, pulled toward the inside of each of the four corners. Beside it, one corner at a larger scale, with the 45-degree chamfer's leg c = 75 micrometres dimensioned on the centreline."
+  />
+  <figcaption>
+    Why I think the corners cost delay. The current cuts the inside of each turn, so its path is shorter than the centre line.
+  </figcaption>
+</figure>
+
+In the bend fixes each excursion lost 1.6, 1.4 and 1.1 ps of the
+delay its length promised, for one, two and four excursions. The loss per excursion shrinks
+as the excursions get smaller, but not as fast as their number grows, so a fix built from
+lots of small excursions still does worst.
+
+<figure>
+  <Image
+    src={figEta}
+    alt="Bars of delay efficiency, the delay a tuning adds over the delay its length predicts. One broad excursion 0.74, two excursions 0.60, the same two at the launch 0.52, four excursions 0.44, and in teal the 6 mm serpentine with folds 1.0 mm apart 0.84 and 0.15 mm apart 0.68. A dashed line marks 1.0."
+  />
+  <figcaption>
+    How much of its promised delay each tuning delivers.
+  </figcaption>
+</figure>
+
+## Stripline
+
+Microstrip runs its two modes at different speeds, so some of this could have been a
+microstrip quirk. Copperhead put the same copper between two planes and ran it again, on
+one mesh only.
+
+It wasn't. Geometry predicts the stripline bend to 0.6 % (10.97 ps against 11.04 ps).
+The tunings removed 81, 64 and 42 % of the skew. In microstrip they removed 75, 61 and
+44 %.
+
+Tight folds still cost 20 points. Copperhead had written into the first draft of its
+report that this penalty should shrink in stripline, because far-end coupling between
+parallel lines vanishes there. It doesn't shrink. My best guess, which nothing here
+tests, is that neighbouring folds carry current in opposite directions. The coupling
+that shortcuts them would then be backward coupling, and stripline has plenty of that.
+
+<figure>
+  <Image
+    src={figStripline}
+    alt="Paired bars of delay efficiency for the same copper in microstrip (copper) and stripline (teal): one excursion 0.74 and 0.80, two 0.60 and 0.64, four 0.44 and 0.42, serpentine with 1.0 mm folds 0.84 and 0.84, and with 0.15 mm folds 0.68 and 0.64."
+  />
+  <figcaption>
+    The same copper in microstrip and stripline, each against its own nominal velocity.
+  </figcaption>
+</figure>
+
+## Tuning position
+
+C far is the same tuning as C, moved next to the launch. Its skew at the receiver isn't
+much worse (4.4 ps against 3.6 ps). Its mode conversion is. Between the tuning and the
+bend the pair carries skew the other way, and the two corrections drift out of phase as
+the frequency goes up. Read as a skew, C far's grows from 4.1 ps at 5 GHz to 6.5 ps at
+25 GHz while C's stays flat. That's one placement against another, not a sweep of the
+distance.
+
+<figure>
+  <Image
+    src={figFdSkew}
+    alt="Skew read from the ratio of common-mode to differential transmission at each frequency from 1 to 30 GHz. The untuned bend sits near 9.5 ps in grey. C next to the bend stays near 3.6 ps in teal. C at the launch rises from about 4.1 ps at 5 GHz to about 6.5 ps at 25 GHz in copper."
+  />
+  <figcaption>
+    The same tuning next to the bend and at the launch, read as a skew at each frequency.
+  </figcaption>
+</figure>
+
+## Impedance and return loss
+
+The broad trombone removed the most skew. But its trace leaves its partner for 3 mm and
+the differential impedance there jumps to 114 Ω, against 107 Ω for the plain bend. Its
+return loss is the worst of the length-matched boards (−16.8 dB against −20.7 dB).
+
+<figure>
+  <Image
+    src={figTdr}
+    alt="Differential TDR with a 35 ps edge over 400 ps of round-trip time. The untuned bend in grey stays between about 100 and 107 ohms. The trombone in copper peaks at 114 ohms around 120 ps, where its uncoupled stretch sits."
+  />
+  <figcaption>
+    The trombone's uncoupled stretch shows up as a bump on the TDR.
+  </figcaption>
+</figure>
+
+## Eye and common mode
+
+At 16 Gb/s with 35 ps edges, the untuned bend closes the eye from 92.9 % to 91.1 % of
+the swing. That's small. The bigger effect is common mode, 13.6 % of the swing peak to
+peak at the receiver against 3.3 % for the trombone. A receiver with decent common-mode
+rejection won't notice the timing. Whether the common mode becomes an emissions problem
+depends on the rest of the board, and none of this models that.
+
+<figure>
+  <Image
+    src={figEye}
+    alt="Two 16 Gb/s PRBS7 eyes with 35 ps edges, the straight pair at 92.9 % eye height and the untuned bend at 91.1 %, each with its common-mode voltage at the receiver underneath: flat for the straight pair and 13.6 % of the swing peak to peak for the bend."
+  />
+  <figcaption>
+    The eye barely moves. The common mode is where the skew shows.
+  </figcaption>
+</figure>
+
+## Sizing from the residual
+
+If each excursion loses a fixed amount, the fix is to put that amount back. Copperhead
+lengthened C, D and F by their own leftover skew, converted to length at the bend's
+rate. By CAD measure P is now longer than N. The line model says all three overshoot: to
+-1.9 ps for F, -3.0 ps for C and -4.5 ps for D.
+
+openEMS put F at 0.15 ps and C at 0.56 ps, so one iteration was enough for those two.
+Neither was rerun on other meshes, so the ±0.3 ps from C's mesh check is a loan here,
+not a measurement. The dense accordion only came down to 1.9 ps. Each extra millimetre
+delivered 62 % of what it should have, against 83 % for C and 92 % for F. My guess is
+that stretching its tightly packed verticals tightens the coupling between them too.
+
+<figure>
+  <Image
+    src={figPareto}
+    alt="Two scatter plots of skew against cost. Left, skew against the board area the tuning takes, with the untuned bend, D, D sized from its residual, C sized from its residual and F sized from its residual on the front. Right, skew against worst differential return loss, with C sized from its residual and F sized from its residual on the front."
+  />
+  <figcaption>
+    Skew against board area and against return loss. The points on the dashed line are the ones nothing else beats on both.
+  </figcaption>
+</figure>
+
+## Design guidance
+
+For edge-coupled pairs around this pitch, in microstrip or stripline:
+
+- Trust geometry for the bend and not for the fix. Budget a few picoseconds of residual,
+  or size the tuning from a field solve or a coupon.
+- Use as few excursions as you can. The loss per excursion shrinks with its size, but
+  not as fast as the count grows.
+- Keep the folds apart. At the clearance rule they cost 16 to 24 points of efficiency.
+- Tune next to the bend, not at the end of the route.
+- Keep a broad excursion short or it'll show up on the TDR.
+- Swinging the whole pair out does nothing for skew within the pair.
+
+## Why Copperhead runs studies
+
+It's easy to build an AI for PCBs that's judged by the rules it follows. DRC passes, the
+length report reads zero, done. On this bend that bar passes a board that still carries
+5.2 ps of skew.
+
+Copperhead works the other way round. It treats a rule as a claim to test, runs the
+study that tests it and keeps the result as a check with a number on it. This post is
+one of those studies from start to finish. Copperhead built the fixtures, ran the 140
+solves, caught its own mistakes (below) and wrote the report.
+
+The checks run on real designs through fang<sup><a href="#ref-8">[8]</a></sup>,
+Copperhead's hardware kernel. A requirement that needs a simulation gets one. ngspice
+takes the circuits and Renode runs the firmware against the board it's written for. A
+value that breaks a requirement never reaches the design. One that nothing has measured
+yet stays unknown instead of passing.
+
+This study ran on its own scripts, beside fang rather than through it. fang can't ask a
+field solver for skew yet, and the residual budget above is the first check I'd want it
+to run.
+
+## Errors during the study
+
+The first runs never finished. openEMS stops once the energy in the model has decayed,
+and here it stalled well short of the target. Copperhead traced that to the DC content
+of the pulse, which leaves a static field behind that never decays. Every run now stops
+at a fixed 2 ns instead, after checking that the signals at the ports have fallen at
+least 98 dB.
+
+The dense accordion wouldn't converge. On three meshes its skew came out at 4.45, 5.16
+and 4.88 ps. The honest bound on that is ±2.1 ps on a 5 ps result. Its 75 µm corner cuts
+are only a couple of cells wide. A fourth, finer mesh gave 4.84 ps and settled it at
+about 4.8 ps. The coarse mesh had been the outlier.
+
+It also first scored the stripline boards against microstrip's velocity, which made them
+look 17 % better than they are. That got caught because the loose stripline serpentine
+came out at 0.98, which didn't fit anything else in the study.
+
+## Limitations
+
+All of this is simulation. Nothing was built or measured. It's one trace width and one
+pitch in one microstrip and one stripline stackup. The ports are lumped and the return
+planes perfect. The copper has no roughness.
+
+Every full-wave number here comes from one solver, openEMS. The line model was
+calibrated on its runs, so the two agreeing isn't an independent check. Nor are the
+mechanisms pinned down. The fold result is tangled up with section length, and the
+corners are a guess by elimination.
+
+The report has a coupon plan for checking it on real boards. The first thing I'd want to
+see on a VNA is the dense accordion leaving 5.2 ps where the length report says zero.
+
+## Full report
+
+Copperhead wrote the report and drew every figure in this post. It runs to 14 pages with
+the method, the mesh checks, the related work and the coupon plan. Copperhead checked
+each of its 26 references against Crossref or its source
+page<sup><a href="#ref-9">[9]</a></sup>. The scripts, the S-parameter files and the raw
+solver runs are in the
+[study's repository](https://github.com/copperheadhq/copperhead-research/tree/main/diffpair-meanders).
+A script fills in every number in this post from those files.
+
+<figure class="two-up">
+  <p>
+    <a href="/blog/diffpair-meanders-report.pdf">
+      <Image
+        src={reportCover}
+        alt="First page of the report, Beyond Length Matching: Electromagnetic Verification and Optimization of Differential-Pair Meanders, by Animesh Chouhan of Copperhead and dated 22 October 2026, with board D as openEMS meshes it beside its receiver waveforms above the abstract."
+      />
+    </a>
+    <a href="/blog/diffpair-meanders-report-ieee.pdf">
+      <Image
+        src={ieeeCover}
+        alt="First page of the same report set in IEEE two-column format, with the abstract and index terms on the left and the introduction beginning beside them."
+      />
+    </a>
+  </p>
+  <figcaption>
+    The report and the same text in IEEE format. Each opens the PDF.
+  </figcaption>
+</figure>
+
+<div data-bleed-ok>
+
+| Document | Pages | File |
+| --- | ---: | --- |
+| Beyond Length Matching, report | 14 | [PDF, 0.8 MB](/blog/diffpair-meanders-report.pdf) |
+| Beyond Length Matching, IEEE format | 13 | [PDF, 0.8 MB](/blog/diffpair-meanders-report-ieee.pdf) |
+
+</div>
+
+## References
+
+Each entry says which claim in the text it carries. Web sources were read on 19 October
+2026.
+
+1. <a id="ref-1"></a>
+   @CorneliusWrites, post on X.\
+   [https://x.com/CorneliusWrites/status/2110776676795953595](https://x.com/CorneliusWrites/status/2110776676795953595)\
+   The 9.5 ps and 1.6 mm this post starts from. The post wouldn't load for re-checking
+   on 19 October 2026.
+
+2. <a id="ref-2"></a>
+   openEMS Project, Introduction.\
+   [https://docs.openems.de/en/latest/intro.html](https://docs.openems.de/en/latest/intro.html)\
+   The field solver, an equivalent-circuit FDTD code. The runs used version
+   v0.37.0-rc3-31-g6761a36.
+
+3. <a id="ref-3"></a>
+   openEMS Project, Ports.\
+   [https://docs.openems.de/en/latest/concepts/ports.html](https://docs.openems.de/en/latest/concepts/ports.html)\
+   One excited port per run with the rest passive, which is how the 4×4 matrix is built.
+
+4. <a id="ref-4"></a>
+   scikit-rf, Network.se2gmm.\
+   [https://scikit-rf.readthedocs.io/en/latest/api/generated/skrf.network.Network.se2gmm.html](https://scikit-rf.readthedocs.io/en/latest/api/generated/skrf.network.Network.se2gmm.html)\
+   The conversion to differential and common-mode terms. Its port order was checked
+   against the source of scikit-rf 2.2.0 rather than the rendered docs.
+
+5. <a id="ref-5"></a>
+   R.-B. Wu and F.-L. Chao, Laddering wave in serpentine delay line, IEEE Trans.
+   Compon., Packag., Manuf. Technol. B, vol. 18, no. 4, 1995.\
+   [https://doi.org/10.1109/96.475270](https://doi.org/10.1109/96.475270)\
+   Coupling between the segments of a serpentine shortens its delay.
+
+6. <a id="ref-6"></a>
+   B. J. Rubin and B. Singh, Study of meander line delay in circuit boards, IEEE
+   Transactions on Microwave Theory and Techniques, vol. 48, no. 9, 2000.\
+   [https://doi.org/10.1109/22.868994](https://doi.org/10.1109/22.868994)\
+   The same effect in meanders, modelled and measured.
+
+7. <a id="ref-7"></a>
+   E. Hammerstad and O. Jensen, Accurate models for microstrip computer-aided design,
+   1980 IEEE MTT-S International Microwave Symposium Digest.\
+   [https://doi.org/10.1109/MWSYM.1980.1124303](https://doi.org/10.1109/MWSYM.1980.1124303)\
+   The single-line ε_eff of 3.15 behind the 9.45 ps.
+
+8. <a id="ref-8"></a>
+   Copperhead, fang.\
+   [https://github.com/copperheadhq/fang](https://github.com/copperheadhq/fang)\
+   The hardware kernel and its verification questions: ngspice and Xyce for circuits,
+   Renode for firmware, KiCad's ERC and Touchstone files for RF.
+
+9. <a id="ref-9"></a>
+   Beyond Length Matching: Electromagnetic Verification and Optimization of
+   Differential-Pair Meanders, 14 pages.\
+   [/blog/diffpair-meanders-report.pdf](/blog/diffpair-meanders-report.pdf)\
+   Every number in this post with its method, its mesh checks and the limitations.

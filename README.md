@@ -1,6 +1,6 @@
 # copperhead-site
 
-Website for copperhead, the open source AI agent for PCB design.
+Website for Copperhead, the open source AI agent for PCB design.
 Live at [copperhead.sh](https://copperhead.sh/).
 
 Single static page. Astro, vanilla CSS, no client framework, no CMS, no backend.
@@ -185,7 +185,7 @@ conflicts with the spec, the visual direction won:
   USB-C power input to the key" and the tool calls it makes. It is DOM and CSS
   keyframes, not a recorded GIF, so the text stays selectable and crisp at any
   zoom for ~6 KB. It stays inside the W-5 rule by taking its *format* from the
-  copperhead source rather than from a screenshot; every tool name is real, out
+  Copperhead source rather than from a screenshot; every tool name is real, out
   of the agent's registry. `TerminalDemo.astro` lists the file each part of the
   layout came from — keep that map current if the CLI's output changes.
 - **Hero layout.** Centred single-column, in the supermemory.ai shape: chip,

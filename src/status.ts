@@ -1,7 +1,7 @@
 /**
  * The public status page's data contract, and the decisions made over it.
  *
- * UptimeRobot hosts a status page for the copperhead monitors at
+ * UptimeRobot hosts a status page for the Copperhead monitors at
  * https://stats.uptimerobot.com/irTTwRgiJs and exposes its data at a public,
  * CORS-open JSON endpoint: no key, nothing private, exactly what the hosted
  * page renders. Hosting the page on their domain is free; hosting it on ours

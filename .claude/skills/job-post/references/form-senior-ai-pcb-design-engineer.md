@@ -11,13 +11,13 @@ Like that form it is a gate rather than a general application: the listing state
 requirements, so the form asks for evidence of boards rather than for claims about them.
 Where it differs, the role differs. This is full-time rather than a contract, it is not
 tied to one carrier board and half of it is turning how the candidate reasons into rules
-copperhead can check, which is why question 23 exists.
+Copperhead can check, which is why question 23 exists.
 
-**Form title:** Senior AI PCB Design Engineer, copperhead
+**Form title:** Senior AI PCB Design Engineer, Copperhead
 **Intro text:**
 
 > A full-time, in-person role in Bengaluru, designing production-grade multilayer boards
-> in KiCad and encoding how you make those decisions into copperhead. This role has hard
+> in KiCad and encoding how you make those decisions into Copperhead. This role has hard
 > requirements: five or more years of professional PCB work, production-level KiCad and
 > complex multilayer boards you have personally taken through bring-up. The form asks
 > for evidence of that work with confidential details removed. An application without

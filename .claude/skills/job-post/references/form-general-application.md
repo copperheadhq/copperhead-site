@@ -27,9 +27,9 @@ Enter as the form's description. Sentence by sentence this is all checkable agai
 repository or the site, which is deliberate: a hiring page that overstates a company is
 found out by exactly the people worth hiring.
 
-> ### About copperhead
+> ### About Copperhead
 >
-> copperhead is an open source agent for hardware design. Given a plain-English change
+> Copperhead is an open source agent for hardware design. Given a plain-English change
 > request or a written brief, it edits real KiCad files in your own git repository,
 > propagates the change into every document that references it and verifies its own work
 > by running kicad-cli ERC and DRC until the checks pass. It leaves artifacts on disk
@@ -42,7 +42,7 @@ found out by exactly the people worth hiring.
 >
 > It was built by Animesh Chouhan and proven on Open Telegraph, a 40 by 40 mm
 > ESP32-S3 Morse key with a 25 microamp deep-sleep budget. Building that board produced
-> copperhead and redesigning the board through copperhead proved it. Both are public.
+> Copperhead and redesigning the board through Copperhead proved it. Both are public.
 >
 > ### Why join
 >
@@ -73,7 +73,7 @@ found out by exactly the people worth hiring.
 > agents: execution loops, sandboxes, job pipelines, evaluation harnesses and tracing.
 >
 > **Senior AI PCB Design Engineer.** Production-grade multilayer boards in KiCad, and
-> turning how you make those decisions into rules copperhead can check. This one has
+> turning how you make those decisions into rules Copperhead can check. This one has
 > hard requirements and its own form.
 >
 > If none of those is quite you, apply anyway and say so. Roles here get written around a
@@ -144,7 +144,7 @@ TODO.
 | 13 | Portfolio, site or writing | Short text | No |
 | 14 | Will you be able to join full time? Any other commitments? | Long text | Yes |
 | 15 | Early startups are hard. Why do you want to be at one, and how risk averse are you? | Long text | Yes |
-| 16 | You were asked to try copperhead. What did you make of it? | Long text | Yes |
+| 16 | You were asked to try Copperhead. What did you make of it? | Long text | Yes |
 | 17 | Possible start date | Date | Yes |
 | 18 | Phone. Optional, we may call you | Phone | No |
 | 19 | Resume | File upload, 10MB | Yes |
@@ -191,7 +191,7 @@ Indian work authorisation. Copying the original across would have collected an a
 that means nothing.
 
 **Remote is refused, not welcomed.** The template says "We are open to remote roles!".
-Every copperhead role is on-site and the hardware listing says outright that remote
+Every Copperhead role is on-site and the hardware listing says outright that remote
 applications will not be considered. This is the largest single filter on the form,
 which is why it is question 4 and why the intro says it too.
 
@@ -201,7 +201,7 @@ second video pays for its friction. The role forms already filter by their own h
 questions and do not need it.
 
 **Question 16 has no counterpart.** The template asks applicants to read the docs before
-applying and then never mentions it again. copperhead is free to install and runs
+applying and then never mentions it again. Copperhead is free to install and runs
 locally, so trying it costs a candidate ten minutes, and asking what they made of it is
 both a filter and the best product feedback in the pile. Expect a few answers that are
 better than the application around them.

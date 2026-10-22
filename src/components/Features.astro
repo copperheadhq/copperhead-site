@@ -13,13 +13,13 @@ const stages = [
     n: '01',
     name: 'spec',
     artifact: 'docs/SPEC.md',
-    gate: 'a budgets section, actually filled in',
+    gate: 'a budgets section with numbers in it',
   },
   {
     n: '02',
     name: 'architecture',
     artifact: 'docs/SUBSYSTEMS.md',
-    gate: 'real reasoning under every subsystem',
+    gate: 'a written rationale under every subsystem',
   },
   {
     n: '03',
@@ -46,7 +46,7 @@ const stages = [
     n: '06',
     name: 'outputs',
     artifact: 'gerbers / drill / STEP',
-    gate: 'gerbers actually on disk',
+    gate: 'gerber files on disk',
   },
   {
     n: '07',
@@ -67,7 +67,7 @@ const stages = [
   <div class="wrap">
     <h2 class="section-title">Eight stages, start to finish.</h2>
     <p class="section-intro">
-      You write the brief. copperhead runs the stages in order, each one its
+      You write the brief. Copperhead runs the stages in order, each one its
       own agent run. A stage has to leave its artifact on disk before the next
       starts. If a gate fails, the run stops there.
     </p>
@@ -111,18 +111,18 @@ const stages = [
     <ul class="legend">
       <li>
         <span class="mark via"></span>
-        <span>Every hop is a gate: <b>no real work on disk, no commit</b>.</span>
+        <span>Every hop is a gate: <b>a stage commits only once its artifact is on disk</b>.</span>
       </li>
       <li>
         <span class="mark ring"></span>
-        <span>Copper border: <b>verified by KiCad itself, ERC and DRC clean</b>.</span>
+        <span>Copper border: <b>KiCad checks this stage, ERC or DRC clean</b>.</span>
       </li>
     </ul>
 
     <!-- The arrow is drawn rather than set as a glyph, on Hero.astro's rule:
          the font subsets do not carry it. -->
     <a class="readmore" href="/blog/from-brief-to-gerbers">
-      Read the long version, one stage at a time<svg
+      Read the stage-by-stage walkthrough<svg
         class="arrow"
         viewBox="0 0 16 16"
         width="13"

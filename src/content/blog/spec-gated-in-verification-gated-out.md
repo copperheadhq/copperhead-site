@@ -4,17 +4,17 @@ description: 'The two invariants that make an agent safe to point at real design
 date: 2026-07-16
 kind: 'Engineering'
 cover: 'spec-gated-in-verification-gated-out'
-coverAlt: 'A copperhead title card: one trace running through two gate pads.'
+coverAlt: 'A Copperhead title card: one trace running through two gate pads.'
 ---
 
-An agent that can edit your schematic is only useful if you can predict what it will
-not do. copperhead gets that from two invariants that hold on every run.
+An agent that can edit your schematic is only useful if you can predict what it
+won't do. Copperhead gets that from two invariants that hold on every run.
 
-## Nothing starts without a spec
+## The spec gate
 
-The agent cannot touch a design file until a validated change proposal exists. This
-is not a convention it tries to follow. The edit tools are locked, and the thing
-that unlocks them is a proposal that passes validation.
+The agent cannot touch a design file until a validated change proposal exists.
+The edit tools are locked, and the thing that unlocks them is a proposal that
+passes validation. That holds whatever the prompt says.
 
 So a request becomes a written document first: what is changing, why, which
 constraints it touches, what the agent expects to happen. You read it. You push back
@@ -24,17 +24,17 @@ The side effect is that every edit traces back to a documented intent. Six month
 later the question "why is this pin like this" has an answer that was written at the
 time, not reconstructed from a diff.
 
-## Nothing is done until the tools agree
+## The verification gate
 
 Every change is followed by ERC on the schematic and DRC on the board, through
 `kicad-cli`. Violations get read back, fixed and re-run. The agent reports success
-when the checks report success, not when it feels finished.
+when the checks do.
 
-This is the part that makes the output auditable. The claim "this schematic is
-clean" is not a language model's opinion about its own work. It is the exit code of
-a deterministic tool that has no idea an agent is involved.
+That is what makes the output auditable. The claim "this schematic is clean"
+comes from the exit code of a deterministic tool that has no idea an agent is
+involved.
 
-## The loop in between
+## The edit loop
 
 It looks a lot like pair programming, except the codebase is a circuit board.
 
@@ -51,21 +51,21 @@ It looks a lot like pair programming, except the codebase is a circuit board.
 6. **Write down why.** Every decision gets a one-line reason next to it, so the next
    change does not quietly undo it.
 
-## Surgical edits, not regeneration
+## Surgical edits
 
 The agent never regenerates a whole KiCad file. Edits are targeted changes to the
 s-expression source, which means your diffs stay readable and reviewable, and the
-parts of the file nobody asked about stay byte-identical. A tool that rewrites the
-entire schematic to move one net has made its own work impossible to review.
+parts of the file nobody asked about stay byte-identical. Moving one net shows up
+in the diff as one net moved.
 
-## Memory that both sides can read
+## Shared memory
 
 Constraints are dual-written. Every budget, forbidden pin and keepout lands in a
 human-readable document and in the machine-readable registry in the same turn, so
-the engineer and the agent never end up looking at different versions of the truth.
-A constraint the agent knows but you cannot see is a trap waiting to spring.
+the engineer and the agent never end up looking at different versions of the
+truth. There is no constraint the agent holds that you can't read.
 
-## What it refuses to claim
+## Limitations
 
 The honesty rules matter as much as the checks:
 
@@ -76,7 +76,5 @@ The honesty rules matter as much as the checks:
 - The draft layout is labeled as a draft, with a written list of what a layout
   specialist should redo.
 - It refuses changes that break a documented budget, and cites the source.
-
-You will come to like being told no.
 
 Questions about any of this are probably covered in [the FAQ](/blog/faq/).

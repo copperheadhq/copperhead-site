@@ -34,8 +34,8 @@ const jsonLd = {
 ---
 
 <Base
-  title="copperhead: FAQ"
-  description="What copperhead costs, what it refuses to do, whether it replaces an engineer and what happens to your design files."
+  title="Copperhead: FAQ"
+  description="What Copperhead costs, what it refuses to do, whether it replaces an engineer and what happens to your design files."
   path="/blog/faq/"
   ogImage={ogImage}
   ogImageAlt={faqCover.alt}
@@ -46,12 +46,7 @@ const jsonLd = {
     <article>
       <div class="wrap">
         <header>
-          <p class="kind">FAQ</p>
-          <h1>Frequently asked questions</h1>
-          <p class="standfirst">
-            The questions hardware engineers ask in the first five minutes. If yours
-            is not here, the <a href={links.repo}>repo</a> is the best place to ask.
-          </p>
+          <h1>FAQ</h1>
         </header>
 
         {
@@ -91,24 +86,9 @@ const jsonLd = {
     max-width: 760px;
   }
 
-  .kind {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--copper);
-    margin: 0 0 1.5rem;
-  }
-
   h1 {
     font-size: clamp(2rem, 5vw, 3rem);
     text-wrap: balance;
-  }
-
-  .standfirst {
-    color: var(--text-dim);
-    font-size: 1.12rem;
-    margin: 1.5rem 0 0;
-    max-width: 58ch;
   }
 
   .group {
@@ -194,10 +174,6 @@ const jsonLd = {
   @media (max-width: 720px) {
     article {
       padding-block: 139px var(--pad-y);
-    }
-
-    .standfirst {
-      font-size: 1.05rem;
     }
 
     .group {

@@ -56,7 +56,7 @@ const kinds = [...counts.entries()].map(([kind, n]) => ({
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  name: "The copperhead blog",
+  name: "The Copperhead blog",
   url: new URL("/blog/", site).href,
   blogPost: posts.map((p) => ({
     "@type": "BlogPosting",
@@ -69,8 +69,8 @@ const jsonLd = {
 ---
 
 <Base
-  title="copperhead: Blog"
-  description="How copperhead works, the drift problem it exists to solve and the invariants that make an AI agent safe to point at real KiCad files."
+  title="Copperhead: Blog"
+  description="How Copperhead works, the drift problem it exists to solve and the invariants that make an AI agent safe to point at real KiCad files."
   path="/blog/"
   jsonLd={jsonLd}
 >
@@ -78,29 +78,7 @@ const jsonLd = {
   <main id="top">
     <div class="blog-frame">
       <header class="blog-head">
-        <p class="index">
-          <svg
-            class="chev"
-            viewBox="0 0 8 12"
-            width="7"
-            height="10"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M1.5 1 6 6l-4.5 5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"></path>
-          </svg>
-          BLOG
-        </p>
-        <h1 class="blog-h1">Notes from the copper.</h1>
-        <p class="blog-sub">
-          What we have learned pointing an agent at real hardware files: how it
-          works, where it breaks and why it is fenced in the way it is. Every
-          claim here is one you can go and check in the repo.
-        </p>
+        <h1 class="blog-h1">Blog</h1>
 
         <div class="blog-cats" role="group" aria-label="Filter posts by kind">
           <button
@@ -207,9 +185,7 @@ const jsonLd = {
   /* One framed column for the whole index, in supermemory's shape: hairlines
      down both edges of the content box and a faint dot field behind it, so the
      header, the featured post and the grid read as cells of one sheet rather
-     than as three bands stacked on the page. The site's own .framed does the
-     same job for the home page; this is that idea scoped to one column that
-     also carries the background. */
+     than as three bands stacked on the page. */
   .blog-frame {
     width: 100%;
     max-width: var(--maxw);
@@ -225,31 +201,10 @@ const jsonLd = {
     border-bottom: 1px solid var(--line);
   }
 
-  /* The reference sets its eyebrow as a chevron, the word, and a rule. The
-     chevron is drawn rather than typed: the glyph supermemory uses (U+3009) is
-     outside this site's font subset and would fall back to a system face for
-     one character. The 44px rule .index used to draw after the label is gone
-     with it, site-wide. */
-  .index .chev {
-    margin-right: 2px;
-    flex: none;
-  }
-
   .blog-h1 {
     font-size: clamp(2rem, 5vw, 3.25rem);
     line-height: 1.05;
     letter-spacing: -0.045em;
-    max-width: 18ch;
-    text-wrap: balance;
-  }
-
-  .blog-sub {
-    font-family: var(--body);
-    margin: 1.1rem 0 0;
-    max-width: 34rem;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--text-dim);
   }
 
   /* ---- Filter chips ---- */
@@ -358,7 +313,7 @@ const jsonLd = {
   }
 
   /* Below this the column is the viewport, where the edge hairlines read as a
-     browser artefact rather than as a frame — the same cut-off .framed uses. */
+     browser artefact rather than as a frame. */
   @media (max-width: 900px) {
     .blog-frame {
       border-inline: 0;

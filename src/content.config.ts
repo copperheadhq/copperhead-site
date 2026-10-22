@@ -69,6 +69,32 @@ const research = defineCollection({
      * describing an unrun benchmark must not read like one reporting it.
      */
     status: z.string().optional(),
+    /**
+     * Byline, in order, each with the institution it is credited to. Defaults
+     * to the blog's defaultAuthor at Copperhead (authorsOf in src/research.ts),
+     * so the field exists for a co-authored piece rather than for every one.
+     */
+    authors: z
+      .array(z.object({ name: z.string(), affiliation: z.string().optional() }))
+      .optional(),
+    /** Shown under the abstract and emitted as citation_keywords. */
+    keywords: z.array(z.string()).optional(),
+    /**
+     * The paper this article is the web edition of. A URL ending in .pdf is
+     * labelled as the PDF and a site-root one is also handed to Google Scholar
+     * as citation_pdf_url; anything else is labelled as the paper's source.
+     */
+    paper: z.string().optional(),
+    /** The repository holding the code, fixtures or data the article describes. */
+    code: z.string().optional(),
+    /**
+     * The article's card on the research index, in either of the blog's two
+     * forms (see `cover` on the blog collection above). For a paper this is
+     * usually a 16:9 crop of its first page, title block on top, from public/.
+     */
+    cover: z.string().optional(),
+    /** Alt text for that card. Describes the picture, not the article. */
+    coverAlt: z.string().optional(),
   }),
 });
 

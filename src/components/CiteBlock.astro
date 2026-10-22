@@ -1,0 +1,133 @@
+---
+/**
+ * A research article's citation, in the two forms people paste: a BibTeX entry
+ * for a .bib file and a plain author-date reference for anywhere else.
+ *
+ * Both strings come from src/research.ts, so the index's Cite dialog and the
+ * article's own Cite section cannot disagree about how the piece is cited.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { bibtex, citation } from '../research';
+
+interface Props {
+  article: CollectionEntry<'research'>;
+}
+
+const { article } = Astro.props;
+
+const formats = [
+  { label: 'BibTeX', text: bibtex(article), block: true },
+  { label: 'Plain text', text: citation(article), block: false },
+];
+---
+
+<div class="cite">
+  {
+    formats.map((f) => (
+      <div class="cite-fmt">
+        <div class="cite-head">
+          <span class="cite-label">{f.label}</span>
+          <button type="button" class="cite-copy" data-cite-copy>
+            Copy
+          </button>
+        </div>
+        {f.block ? <pre class="cite-text">{f.text}</pre> : <p class="cite-text">{f.text}</p>}
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  /* Copies the text of the format the button sits in. textContent rather than
+     innerText, so the BibTeX keeps its line breaks and alignment exactly as
+     rendered into the <pre>. */
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-cite-copy]')) {
+    btn.addEventListener('click', async () => {
+      const text = btn.closest('.cite-fmt')?.querySelector('.cite-text')?.textContent ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Copied';
+        setTimeout(() => (btn.textContent = 'Copy'), 1400);
+      } catch {
+        /* no clipboard permission; the text is selectable where it sits */
+      }
+    });
+  }
+</script>
+
+<style>
+  /* minmax(0, 1fr), not the implicit auto track: a grid item's minimum is its
+     min-content width, and the BibTeX's longest line would otherwise widen the
+     whole column past a phone's viewport instead of scrolling inside its box. */
+  .cite {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .cite-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cite-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .cite-copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .cite-copy:hover {
+    border-color: var(--copper);
+    color: var(--copper);
+  }
+
+  /* The quickstart's code surface (InstallBlock.astro): dashed ink border on
+     --surface. BibTeX is code a reader copies, so it gets the same frame. */
+  .cite-text {
+    margin: 0;
+    background: var(--surface);
+    border: 1px dashed color-mix(in srgb, var(--text) 20%, transparent);
+    padding: 14px 16px;
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    color: var(--text);
+    overflow-x: auto;
+  }
+
+  p.cite-text {
+    font-family: var(--body);
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+  }
+
+  /* Wrapped rather than scrolled: a title runs past the box at any width a
+     dialog has, and a citation whose closing brace is off to the right reads
+     as truncated. BibTeX ignores the whitespace, and Copy takes the text as
+     generated, unwrapped. */
+  pre.cite-text {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+</style>

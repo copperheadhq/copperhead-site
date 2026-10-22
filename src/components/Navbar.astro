@@ -25,6 +25,7 @@ const nav = [
   // roles are the thing a reader arrives looking for and cannot find by
   // guessing.
   { label: 'Careers', href: links.careers },
+  { label: 'About', href: links.about },
 ];
 ---
 
@@ -237,6 +238,19 @@ const nav = [
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  /* Six links since About joined the row, and the right half (toggle, stars,
+     Sign in, CTA) is the wider one, so between the drawer breakpoint and the
+     width where .inner stops growing the centred row ran into the toggle: 20px
+     of overlap at 1180, clear only from about 1240. Through that band the row
+     gives up 48px of centring to the logo side, which still has 170px spare at
+     1180. Raising the drawer breakpoint instead would have put 1280px laptops
+     on the hamburger. */
+  @media (min-width: 1180px) and (max-width: 1339.98px) {
+    nav {
+      transform: translateX(calc(-50% - 48px));
+    }
   }
 
   nav ul {

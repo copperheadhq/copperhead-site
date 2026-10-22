@@ -10,10 +10,10 @@ Build at binary.so. The published URL goes in the `applyUrl` of the
 > sort: nothing asks whether the candidate has trained a model, implemented an RL
 > algorithm or changed an architecture.
 
-**Form title:** Founding AI Engineer, copperhead
+**Form title:** Founding AI Engineer, Copperhead
 **Intro text:**
 
-> copperhead is an open source agent that designs, documents and verifies real circuit
+> Copperhead is an open source agent that designs, documents and verifies real circuit
 > boards. This role is the founding engineer on the core of it, on-site in Bengaluru.
 > The bar is research-level: training, reinforcement learning and custom architectures,
 > then the production engineering that decides whether any of it ships. The questions

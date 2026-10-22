@@ -2,7 +2,7 @@
 export const pkg = 'copperhead';
 
 /**
- * git remote of the copperhead repo (brand doc says animesh-chouhan; remote wins).
+ * git remote of the Copperhead repo (brand doc says animesh-chouhan; remote wins).
  * The repo moved from the chouhanindustries org to copperheadhq; GitHub 301s the
  * old path, but everything published from here uses the current one. Note that
  * src/repo-stats.ts deliberately does NOT follow this rename — see the comment
@@ -23,7 +23,7 @@ export const siteCard = '/og-image.png';
 
 export const links = {
   repo,
-  // Primary navbar CTA ("Let's talk") — books a copperhead demo call.
+  // Primary navbar CTA ("Let's talk") — books a Copperhead demo call.
   getStarted: 'https://cal.com/animeshchouhan/demo-copperhead',
   // The blog now lives on this site (spec §non-goals said chouhan.ai; superseded).
   // The docs are a separate Astro Starlight site on GitHub Pages (source: repo
@@ -32,7 +32,7 @@ export const links = {
   blog: '/blog/',
   faq: '/blog/faq/',
   docs: 'https://docs.copperhead.sh/',
-  // The hosted platform, copperhead cloud (the copperhead-cloud repo). This
+  // The hosted platform, Copperhead Cloud (the copperhead-cloud repo). This
   // site links to it and does nothing else with it: cloud SPEC §3.1 scopes
   // copperhead-site to "links only" and forbids auth code, a Supabase client
   // or any secret landing here.
@@ -42,6 +42,12 @@ export const links = {
   buildStory: 'https://chouhan.ai/building-with-claude',
   // Placeholder page on this site; chouhan.ai/research is a different thing.
   research: '/research/',
+  // The code and data behind the research articles, one folder per study. A
+  // research article without its own `code` repo falls back to this one.
+  researchRepo: 'https://github.com/copperheadhq/copperhead-research',
+  // Fang, the hardware kernel behind simulation and verification, on its own
+  // site (source: copperheadhq/fang). The About page links it.
+  fang: 'https://fang.copperhead.sh/',
   // The long traffic record for the repo, drawn from the data branch that
   // .github/workflows/repo-stats.yml appends to daily.
   stats: '/stats/',
@@ -49,14 +55,23 @@ export const links = {
   // (src/status.ts). Their hosted copy is the fallback linked from the page.
   status: '/status/',
   // Open roles. In the navbar and in the footer's Company column: it replaced
-  // Discord in the bar, which keeps that row at five links.
+  // Discord in the bar.
   careers: '/careers/',
+  // Who builds Copperhead, and the page carrying the Organization node. In the
+  // footer's Company column and in the navbar, where it follows Careers so the
+  // two company links sit together.
+  about: '/about/',
+  // The Show HN launch thread, which made the front page.
+  hn: 'https://news.ycombinator.com/item?id=49610059',
+  // The thread for OpenAI's Navier-Stokes post, which made the same front page
+  // the same day (news.ycombinator.com/front?day=2026-09-08).
+  hnNavierStokes: 'https://news.ycombinator.com/item?id=49613262',
   // The Antler write-up, on chouhan.ai rather than this site's own /blog copy.
   antler: 'https://chouhan.ai/antler-crackathon',
   // General enquiries. copperhead.sh now has MX records on Cloudflare Email
   // Routing, so the domain receives mail; whether this particular address does
   // still depends on a routing rule (or a catch-all) existing for it there.
-  contact: 'mailto:hello@copperhead.sh',
+  contact: 'mailto:contact@copperhead.sh',
   // Applications. Separate from `contact` so a careers reply-to never lands in
   // the same thread as a sales enquiry, and so this address can be routed to a
   // different person without moving everything else with it. It is the fallback
@@ -74,6 +89,7 @@ export const links = {
   x: 'https://x.com/copperheadhq',
   linkedin: 'https://www.linkedin.com/company/copperheadhq',
   instagram: 'https://www.instagram.com/copperhead.hq/',
+  youtube: 'https://www.youtube.com/@CopperheadHQ',
   reddit: 'https://www.reddit.com/r/copperheadhq/',
   chouhan: 'https://chouhan.ai',
   kicad: 'https://www.kicad.org/',

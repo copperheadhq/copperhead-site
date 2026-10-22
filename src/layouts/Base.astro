@@ -25,13 +25,13 @@ interface Props {
 }
 
 const {
-  title = 'copperhead. Cursor for circuit boards.',
-  description = 'An open-source AI agent that designs, documents and validates real PCBs from a prompt.',
+  title = 'Copperhead. Cursor for circuit boards.',
+  description = 'Copperhead is an open source AI agent that edits your real KiCad files and runs ERC and DRC until they pass.',
   path = '/',
   jsonLd: extraJsonLd,
   ogType = 'website',
   ogImage: ogImagePath = siteCard,
-  ogImageAlt = 'copperhead: an open-source AI agent for circuit board design',
+  ogImageAlt = 'Copperhead: an open source AI agent for circuit board design',
   publishedTime,
   noindex = false,
 } = Astro.props;
@@ -44,7 +44,7 @@ const ogImage = new URL(ogImagePath, site).href;
 const appJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'copperhead',
+  name: 'Copperhead',
   description:
     'An open-source AI agent that designs, documents and validates real PCBs from a prompt.',
   url: site,
@@ -53,7 +53,7 @@ const appJsonLd = {
   operatingSystem: 'macOS, Linux, Windows',
   license: 'https://www.apache.org/licenses/LICENSE-2.0',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  author: { '@type': 'Organization', name: 'copperhead', url: site, sameAs: links.chouhan },
+  author: { '@type': 'Organization', name: 'Copperhead', url: site, sameAs: links.chouhan },
 };
 
 const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
@@ -221,7 +221,7 @@ const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={ogImageAlt} />
-    <meta property="og:site_name" content="copperhead" />
+    <meta property="og:site_name" content="Copperhead" />
     <meta property="og:locale" content="en_US" />
     {publishedTime && (
       <meta property="article:published_time" content={publishedTime} />
@@ -239,6 +239,10 @@ const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
       type="application/ld+json"
       set:html={JSON.stringify(jsonLd)}
     />
+
+    {/* Page-specific head tags beyond what the props cover: the research
+        articles put their Google Scholar citation_* tags here. */}
+    <slot name="head" />
   </head>
   <body>
     <slot />

@@ -21,6 +21,7 @@ export const GET: APIRoute = async () => {
     { loc: '/stats/', changefreq: 'daily', priority: '0.5' },
     // Its content is live in the browser; the page itself hardly changes.
     { loc: '/status/', changefreq: 'monthly', priority: '0.5' },
+    { loc: '/about/', changefreq: 'monthly', priority: '0.6' },
     { loc: '/careers/', changefreq: 'monthly', priority: '0.6' },
     // Unpublished roles are already filtered out of `openRoles`, so a draft
     // listing cannot be advertised here while having no page to land on. This

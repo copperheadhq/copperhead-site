@@ -23,7 +23,7 @@ const posted = openRoles.filter((r) => jobPostingJsonLd(r));
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Careers at copperhead",
+  name: "Careers at Copperhead",
   url: new URL("/careers/", site).href,
   ...(posted.length
     ? {
@@ -41,10 +41,10 @@ const jsonLd = {
 ---
 
 <Base
-  title="Careers · copperhead"
-  description="Open roles at copperhead, an open source agent that designs circuit boards and verifies its own work against KiCad."
+  title="Careers · Copperhead"
+  description="Open roles at Copperhead, an open source agent that designs circuit boards and verifies its own work against KiCad."
   path="/careers/"
-  ogImageAlt="Careers at copperhead"
+  ogImageAlt="Careers at Copperhead"
   jsonLd={jsonLd}
 >
   <Navbar home={false} />
@@ -52,12 +52,7 @@ const jsonLd = {
     <article>
       <div class="wrap">
         <header>
-          <p class="kind">Careers</p>
-          <h1>Work on copperhead</h1>
-          <p class="standfirst">
-            We are a small team in Bengaluru working at the intersection of AI,
-            electronics engineering and open source software.
-          </p>
+          <h1>Careers</h1>
         </header>
 
         {
@@ -141,28 +136,12 @@ const jsonLd = {
     max-width: 62ch;
   }
 
-  .kind {
-    margin: 0 0 1.1rem;
-    font-family: var(--mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--copper);
-  }
-
   h1 {
     font-size: clamp(2.25rem, 5vw, 3.5rem);
     letter-spacing: -0.045em;
   }
 
-  .standfirst {
-    margin: 1.25rem 0 0;
-    color: var(--text-dim);
-    font-size: 1.2rem;
-    line-height: 1.55;
-  }
-
-  /* Tracked mono label, the same as the research index uses. */
+  /* Tracked mono label over each list. */
   .head {
     margin: 3rem 0 0;
     font-family: var(--mono);
@@ -173,8 +152,8 @@ const jsonLd = {
     color: var(--text-dim);
   }
 
-  /* The first one follows the standfirst rather than another block, and wants
-     the wider gap the research index puts above its card list. */
+  /* The first one follows the page heading rather than another block, and
+     wants the wider gap above it. */
   header + .head {
     margin-top: 3rem;
   }
@@ -295,10 +274,6 @@ const jsonLd = {
   @media (max-width: 720px) {
     article {
       padding-block: 100px 64px;
-    }
-
-    .standfirst {
-      font-size: 1.05rem;
     }
 
     .roles li {
