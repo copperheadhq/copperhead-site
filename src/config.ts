@@ -92,6 +92,9 @@ export const links = {
   youtube: 'https://www.youtube.com/@CopperheadHQ',
   reddit: 'https://www.reddit.com/r/copperheadhq/',
   chouhan: 'https://chouhan.ai',
+  // The founder's own site. chouhan.ai above is the organisation, so a link on
+  // the founder's name goes here instead.
+  animesh: 'https://animeshchouhan.com',
   kicad: 'https://www.kicad.org/',
   openspec: 'https://github.com/Fission-AI/OpenSpec',
   license: `${repo}/blob/main/LICENSE`,
