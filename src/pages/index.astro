@@ -7,38 +7,46 @@ import Demo from "../components/Demo.astro";
 import Features from "../components/Features.astro";
 import CtaEnd from "../components/CtaEnd.astro";
 import Footer from "../components/Footer.astro";
-import SectionRule from "../components/SectionRule.astro";
 import PricingTiers from "../components/PricingTiers.astro";
 import Faq from "../components/Faq.astro";
 
-import { has } from "../assets";
-
-// The hero is the page's own header and takes no divider. Demo only renders
-// once public/copperhead-demo.mp4 exists — the hero already carries the
-// animated terminal — so its divider is withheld with it, leaving no rule
-// standing over an empty section.
+// Sections are told apart by tone and a hairline: every other one sits on a
+// slightly lighter band, and each starts on the same 1px rule the footer's
+// top edge draws. Demo only
+// renders once public/copperhead-demo.mp4 exists — the hero already carries
+// the animated terminal.
 ---
 
 <Base>
   <Navbar />
   <main>
     <Hero />
-    <!-- The frame's vertical rules are drawn on this wrapper, so they run the
-         height of the sections without ruling the hero above them. -->
-    <div class="framed">
-      <SectionRule label="Proven on copper" />
-      <Proof />
-      {has.video && <SectionRule label="See it run" />}
-      <Demo />
-      <SectionRule label="How it works" />
-      <Features />
-      <SectionRule label="Pricing" />
-      <PricingTiers id="pricing" />
-      <SectionRule label="FAQ" />
-      <Faq />
-      <SectionRule label="Start building" />
-      <CtaEnd />
-    </div>
+    <Proof />
+    <Demo />
+    <Features />
+    <PricingTiers id="pricing" />
+    <Faq />
+    <CtaEnd />
   </main>
   <Footer />
 </Base>
+
+<style>
+  /* A band needs air on both sides of its content, so every section keeps both
+     paddings, cut to 70% so two of them meeting do not open a 272px gap. The
+     hero keeps its own: its dot field ends at its bottom edge. */
+  main > :global(section:not(.hero)) {
+    padding-block: calc(var(--pad-y) * 0.7);
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* nth-of-type rather than naming the sections, so the alternation holds when
+     Demo appears. The hero is the first, so the bands fall on the evens. A
+     flat fill with a hard edge, and --bg is pointed at it so the cells, via
+     dots and copper washes that are filled with the page colour match the
+     ground they are on. */
+  main > :global(section:nth-of-type(even)) {
+    --bg: var(--band);
+    background: var(--band);
+  }
+</style>

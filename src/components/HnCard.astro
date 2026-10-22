@@ -1,0 +1,156 @@
+---
+// The Show HN thread as a card: the HN mark, the title as it ran and the
+// numbers under it, the way HN prints them. The whole card is the link.
+//
+// Two glyphs are drawn rather than typed. ▲ and ↗ are outside the font subset
+// (global.css), so typed they would render in a system face.
+import { links } from "../config";
+import { formatDate } from "../blog";
+import type { HnStory } from "../hn";
+
+interface Props {
+  story: HnStory;
+}
+
+const { story } = Astro.props;
+---
+
+<a class="hn" href={links.hn}>
+  <span class="head">
+    {/* HN's own mark, an orange square with a white Y. Fixed colours in both
+        themes: it is their logo, not part of this site's palette. */}
+    <svg class="logo" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <rect width="24" height="24" fill="#FF6600"></rect>
+      <path d="M7 5.5 12 13l5-7.5M12 13v6" fill="none" stroke="#FFF" stroke-width="2.4"></path>
+    </svg>
+    <span class="site">Hacker News</span>
+    <span class="badge">Front page</span>
+  </span>
+
+  <span class="title">{story.title}</span>
+
+  <span class="meta">
+    <span class="stat">
+      <svg class="up" viewBox="0 0 10 10" width="10" height="10" aria-hidden="true" focusable="false">
+        <path d="M5 1.5 9.5 8.5h-9z" fill="#FF6600"></path>
+      </svg>
+      <strong>{story.points}</strong> points
+    </span>
+    <span class="stat"><strong>{story.comments}</strong> comments</span>
+    {story.by && <span>by {story.by}</span>}
+    <time datetime={story.posted.toISOString()}>{formatDate(story.posted)}</time>
+    <span class="go">
+      Read the thread
+      <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false">
+        <path d="M4.5 2.5h5v5M9.5 2.5 3 9" fill="none" stroke="currentColor" stroke-width="1.4"></path>
+      </svg>
+    </span>
+  </span>
+</a>
+
+<style>
+  /* A panel in the Proof frame's terms: 2px hairline, raised fill, lift. */
+  .hn {
+    display: grid;
+    gap: 14px;
+    padding: 20px 22px;
+    border: 2px solid var(--line);
+    background: var(--panel);
+    box-shadow: var(--lift);
+    color: var(--text);
+    text-decoration: none;
+    transition:
+      border-color 0.15s,
+      background-color 0.15s;
+  }
+
+  .hn:hover {
+    border-color: var(--line-hi);
+    background: var(--panel-hi);
+  }
+
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo {
+    flex: none;
+    display: block;
+  }
+
+  .site {
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+  }
+
+  .badge {
+    padding: 3px 7px;
+    border: 1px solid var(--trace);
+    font-family: var(--mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+
+  .title {
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  /* HN's own subline, in this site's reference-designator mono. The numbers
+     are the point of the card, so they alone take the full text colour. */
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 20px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+
+  .stat strong {
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  .up {
+    margin-right: 2px;
+  }
+
+  /* Pushed to the far edge while the row fits, and onto its own line once it
+     does not. */
+  .go {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--copper);
+  }
+
+  .hn:hover .go {
+    color: var(--copper-hi);
+  }
+
+  @media (max-width: 720px) {
+    .hn {
+      padding: 16px 18px;
+    }
+
+    .title {
+      font-size: 1.125rem;
+    }
+
+    .go {
+      margin-left: 0;
+    }
+  }
+</style>

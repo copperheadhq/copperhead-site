@@ -53,6 +53,7 @@ const columns = [
   {
     title: "Company",
     items: [
+      { label: "About", href: links.about },
       { label: "chouhan.ai", href: links.chouhan },
       { label: "Careers", href: links.careers },
       ...(links.contact ? [{ label: "Contact", href: links.contact }] : []),
@@ -97,6 +98,17 @@ const social = [
         },
       ]
     : []),
+  // YouTube is drawn the same way: a rounded frame with the play triangle wound
+  // the other way, so the triangle is a hole rather than a second fill.
+  ...(links.youtube
+    ? [
+        {
+          label: "YouTube",
+          href: links.youtube,
+          path: "M2.5 2.4H13.5A2.5 2.5 0 0 1 16 4.9V11.1A2.5 2.5 0 0 1 13.5 13.6H2.5A2.5 2.5 0 0 1 0 11.1V4.9A2.5 2.5 0 0 1 2.5 2.4ZM6.4 5.6V10.4L10.6 8Z",
+        },
+      ]
+    : []),
   ...(links.reddit
     ? [
         {
@@ -124,8 +136,7 @@ const social = [
       <div class="brand">
         <h2>Circuit boards,<br />designed by an agent.</h2>
         <p>
-          Open source, verified against KiCad and built by people who still
-          solder.
+          Open source, Apache-2.0, verification-first.
         </p>
       </div>
 

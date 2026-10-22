@@ -143,6 +143,6 @@ Built at Antler Crackathon, Bengaluru.
 
 ## Show HN draft (post-launch)
 
-**Title:** Show HN: Copperhead, an open source AI agent that designs real PCBs in your KiCad repo
+**Title:** Show HN: copperhead, an open source AI agent that designs real PCBs in your KiCad repo
 
 **Body:** I design open hardware and got tired of the part of the job that is not engineering: keeping five documents, a BOM and a schematic from drifting apart every time one value changes. So I turned my workflow into an agent. It writes a change proposal first, edits the real KiCad s-expressions surgically, propagates the change across every doc, then runs kicad-cli ERC and DRC and fixes what they flag. It refused to add a pullup that would have leaked 33 uA against my 25 uA sleep budget, and cited the spec line. That was the moment it earned the repo it lives in. Proof board (a pocket Morse key) and the tool are both fully open. Happy to answer anything.

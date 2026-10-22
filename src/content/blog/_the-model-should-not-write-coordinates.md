@@ -13,7 +13,7 @@ the page, nothing flows left to right and the title block is empty.
 Nothing caught that, because nothing was looking. ERC checks the net graph. It has
 no opinion about the drawing.
 
-## Where the coordinates were coming from
+## Where coordinates came from
 
 Until this week, every number in a copperhead schematic was a token the model
 sampled. Placement was not computed. It was generated, one s-expression at a time,
@@ -29,7 +29,7 @@ It is also expensive in a less obvious way. If placement is sampled, it is diffe
 every time. There is nothing to regression-test, nothing to pin and no way to say
 that a fix stayed fixed.
 
-## Intent in, geometry out
+## Intent to geometry
 
 The model no longer writes geometry. It writes a netlist intent file: parts, nets,
 group assignments, declared no-connects and a few hints. No coordinates, and not by
@@ -53,7 +53,7 @@ For the DC-DC converter we drafted this week, the model's authored surface is 45
 lines. The sheet is 3,614. About a third of the emitted file is symbol definitions
 copied verbatim out of the KiCad libraries, authored by nobody.
 
-## Determinism is the whole point
+## Determinism
 
 Identical intent produces a byte-identical file. That is a hard guarantee, and it
 took some care to hold. Identifiers are UUIDv5 derived from stable semantic paths
@@ -66,7 +66,7 @@ repository: an LDO, a transistor switch and now a buck converter. CI re-drafts e
 one and compares it to a committed reference byte for byte. A single changed
 coordinate fails the build.
 
-## What we gave up
+## Trade-offs
 
 You cannot hand-edit an engine-drafted schematic. The agent will not do it either.
 Point the edit tool at a sheet carrying the engine's generator marker and it refuses,
@@ -105,14 +105,14 @@ Three fixes later the same board drafts at zero errors, with a legibility score 
 byte-identical, so nothing regressed, and the buck converter is now a third pinned
 reference.
 
-## Why that is worth something
+## Why determinism matters
 
 An engine that makes a mistake makes it the same way every time. That is not a
 consolation, it is the property that makes the mistake findable, fixable and
 provably gone. A model that samples placement can produce the same three defects and
 you would never be able to tell, because it would not produce the same file twice.
 
-## What this does not do yet
+## Limitations
 
 The engine drafts in one pass. It does not run the legibility checker against its
 own output and re-place until clean. It has local repair moves, the router tries

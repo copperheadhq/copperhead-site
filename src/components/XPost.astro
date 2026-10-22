@@ -1,0 +1,64 @@
+---
+/**
+ * An X post in an article body, for .mdx files.
+ *
+ * The same embed hardware-as-fast-as-software.md writes out by hand: X's own
+ * blockquote, which is what a reader sees if widgets.js never runs, then the
+ * theme handling, then widgets.js. A .md post can carry that script inline;
+ * an .mdx file cannot, because MDX reads the braces in it as expressions, so
+ * the markup lives here and the post passes the id and the fallback text.
+ *
+ * Write the fallback as X gives it, with the em dash before the byline turned
+ * into a comma: the collections are linted for dashes.
+ */
+interface Props {
+  /** The post's numeric id, the last path segment of its URL. */
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<figure class="embed">
+  <blockquote class="twitter-tweet"><slot /></blockquote>
+  <script is:inline define:vars={{ id }}>
+    // widgets.js reads data-theme once, when it draws, so the fallback is
+    // stamped with the page's theme first. After that the post is redrawn only
+    // when the theme it was drawn in (in its iframe's URL) differs from the
+    // page's, and the old one stays until the replacement has landed. While
+    // the fallback blockquote is still on the page widgets.js is mid-draw, so
+    // it is only restamped; the childList observer comes back once that
+    // finishes.
+    var fig = document.currentScript.parentNode;
+    var busy = false;
+    var drawn = function (el) {
+      var f = el && el.querySelector('iframe');
+      var m = f && /[?&]theme=(dark|light)/.exec(f.src);
+      return m ? m[1] : null;
+    };
+    var redraw = function () {
+      var want = window.__theme.resolved();
+      var quote = fig.querySelector('blockquote.twitter-tweet');
+      if (quote) {
+        quote.dataset.theme = want;
+        return;
+      }
+      var old = fig.querySelector('.twitter-tweet-rendered');
+      if (busy || !old || !window.twttr || drawn(old) === want) return;
+      busy = true;
+      window.twttr.widgets.createTweet(id, fig, { theme: want }).then(function (el) {
+        busy = false;
+        if (el) old.remove();
+        redraw();
+      });
+    };
+    redraw();
+    new MutationObserver(redraw).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    new MutationObserver(redraw).observe(fig, { childList: true });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redraw);
+  </script>
+  <script is:inline async src="https://platform.twitter.com/widgets.js"></script>
+</figure>

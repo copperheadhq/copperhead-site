@@ -93,19 +93,19 @@ Kyra's entire public hardware specification, quoted in full from
 > Mac and iOS first, because that is where your work happens. Then ambient glasses
 > controlled by a ring: reply, dismiss or confirm with your thumb.
 
-Plus a privacy commitment: your data stays with you. No part numbers, no budgets, no
-dimensions, no display or camera decision. The evening before, Sahil Dhull had
-[posted a working V0 of the
+Plus a privacy commitment: your data stays with you. There are no part numbers, no
+budgets, no dimensions and no display or camera decision. The evening before, Sahil
+Dhull had [posted a working V0 of the
 glasses](https://www.linkedin.com/feed/update/urn:li:activity:7500590483107344384/),
 demonstrated by making a phone call through them<sup><a href="#ref-3">[3]</a></sup>.
-That post settled one question the roadmap did not: the glasses have an audio path.
+That post settled a question the roadmap did not: the glasses have an audio path.
 
-## The record
+## Run record
 
 Hashes are commits in the two design repositories; each stage of the pipeline commits
 when its completion contract holds, so the hash is the evidence<sup><a href="#ref-4">[4]</a><a href="#ref-5">[5]</a></sup>. The pipeline is `copperhead create`.
-The scope was its first three stages, specification, architecture and part selection,
-stopped by design at the schematic boundary.
+The scope was its first three stages, specification, architecture and part selection.
+The run was set up to stop there, at the schematic boundary.
 
 |                         | Ring               | Glasses            |
 | ----------------------- | ------------------ | ------------------ |
@@ -121,13 +121,14 @@ The ring's brief was written the night before, from the roadmap above and a mark
 study, with ten engineering decisions taken in the absence of a client and the
 consequence of each written down. The glasses' brief was written while the ring ran,
 after every candidate part had been checked against the 222 symbol libraries on the
-machine, because a part without a symbol makes a run unwinnable. Between the two sits
-the contract that ties the boards together: glasses as the escalation surface, ring as
-the confirm surface, four links between them and the phone. Both design packages were
-assembled from the stage commits: brief, specification, architecture, bill of
-materials, decision log, change log and every requirement file.
+machine, because a part without a symbol makes a run unwinnable. The contract that ties
+the boards together sits between the two briefs. The glasses are the escalation
+surface, the ring is the confirm surface and there are four links between them and the
+phone. Both design packages were assembled from the stage commits: brief,
+specification, architecture, bill of materials, decision log, change log and every
+requirement file.
 
-## What each stage cost
+## Cost per stage
 
 Every figure here is read off the Claude Agent SDK's own usage record, one line per API
 call and priced at the published Claude Opus 5 rates: <span class="cost">$5</span> per
@@ -165,7 +166,7 @@ Part selection is the largest line on both boards, 45 percent of the ring's bill
 percent of the glasses'. It is also where the wall clock goes: 43 and 49 minutes against
 under half an hour for a specification.
 
-## What came out
+## Outputs
 
 | Figure                                  | Glasses EV1, `3297c80`         | Ring EV1, `c19ab02`          |
 | --------------------------------------- | ------------------------------ | ---------------------------- |
@@ -192,10 +193,11 @@ Every shipping smart ring is a capture device<sup><a href="#ref-7">[7]</a><a
 href="#ref-8">[8]</a><a href="#ref-9">[9]</a></sup>; this one is a control device. The
 architecture follows the published Open Ring design record<sup><a href="#ref-10">[10]</a></sup>. <a href="/blog/figures/kyra-ring-exploded.svg" download>Download the SVG</a>._
 
-## The glasses, as designed
+## The glasses
 
-Two radios, because an iPhone carries a call over Bluetooth Classic and the Kyra app
-needs a Bluetooth Low Energy data channel and a central role toward the ring. The audio
+The glasses carry two radios, because an iPhone carries a call over Bluetooth Classic
+and the Kyra app needs a Bluetooth Low Energy data channel and a central role toward the
+ring. The audio
 module owns the call path and the charger; the controller module owns the sensors, the
 touch strip, the microphone switch and both BLE links. Everything off the board is
 dashed.
@@ -317,12 +319,13 @@ column is the KiCad footprint the symbol was checked against.
 
 </details>
 
-## The ring, as designed
+## The ring
 
-One radio and no regulator: the nRF52833 takes the cell directly in high-voltage mode. A
-dedicated touch controller scans on its own and wakes the controller once per gesture,
-which is the whole power budget. Charging is inductive through a discrete rectifier, and
-the haptic pulse is drawn from a capacitor bank rather than the cell.
+The ring has one radio and no regulator, since the nRF52833 takes the cell directly in
+high-voltage mode. A dedicated touch controller scans on its own and wakes the
+controller once per gesture, which is where the power budget goes. Charging is
+inductive through a discrete rectifier, and the haptic pulse is drawn from a capacitor
+bank rather than the cell.
 
 <img src="/blog/figures/kyra-ring-block-diagram.svg" width="560" height="300" loading="lazy" alt="Block diagram of the ring EV1: phone and glasses on the left, the nRF52833 in the centre, NFC antenna, touch controller with its off-board electrodes, accelerometer, haptic driver with the LRA and capacitor bank on the right and the charging chain from receive coil through rectifier and charger to the protected cell along the bottom">
 
@@ -440,14 +443,14 @@ on the same terms.
 
 </details>
 
-## What this does not prove
+## Limitations
 
 - Anything past part selection. There is no schematic, no ERC, no layout and no
 measurement. Both packages say so on their first pages.
 
 - That the parts are right. Every part number is proposed from catalogue knowledge and
 flagged UNVERIFIED, with the datasheet claim that must be checked written next to it.
-That check is a lookup, not a design change. It has not been done.
+That check is a lookup rather than a design change, and it has not been done.
 
 - That the budgets hold. The glasses figure rests on one assumed number, the audio
 module's sniff current, entered at 3.00 mA and marked as assumed. The ring's haptic bank
@@ -456,11 +459,11 @@ Both are the first things the boards would measure.
 
 - That Kyra wants any of this. The two biggest decisions, no display and no camera, were
 ours, taken from a three-day prototype and a two-sentence roadmap. They are listed as
-open items addressed to Kyra, unasked.
+open items addressed to Kyra, who has not asked for them.
 
-## What it does prove
+## What it shows
 
-That the slow part of hardware comes before the schematic: turning intent into a
+The slow part of hardware comes before the schematic. It is turning intent into a
 specification precise enough to argue with, choosing an architecture and building a bill
 of materials in which every part is known to exist, to have a symbol, to have the pins
 you will wire and to fit a power budget itemised line by line. That part took a working
@@ -468,8 +471,8 @@ day for two boards, and every claim in it traces to a commit, a decision number 
 assumption with its consequence written down.
 
 Software teams take that for granted: a spec, a design, a build, a diff, a log. Hardware
-mostly does not have it, and that is the gap copperhead is built for<sup><a href="#ref-11">[11]</a></sup>. The proof is not the pitch. It is the record above, which
-anyone can check out.
+mostly does not have it, and copperhead is built to supply
+it<sup><a href="#ref-11">[11]</a></sup>.
 
 ## References
 
@@ -549,9 +552,9 @@ built from.
    <https://interrupt.memfault.com/blog/smart-ring-development-part-1>\
    The published design record the ring's architecture leans on: wafer-level packaging
    forced by a 2.6 to 2.9 mm band, rigid-flex, 6.78 MHz induction charging with a
-   discrete rectifier and a capacitor bank for the haptic. It is a design one may
-   read, not one being shipped; the Kyra ring departs from it on the touch controller
-   and the second MCU.
+   discrete rectifier and a capacitor bank for the haptic. It is a published design
+   rather than a shipping product; the Kyra ring departs from it on the touch
+   controller and the second MCU.
 
 11. <a id="ref-11"></a>
    copperhead.\

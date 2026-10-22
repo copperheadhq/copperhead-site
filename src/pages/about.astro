@@ -1,0 +1,163 @@
+---
+import Base from "../layouts/Base.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import Backers from "../components/Backers.astro";
+import HnCard from "../components/HnCard.astro";
+import { site, repo, links } from "../config";
+import { launch } from "../hn";
+
+// The page search engines read the company off. Everywhere else the
+// structured data describes the product; this is the one place the
+// Organization behind it is spelled out, with the profiles that tell it apart
+// from the snake, the comic villain and every other copperhead. The @id is
+// the anchor other nodes can point at instead of restating the company.
+const org = {
+  "@type": "Organization",
+  "@id": `${site}/#organization`,
+  name: "copperhead",
+  url: site,
+  logo: new URL("/icon-512.png", site).href,
+  description:
+    "copperhead builds an open source AI agent for circuit board design that edits real KiCad files and runs KiCad's own checks until they pass.",
+  email: links.contact.replace("mailto:", ""),
+  founder: { "@type": "Person", name: "Animesh Chouhan", url: links.chouhan },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Bengaluru",
+    addressRegion: "Karnataka",
+    addressCountry: "IN",
+  },
+  // The GitHub org rather than the repo: sameAs names the company's own
+  // profiles, and the repo is the product's.
+  sameAs: [
+    repo.split("/").slice(0, 4).join("/"),
+    links.x,
+    links.linkedin,
+    links.youtube,
+    links.reddit,
+    links.instagram,
+  ],
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: "About copperhead",
+  url: new URL("/about/", site).href,
+  mainEntity: org,
+};
+
+const email = links.contact.replace("mailto:", "");
+---
+
+<Base
+  title="About · copperhead"
+  description="copperhead is an open source AI agent for KiCad PCB design, built by a small team in Bengaluru."
+  path="/about/"
+  ogImageAlt="About copperhead"
+  jsonLd={jsonLd}
+>
+  <Navbar home={false} />
+  <main id="top">
+    <article>
+      {/* Each link sits on the same line as the words either side of it:
+          Astro drops the whitespace at a line break next to an element, and
+          "Thelonger story" is what that looks like. */}
+      <div class="wrap">
+        <header>
+          <h1>About</h1>
+        </header>
+
+        <div class="body">
+          <p>
+            copperhead is an open source AI agent for PCB design. It edits your
+            KiCad schematic and layout files and runs ERC and DRC until they
+            pass.
+          </p>
+          <p>
+            It came out of building Open Telegraph, a pocket-size ESP32-S3 Morse
+            key.
+            The board is <a href={links.telegraphRepo}>on GitHub</a> and the <a href={links.buildStory}>build story</a> is on chouhan.ai.
+          </p>
+          <p>
+            Our <a href={links.hn}>Show HN launch</a> made the Hacker News front page
+            the same day as OpenAI's <a href={links.hnNavierStokes}>Navier-Stokes post</a>.
+          </p>
+          {/* The sentence stands on its own, so a build that cannot reach HN
+              loses the card and nothing else. */}
+          {
+            launch && (
+              <div class="launch">
+                <HnCard story={launch} />
+              </div>
+            )
+          }
+          <p>
+            copperhead is built by Animesh Chouhan and a small team in Bengaluru.
+          </p>
+          <p>
+            Email <a href={links.contact}>{email}</a> or <a href={links.getStarted}>book a call</a>.
+            Questions about the agent go in <a href={`${repo}/issues`}>GitHub issues</a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="backers">
+        <Backers caption="Backed by" />
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  article {
+    padding-block: 130px 96px;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    letter-spacing: -0.045em;
+  }
+
+  .body {
+    max-width: 62ch;
+    margin-top: 2rem;
+  }
+
+  .body p {
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+
+  .body a {
+    color: var(--copper);
+    text-underline-offset: 3px;
+  }
+
+  .body a:hover {
+    color: var(--copper-hi);
+  }
+
+  .launch {
+    margin: 1.75rem 0;
+  }
+
+  /* The strip is a band and owns no air of its own (Backers.astro), so the
+     page sets it here. */
+  .backers {
+    margin-top: 3.5rem;
+  }
+
+  @media (max-width: 720px) {
+    article {
+      padding-block: 100px 64px;
+    }
+
+    .body p {
+      font-size: 1.0625rem;
+    }
+  }
+</style>

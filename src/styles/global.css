@@ -123,6 +123,9 @@
   --green:     light-dark(#0E5A38, #3FAF7A);
   --text:      light-dark(#0A0A0A, #EDEDEF);
   --text-dim:  light-dark(#57575E, #9B9BA5);
+  /* the alternate home-page section: a step off the page toward --panel, so
+     the bands read as tone rather than as cards (see index.astro) */
+  --band:      light-dark(#F5F5F6, #0F0F12);
 
   --display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, sans-serif;
@@ -320,72 +323,6 @@ section {
   padding-block: var(--pad-y);
 }
 
-/* ---- Section frame ----
-
-   supermemory runs two hairlines down the full height of the page at the edges
-   of its content column, so every section reads as a cell of one continuous
-   frame rather than as a band floating on the page. Theirs sit at x=104/1335 in
-   a 1440 viewport: a 1231px column, which is the same geometry as this site's
-   --maxw box. SectionRule.astro's inner rule spans exactly this width, so the
-   two meet at the corners.
-
-   Drawn on one wrapper rather than per section: a single pair of lines for the
-   whole column means no seams where sections meet, and no section has to know
-   it is inside a frame. The wrapper starts below the hero, because on their
-   page the frame does too — the hero is the page's cover, not a cell of the
-   grid, and ruling its flanks would fight the dot field already there. */
-.framed {
-  position: relative;
-}
-
-.framed::before,
-.framed::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--line);
-  pointer-events: none;
-}
-
-.framed::before {
-  left: max(0px, calc(50% - var(--maxw) / 2));
-}
-
-.framed::after {
-  right: max(0px, calc(50% - var(--maxw) / 2));
-}
-
-/* A section that follows a rule closes up against it: the divider is the
-   section's own header, so the full --pad-y would read as a gap between them. */
-.rule + section {
-  padding-top: 72px;
-}
-
-/* Below this the column is the viewport and the rules would hug the screen
-   edges, where they read as a browser artefact rather than as a frame. */
-@media (max-width: 900px) {
-  .framed::before,
-  .framed::after {
-    display: none;
-  }
-}
-
-/* Section index, set like a schematic reference designator: a mono label, no
-   shouty uppercase and no rule. The trailing 44px trace this used to draw is
-   gone; the blog index sets a chevron before the label instead, which is where
-   the reference puts its mark. */
-.index {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--copper);
-  margin: 0 0 1.75rem;
-}
-
 .section-title {
   /* mastra headline-2xl: clamp(30px … 54px) */
   font-size: clamp(1.875rem, 3.8vw, 3.375rem);
@@ -529,10 +466,6 @@ section {
   .section-title {
     font-size: clamp(1.8rem, 7.6vw, 2.2rem);
     max-width: 17ch;
-  }
-
-  .index {
-    margin-bottom: 1.35rem;
   }
 
   .section-intro {

@@ -51,6 +51,14 @@ export const links = {
   // Open roles. In the navbar and in the footer's Company column: it replaced
   // Discord in the bar, which keeps that row at five links.
   careers: '/careers/',
+  // Who builds copperhead, and the page carrying the Organization node. Footer
+  // only: the navbar row is held at five links (see `careers` above).
+  about: '/about/',
+  // The Show HN launch thread, which made the front page.
+  hn: 'https://news.ycombinator.com/item?id=49610059',
+  // The thread for OpenAI's Navier-Stokes post, which made the same front page
+  // the same day (news.ycombinator.com/front?day=2026-09-08).
+  hnNavierStokes: 'https://news.ycombinator.com/item?id=49613262',
   // The Antler write-up, on chouhan.ai rather than this site's own /blog copy.
   antler: 'https://chouhan.ai/antler-crackathon',
   // General enquiries. copperhead.sh now has MX records on Cloudflare Email
@@ -74,6 +82,7 @@ export const links = {
   x: 'https://x.com/copperheadhq',
   linkedin: 'https://www.linkedin.com/company/copperheadhq',
   instagram: 'https://www.instagram.com/copperhead.hq/',
+  youtube: 'https://www.youtube.com/@CopperheadHQ',
   reddit: 'https://www.reddit.com/r/copperheadhq/',
   chouhan: 'https://chouhan.ai',
   kicad: 'https://www.kicad.org/',

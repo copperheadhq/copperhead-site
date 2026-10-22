@@ -34,11 +34,11 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'Is this a chatbot for circuits?',
-        a: `No. It is a loop that leaves artifacts on disk. A run ends with edited KiCad source, updated documents, passing ERC and DRC and a commit, not with a transcript you have to act on yourself.`,
+        a: `No. A run ends with edited KiCad source, updated documents, passing ERC and DRC and a commit in your repository, all of it on disk for you to review.`,
       },
       {
         q: 'Does it replace a hardware engineer?',
-        a: `No, and it is built not to pretend otherwise. It automates the propagation and verification work that eats the day, and it flags every assumption it made. You remain the engineer of record. It will not claim fab-readiness beyond "ERC and DRC clean".`,
+        a: `No. It automates the propagation and verification work that eats the day, and it flags every assumption it made. You remain the engineer of record, and it will not claim fab-readiness beyond "ERC and DRC clean".`,
       },
     ],
   },
@@ -76,11 +76,11 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'Will it rewrite my whole schematic?',
-        a: `No. Edits are surgical changes to the KiCad s-expression source, so your diffs stay small and reviewable and untouched parts of the file stay byte-identical. A tool that regenerates the file to move one net has made its own work impossible to review.`,
+        a: `No. Edits are surgical changes to the KiCad s-expression source, so your diffs stay small and reviewable and untouched parts of the file stay byte-identical.`,
       },
       {
         q: 'Is the board ready to send to fabrication?',
-        a: `The gerbers are producible and the layout is DRC-clean, but the draft layout is correct rather than optimal, and it says so itself. <code>LAYOUT.md</code> lists exactly what is solid and what a layout specialist should redo first. Non-optimal is acceptable. Unlabeled non-optimal is not.`,
+        a: `The gerbers are producible and the layout is DRC-clean, but the draft layout is correct rather than optimal. <code>LAYOUT.md</code> lists what is solid and what a layout specialist should redo first.`,
       },
       {
         q: 'Where does my design data go?',
@@ -88,11 +88,11 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'What is the license?',
-        a: `The agent is <a href="${links.license}">Apache-2.0</a>. Everything it writes is plain markdown, JSON and KiCad source in your repository, so there is nothing to be locked into. Our own reference hardware is CERN-OHL-S v2.0.`,
+        a: `The agent is <a href="${links.license}">Apache-2.0</a>. Everything it writes is plain markdown, JSON and KiCad source in your repository. Our own reference hardware is CERN-OHL-S v2.0.`,
       },
       {
         q: 'Is there a hosted version?',
-        a: `Not today. The local CLI with your own key is the whole product right now. A hosted tier is planned, and teams with export-controlled designs will stay on self-hosted.`,
+        a: `Not today. The local CLI with your own key is the product right now. A hosted tier is planned, and teams with export-controlled designs will stay on self-hosted.`,
       },
     ],
   },

@@ -9,7 +9,7 @@ const modes = [
   {
     tag: 'Mode A',
     title: 'Bring your own key',
-    body: 'Supply your own Claude or GPT-5 key. copperhead runs the agent but never touches your token bill. You pay for the platform, not the tokens. Predictable, and open to you on every paid tier.',
+    body: 'Supply your own Claude or GPT-5 key. copperhead runs the agent but never touches your token bill. You pay for the platform and your provider bills the tokens. Available on every paid tier.',
   },
   {
     tag: 'Mode B',
@@ -19,7 +19,7 @@ const modes = [
   {
     tag: 'Mode C',
     title: 'Flat annual',
-    body: 'No per-run metering. A flat annual license sized to expected volume, with inference self-hosted in your own environment or routed through a private endpoint. One predictable number for procurement.',
+    body: 'No per-run metering. A flat annual license sized to expected volume, with inference self-hosted in your own environment or routed through a private endpoint. One figure a year for procurement.',
   },
 ];
 
@@ -48,18 +48,17 @@ const commitments = [
   },
   {
     title: 'Cancel any time',
-    body: 'A paid plan never strands a design. Drop the subscription and you fall straight back to the free CLI, working on the very same files.',
+    body: 'Drop a subscription and you fall back to the free CLI, working on the same files.',
   },
   {
     title: 'A grant-funded commons',
-    body: 'The free CLI is funded by grants, not by hosted revenue, so it stays free for good. It is never held hostage to the paid tiers.',
+    body: 'The free CLI is funded by grants rather than by hosted revenue, so its funding does not depend on the paid tiers.',
   },
 ];
 ---
 
 <section id="metering" class="details">
   <div class="wrap">
-    <p class="index">01 · Metering</p>
     <h2 class="section-title">Three ways to pay for a run.</h2>
     <p class="section-intro">
       Every design run is an agent loop that spends model tokens. copperhead
@@ -83,8 +82,7 @@ const commitments = [
 
 <section id="compare" class="details">
   <div class="wrap">
-    <p class="index">02 · Compare</p>
-    <h2 class="section-title">The whole ladder, side by side.</h2>
+    <h2 class="section-title">How the four tiers compare.</h2>
 
     {/* data-bleed-ok: the 720px table scrolls inside this box by design, so
         the shots.mjs audit should not report it as page overflow. */}
@@ -115,8 +113,7 @@ const commitments = [
 
 <section id="open-core" class="details">
   <div class="wrap">
-    <p class="index">03 · Open core</p>
-    <h2 class="section-title">Open source, and kept that way.</h2>
+    <h2 class="section-title">The free CLI stays free.</h2>
     <p class="section-intro">
       Paid plans only ever add hosting, collaboration and governance on top of
       files you already own. They never wall off the work itself.
@@ -127,8 +124,7 @@ const commitments = [
         <p class="big">
           <strong>Building in the open?</strong> copperhead Cloud is free for public
           repositories released under CERN-OHL-S or an OSHWA-certified license. Managed
-          inference is included within fair-use limits. The open hardware you ship
-          is the best demo we have.
+          inference is included within fair-use limits.
         </p>
         <p class="lic">
           Startups and non-profits: 50% off · accredited education: free
@@ -157,12 +153,6 @@ const commitments = [
 </section>
 
 <style>
-  /* Drop the short copper rule the global .index carries after the section
-     reference number; the pricing page reads cleaner without it. */
-  .index::after {
-    display: none;
-  }
-
   /* ── Metering modes ── */
   .modes {
     list-style: none;

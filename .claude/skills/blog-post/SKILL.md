@@ -131,11 +131,15 @@ labels stuck on top of independent blocks.
   `The circuit is the fun part.` `The absence was the engineering.` Uniform cadence is
   the single loudest AI tell.
 - Carry the thread across the seam. Each section should follow from the one above it,
-  and a heading should be readable as the next move in the argument: `Where the
-  coordinates were coming from`, then `Intent in, geometry out`, then `Determinism is
-  the whole point`.
-- Headings are sentence case and say something. Not `Benefits`, not `Key Features`,
-  not a gerund pileup.
+  and the prose does that work: the first sentence under a heading picks up where the
+  last section stopped.
+- Headings are short plain labels that name what the section covers, the way a
+  paper's do: `Fixtures`, `Stripline`, `Cost per stage`, `Identifying the
+  controller`, `Limitations`. Sentence case, a few words, no verb if one is not
+  needed. A heading is never a claim, a pun or a slogan (`The trombone's bill`,
+  `Numbers that cannot drift`, `Intent in, geometry out`): those read as written by a
+  model, and one of them was quoted as exactly that on Hacker News. Not `Benefits`,
+  not `Key Features` either; a label names this section, not a brochure's.
 - Prose over bullets. A list is correct for genuinely parallel items, such as the
   three defects a checker found. It is wrong for reasoning, which needs connective
   tissue that bullets delete. Look at any existing post: mostly paragraphs.
@@ -168,10 +172,11 @@ provenance is the first thing an edit breaks.
 
 ## Close honestly
 
-Every post here ends on a limit rather than a victory lap. `What this does not do
-yet`, `What it refuses to claim`, `What it does not prove`. Name what is unfinished,
-what the change cost or what you would need to believe the claim. Then, if there is
-a next post, one line linking to it.
+Every post here ends on a limit rather than a victory lap, in a section headed
+`Limitations` in every post and in both collections. It is the one heading that is a
+label rather than a claim, so a reader can find it the same way in every piece. Name
+what is unfinished, what the change cost or what you would need to believe the
+claim. Then, if there is a next post, one line linking to it.
 
 That section is what makes the rest credible. Do not drop it.
 

@@ -10,13 +10,14 @@ Pick the block that fits the space you are filling. Do not mix two of them
 into a new one, and do not trim a longer block to fake a shorter one when a
 shorter one already exists here.
 
-The wordmark is always lowercase `copperhead` when it is set as artwork. In
-running prose it is capitalized as `Copperhead`, the way any product name is
-at the start of a sentence.
+The name is always lowercase `copperhead`, as artwork and in running prose
+alike, including at the start of a sentence. Every surface on the site sets
+it that way. A sentence that reads badly opening on it gets rewritten, not
+capitalized.
 
 ## Name
 
-**Copperhead**
+**copperhead**
 
 ## Tagline
 
@@ -29,16 +30,18 @@ knows what Cursor is. Use the one-liner instead where they might not.
 
 ## One-liner
 
-> Copperhead is an open-source AI engineering platform that helps hardware
-> teams design, verify and ship circuit boards.
+> copperhead is an open source AI agent that edits your real KiCad files and
+> runs ERC and DRC until they pass.
 
 The default sentence. Repo description, package description, meta
 description, the first line of a cold email. It stands on its own with no
-prior context, which the tagline does not.
+prior context, which the tagline does not. It names what the agent touches
+and what it proves, because "platform that helps teams design, verify and
+ship" is a sentence any EDA vendor could run unchanged.
 
 ## Short description
 
-> Copperhead turns product requirements into real, editable KiCad designs.
+> copperhead turns product requirements into real, editable KiCad designs.
 > It helps with circuit architecture, component selection, schematic
 > capture, PCB layout, documentation and verification through
 > deterministic ERC and DRC feedback loops.
@@ -67,7 +70,7 @@ Sized for the ~160 character bio fields. Pair it with the tile
 
 ## Positioning statement
 
-> Copperhead treats every PCB like a codebase: structured intent, traceable
+> copperhead treats every PCB like a codebase: structured intent, traceable
 > decisions, version-controlled changes, executable verification and
 > recoverable workflows.
 
@@ -80,7 +83,7 @@ belongs on an about page or in a deck, not on the fold.
 
 > Hardware engineering is becoming programmable.
 >
-> Copperhead is the AI-native workspace for designing, reviewing and
+> copperhead is the AI-native workspace for designing, reviewing and
 > verifying electronics.
 
 For a launch post, a keynote slide or anywhere the claim is allowed to be
@@ -99,7 +102,7 @@ condition, which is what that reader is checking for.
 ## Pitch version
 
 > Hardware teams still design circuit boards through fragmented tools,
-> manual datasheet work, and endless review cycles. Copperhead brings the
+> manual datasheet work and endless review cycles. copperhead brings the
 > agentic software workflow to electronics, helping engineers move from
 > requirements to verified PCB designs while keeping every decision
 > inspectable and every output editable.
@@ -115,8 +118,8 @@ Checked against the surfaces themselves, not from memory.
 | Surface | Block |
 | --- | --- |
 | Site hero headline (`src/components/Hero.astro`) | Tagline |
-| Site hero subhead (`src/components/Hero.astro`) | One-liner, less one comma |
-| Site meta description (`src/layouts/Base.astro`) | none — its own variant |
+| Site hero subhead (`src/components/Hero.astro`) | One-liner, verbatim |
+| Site meta description (`src/layouts/Base.astro`) | One-liner, verbatim |
 | `copperhead` repo description (GitHub) | Tagline |
 | `copperhead-site` repo description (GitHub) | none — describes the repo |
 | `package.json` description (this repo) | none — describes the repo |
@@ -151,10 +154,6 @@ the layout audit's narrowest viewport is 375 and will not catch it.
 - **Its CTAs do not match either.** It names *View on GitHub* as the
   secondary; the fold runs *Read the docs*, beside a primary that now goes
   to `app.copperhead.sh` rather than down the page.
-- **The meta description is a fourth variant** — "An open-source AI agent
-  that designs, documents and validates real PCBs from a prompt." The
-  one-liner's own note claims the meta description as one of its homes, so
-  one of the two is out of date.
 - **`copperhead-site`'s GitHub description points at `copperhead.chouhan.ai`.**
   The site is at `copperhead.sh`, and `package.json` already says so. That
   one is just stale, and fixing it needs no decision about voice.

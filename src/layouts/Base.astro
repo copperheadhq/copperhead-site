@@ -26,12 +26,12 @@ interface Props {
 
 const {
   title = 'copperhead. Cursor for circuit boards.',
-  description = 'An open-source AI agent that designs, documents and validates real PCBs from a prompt.',
+  description = 'copperhead is an open source AI agent that edits your real KiCad files and runs ERC and DRC until they pass.',
   path = '/',
   jsonLd: extraJsonLd,
   ogType = 'website',
   ogImage: ogImagePath = siteCard,
-  ogImageAlt = 'copperhead: an open-source AI agent for circuit board design',
+  ogImageAlt = 'copperhead: an open source AI agent for circuit board design',
   publishedTime,
   noindex = false,
 } = Astro.props;
@@ -239,6 +239,10 @@ const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
       type="application/ld+json"
       set:html={JSON.stringify(jsonLd)}
     />
+
+    {/* Page-specific head tags beyond what the props cover: the research
+        articles put their Google Scholar citation_* tags here. */}
+    <slot name="head" />
   </head>
   <body>
     <slot />

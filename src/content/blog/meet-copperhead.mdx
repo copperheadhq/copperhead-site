@@ -13,9 +13,9 @@ copperhead is an open source AI agent for hardware design. You give it a brief o
 change request in plain English. It edits your real KiCad files, updates every
 document that references them and runs KiCad's own checks until they pass.
 
-It is not a chatbot that describes a circuit to you. It is a loop that leaves
-artifacts on disk: a schematic, a board, gerbers, a bill of materials, a firmware
-scaffold and a bring-up plan. All of it inside the git repository you already have.
+Every run leaves artifacts on disk: a schematic, a board, gerbers, a bill of
+materials, a firmware scaffold and a bring-up plan. All of it inside the git
+repository you already have.
 
 ## Two ways to use it
 
@@ -35,12 +35,12 @@ stage is gated by validation tooling before the next one begins.
 
 <FileBlock name="shell" code={`copperhead create --brief brief.md`} lang="sh" />
 
-## What it actually produces
+## What it produces
 
 | Artifact | State it lands in |
 |---|---|
 | Schematic | ERC-clean `.kicad_sch` |
-| Board | DRC-clean first-draft `.kicad_pcb`, honestly labeled |
+| Board | DRC-clean first-draft `.kicad_pcb`, labelled as a draft |
 | Gerbers and drill | Ready for JLC or PCBWay |
 | Outline | DXF and STEP for the enclosure |
 | Renders | Schematic and board SVGs |
@@ -48,9 +48,9 @@ stage is gated by validation tooling before the next one begins.
 | Firmware | A scaffold that compiles, with pins generated from the design |
 | Dev plan | Bring-up steps, test points, what to meter first |
 
-The draft layout is correct, not optimal, and it says so itself. `LAYOUT.md` lists
-exactly what is solid and what a specialist should redo before fabrication.
-Non-optimal is acceptable. Unlabeled non-optimal is not.
+The draft layout is correct without being optimal, and it says so itself.
+`LAYOUT.md` lists what is solid and what a specialist should redo before
+fabrication.
 
 ## Where it runs
 
@@ -61,13 +61,14 @@ call itself, and run transcripts stay local in `.copperhead/runs/` with secret
 patterns redacted.
 
 It is Apache-2.0. Everything it writes is plain markdown, JSON and KiCad source.
-There is no proprietary format to get stuck in.
+There's no proprietary format to get stuck in.
 
 ## Proof
 
 Open Telegraph is a pocket-size Morse key: an ESP32-S3, one button, one RGB LED and
 a battery, living inside a 25 microamp sleep budget. It was designed with this
-workflow, and every decision, every trap the agent caught and every file is public.
+workflow, and the decision log, the traps the agent caught and every file are
+public.
 
 The next post covers [the problem this exists to
 solve](/blog/drift-is-a-build-failure/), and after that, [how the loop keeps itself

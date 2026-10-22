@@ -75,7 +75,7 @@ const tiers: Tier[] = [
     name: "Enterprise",
     price: "Custom",
     unit: "annual",
-    blurb: "Self-hosted, built for procurement, one price a year.",
+    blurb: "Self-hosted, one flat price a year.",
     cta: { label: "Talk to sales", href: links.contact },
     headline: "Everything in Team, plus:",
     features: [
@@ -92,21 +92,36 @@ const tiers: Tier[] = [
 // hero already owns that id and two of them on one document is invalid.
 interface Props {
   id?: string;
+  /** On /pricing/ this is the page's masthead, which is the page's name alone;
+      on the homepage it is a section and keeps its headline and lede. */
+  page?: boolean;
 }
-const { id = 'top' } = Astro.props;
+const { id = 'top', page = false } = Astro.props;
 ---
 
 <section id={id} class="tiers">
   <div class="wrap">
-    <h1 class="section-title">Pay to not run it yourself.</h1>
-    <p class="section-intro">
-      copperhead is open core. The CLI is free and always will be, and it does
-      the real work on its own. You pay to host it, to work as a team or to
-      give an auditor what they ask for.
-    </p>
+    <div class="top">
+      <div class="head">
+        {
+          page ? (
+            <h1 class="section-title">Pricing</h1>
+          ) : (
+            <>
+              <h1 class="section-title">What the paid plans add.</h1>
+              <p class="section-intro">
+                copperhead is open core. The CLI is free and does the design
+                work on its own. The paid plans add hosting, team features and
+                the audit trail a compliance review asks for.
+              </p>
+            </>
+          )
+        }
+      </div>
 
-    <div class="actions">
-      <a class="btn btn-primary" href={links.getStarted}>Talk to sales</a>
+      <div class="actions">
+        <a class="btn btn-primary" href={links.getStarted}>Talk to sales</a>
+      </div>
     </div>
 
     <ul class="grid">
@@ -175,15 +190,24 @@ const { id = 'top' } = Astro.props;
     padding-top: 0;
   }
 
+  /* On desktop the CTA sits at the right, level with the last line of the
+     intro, so it doesn't spend a row of its own above the cards. */
+  .top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 48px;
+  }
+
   .section-intro {
     max-width: 58ch;
   }
 
   .actions {
+    flex: none;
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 2rem;
   }
 
   /* Four separate bordered cards with a gap, cal.com style, not the shared
@@ -321,6 +345,16 @@ const { id = 'top' } = Astro.props;
   @media (max-width: 1080px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .top {
+      display: block;
+    }
+
+    .actions {
+      margin-top: 2rem;
     }
   }
 

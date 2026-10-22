@@ -3,9 +3,19 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
+import CiteBlock from '../../components/CiteBlock.astro';
 import { site, links } from '../../config';
-import { formatDate } from '../../blog';
-import { articlePath } from '../../research';
+import { getImage } from 'astro:assets';
+import { formatDate, readingTime, coverArt } from '../../blog';
+import {
+  articlePath,
+  authorsOf,
+  resourcesOf,
+  numberSections,
+  scholarAuthors,
+  scholarDate,
+  scholarPdf,
+} from '../../research';
 
 export async function getStaticPaths() {
   const articles = await getCollection('research');
@@ -17,22 +27,56 @@ interface Props {
 }
 
 const { article } = Astro.props;
-const { Content } = await render(article);
+const { Content, headings } = await render(article);
 const path = articlePath(article.id);
+const url = new URL(path, site).href;
 
-// TechArticle rather than BlogPosting: these are method and measurement write-ups
-// bound to a repository, and the distinction is worth stating to a crawler.
+const authors = authorsOf(article);
+const affiliations = [
+  ...new Set(authors.flatMap((p) => (p.affiliation ? [p.affiliation] : []))),
+];
+const resources = resourcesOf(article);
+const minutes = readingTime(article.body ?? '');
+const pdf = scholarPdf(article);
+
+// The index card doubles as the link preview, resolved the way the blog post
+// resolves its own: a rendered pair is emitted at the 1200x630 Base.astro
+// declares, a single file from public/ is used as it is.
+const art = article.data.cover ? coverArt(article.data.cover) : null;
+const ogImage = art?.optimised
+  ? (await getImage({ src: art.light, width: 1200, height: 630, format: 'png' })).src
+  : art?.light;
+
+// Numbered, as a paper's sections are. The prose draws the same numbers with
+// CSS counters; numberSections is the one place the rail's count is kept in
+// step with them.
+const toc = numberSections(headings);
+
+// ScholarlyArticle rather than BlogPosting: these are method and measurement
+// write-ups bound to a repository, and the distinction is worth stating to a
+// crawler. The author is the person, with the organisation as affiliation,
+// because that is how the work would be cited.
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'TechArticle',
+  '@type': 'ScholarlyArticle',
   headline: article.data.title,
   description: article.data.description,
+  abstract: article.data.description,
+  keywords: article.data.keywords?.join(', '),
   datePublished: article.data.date.toISOString(),
-  url: new URL(path, site).href,
-  mainEntityOfPage: new URL(path, site).href,
-  author: { '@type': 'Organization', name: 'copperhead', url: site, sameAs: links.chouhan },
+  url,
+  mainEntityOfPage: url,
+  isAccessibleForFree: true,
+  ...(ogImage && { image: new URL(ogImage, site).href }),
+  author: authors.map((p) => ({
+    '@type': 'Person',
+    name: p.name,
+    ...(p.affiliation && { affiliation: { '@type': 'Organization', name: p.affiliation } }),
+  })),
   publisher: { '@type': 'Organization', name: 'copperhead', url: site, sameAs: links.chouhan },
 };
+
+const ext = 'M4.5 2.5h5v5M9.5 2.5 3 9';
 ---
 
 <Base
@@ -40,84 +84,342 @@ const jsonLd = {
   description={article.data.description}
   path={path}
   ogType="article"
+  ogImage={ogImage}
+  ogImageAlt={article.data.coverAlt}
   publishedTime={article.data.date.toISOString()}
   jsonLd={jsonLd}
 >
+  {/* Highwire Press tags, the format Google Scholar indexes and the one
+      Zotero's and Mendeley's browser connectors read when a reader saves the
+      page: with them it lands in a reference library as an article with its
+      author and date rather than as an untitled web page. */}
+  <Fragment slot="head">
+    <meta name="citation_title" content={article.data.title} />
+    {
+      scholarAuthors(article).map((p) => (
+        <>
+          <meta name="citation_author" content={p.name} />
+          {p.affiliation && <meta name="citation_author_institution" content={p.affiliation} />}
+        </>
+      ))
+    }
+    <meta name="citation_publication_date" content={scholarDate(article.data.date)} />
+    <meta name="citation_publisher" content="copperhead" />
+    <meta name="citation_abstract_html_url" content={url} />
+    {
+      article.data.keywords && (
+        <meta name="citation_keywords" content={article.data.keywords.join('; ')} />
+      )
+    }
+    {pdf && <meta name="citation_pdf_url" content={pdf} />}
+  </Fragment>
+
   <Navbar home={false} />
   <main id="top">
-    <article>
-      <div class="wrap">
-        <header>
-          <div class="meta">
-            <span class="kind">{article.data.kind}</span>
-            <time datetime={article.data.date.toISOString()}>
-              {formatDate(article.data.date)}
-            </time>
-          </div>
-          <h1>{article.data.title}</h1>
-          <p class="standfirst">{article.data.description}</p>
-          {
-            /* The status line sits above the rule rather than in the body, so a
-               reader who never scrolls still knows whether this article reports
-               measurements or only describes how they will be taken. */
-            article.data.status && <p class="status">{article.data.status}</p>
-          }
-        </header>
+    <article class="post-frame">
+      <header class="post-head">
+        <a class="all-articles" href="/research/">
+          <span class="all-articles-ic" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="11" height="11" focusable="false">
+              <path
+                d="M10 3 5 8l5 5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="square"
+              />
+            </svg>
+          </span>
+          All research
+        </a>
 
-        <div class="prose">
-          <Content />
+        <div class="post-eyebrow">
+          <span class="post-eyebrow-cat">{article.data.kind}</span>
+          <span class="post-eyebrow-sep" aria-hidden="true">/</span>
+          <time datetime={article.data.date.toISOString()}>
+            {formatDate(article.data.date)}
+          </time>
         </div>
 
-        <footer class="end">
-          <a href="/research/">All research</a>
-          <a href={links.repo}>View on GitHub</a>
-        </footer>
+        <h1 class="post-title">{article.data.title}</h1>
+
+        {/* Under the title, where a paper puts it, rather than in the rail
+            where the blog does: in a citation the authors are part of the
+            work's name. */}
+        <p class="post-byline">
+          <span class="post-names">{authors.map((p) => p.name).join(', ')}</span>
+          {affiliations.length > 0 && <span class="post-aff">{affiliations.join(', ')}</span>}
+        </p>
+
+        {
+          /* The status line sits in the masthead rather than in the body, so a
+             reader who never scrolls still knows whether this article reports
+             measurements or only describes how they will be taken. */
+          article.data.status && <p class="status">{article.data.status}</p>
+        }
+      </header>
+
+      {/* Facts rail · content · contents, the blog post's frame (see
+          blog/[...slug].astro for how the columns resolve to an 800px
+          measure). The left rail holds what a reader checks before deciding
+          to read: when, what kind, how long and where the paper and code
+          are. */}
+      <div class:list={['post-layout', toc.length === 0 && 'no-toc']}>
+        <aside class="post-rail">
+          <div class="post-rail-sticky">
+            <dl class="facts">
+              <div>
+                <dt>Published</dt>
+                <dd>
+                  <time datetime={article.data.date.toISOString()}>
+                    {formatDate(article.data.date)}
+                  </time>
+                </dd>
+              </div>
+              <div>
+                <dt>Type</dt>
+                <dd>{article.data.kind}</dd>
+              </div>
+              <div>
+                <dt>Reading time</dt>
+                <dd>{minutes} min</dd>
+              </div>
+            </dl>
+
+            {
+              resources.length > 0 && (
+                <div class="rail-group">
+                  <div class="rail-label">Resources</div>
+                  <ul class="res">
+                    {resources.map((r) => (
+                      <li>
+                        <a href={r.href}>
+                          {r.label}
+                          <svg
+                            viewBox="0 0 12 12"
+                            width="10"
+                            height="10"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path d={ext} fill="none" stroke="currentColor" stroke-width="1.4" />
+                          </svg>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
+
+            <a class="rail-cite" href="#cite">Cite this article</a>
+          </div>
+        </aside>
+
+        <div class="post-content">
+          {/* The description, promoted to the abstract it already is. A
+              reader from a paper expects to be told the claim before the
+              argument, under a heading that says so. */}
+          <section class="abstract" aria-labelledby="abstract-label">
+            <div class="abstract-label" id="abstract-label">Abstract</div>
+            <p>{article.data.description}</p>
+            {
+              article.data.keywords && (
+                <p class="keywords">
+                  <span class="abstract-label">Keywords</span>
+                  {article.data.keywords.join(' · ')}
+                </p>
+              )
+            }
+          </section>
+
+          <div class="prose">
+            <Content />
+          </div>
+
+          <section class="post-cite" id="cite" aria-labelledby="cite-h">
+            <h2 id="cite-h">Cite this article</h2>
+            <CiteBlock article={article} />
+          </section>
+
+          <footer class="end">
+            <a href="/research/">All research</a>
+            <a href={article.data.code ?? links.repo}>View on GitHub</a>
+          </footer>
+        </div>
+
+        {
+          toc.length > 0 && (
+            <nav class="post-toc" aria-label="On this page">
+              <div class="post-toc-sticky">
+                <div class="post-toc-label">Contents</div>
+                <ol>
+                  {toc.map((h) => (
+                    <li class={h.depth === 3 ? 'toc-sub' : undefined}>
+                      <a href={`#${h.slug}`}>
+                        <span class="toc-n">{h.n}</span>
+                        <span>{h.text}</span>
+                      </a>
+                    </li>
+                  ))}
+                  <li class="toc-cite">
+                    <a href="#cite">
+                      <span class="toc-n" aria-hidden="true" />
+                      <span>Cite this article</span>
+                    </a>
+                  </li>
+                </ol>
+              </div>
+            </nav>
+          )
+        }
       </div>
     </article>
   </main>
   <Footer />
 </Base>
 
+<script>
+  /* Scrollspy for the contents rail, on the blog post's rule: mark the last
+     heading that has crossed the top of the reading area, so the end of a long
+     article still has a heading marked rather than none. */
+  const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.post-toc-sticky a')];
+  const targets = tocLinks
+    .map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (targets.length > 0) {
+    const mark = () => {
+      const line = 120;
+      let current = targets[0];
+      for (const t of targets) {
+        if (t.getBoundingClientRect().top <= line) current = t;
+      }
+      for (const a of tocLinks) {
+        a.classList.toggle('active', decodeURIComponent(a.hash.slice(1)) === current.id);
+      }
+    };
+
+    let queued = false;
+    addEventListener(
+      'scroll',
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          mark();
+        });
+      },
+      { passive: true },
+    );
+    mark();
+  }
+</script>
+
 <style>
-  article {
-    padding-block: 179px var(--pad-y);
+  main {
+    padding-top: calc(var(--nav-h) + 1px);
   }
 
-  /* Measure is set on the column, not on each element, so code blocks and tables
-     line up with the paragraphs instead of running wide. */
-  .wrap {
-    max-width: 760px;
+  .post-frame {
+    width: 100%;
+    max-width: var(--maxw);
+    margin-inline: auto;
+    border-inline: 1px solid var(--line);
   }
 
-  .meta {
-    display: flex;
+  /* ---- Masthead ---- */
+
+  .post-head {
+    padding: 28px 32px 28px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .all-articles {
+    display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 0.5rem;
     font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
+    font-size: 12px;
+    letter-spacing: 0.04em;
     color: var(--text-dim);
-    margin-bottom: 1.5rem;
+    text-decoration: none;
+    margin-bottom: 1.25rem;
+    transition: color 0.15s ease;
   }
 
-  .kind {
+  .all-articles:hover {
     color: var(--copper);
   }
 
-  h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
+  .all-articles-ic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--panel);
+  }
+
+  .all-articles:hover .all-articles-ic {
+    border-color: var(--copper);
+    color: var(--copper);
+  }
+
+  .post-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--text-dim) 80%, transparent);
+    margin-bottom: 0.85rem;
+  }
+
+  .post-eyebrow-cat {
+    color: var(--copper);
+  }
+
+  .post-eyebrow-sep {
+    color: var(--line-hi);
+  }
+
+  .post-title {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    max-width: 22ch;
     text-wrap: balance;
   }
 
-  .standfirst {
+  .post-byline {
+    margin: 1.1rem 0 0;
+    font-family: var(--body);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .post-names {
+    color: var(--text);
+  }
+
+  .post-aff {
     color: var(--text-dim);
-    font-size: 1.12rem;
-    margin: 1.5rem 0 0;
-    max-width: 58ch;
+  }
+
+  .post-aff::before {
+    content: '·';
+    margin: 0 0.55rem;
+    color: var(--line-hi);
   }
 
   .status {
-    margin: 1.5rem 0 0;
+    margin: 1.25rem 0 0;
     padding: 0.7rem 0.9rem;
     border-left: 2px solid var(--copper);
     background: var(--surface);
@@ -128,18 +430,301 @@ const jsonLd = {
     max-width: 58ch;
   }
 
+  /* ---- Three-column body ---- */
+
+  .post-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 240px;
+    align-items: start;
+  }
+
+  /* :where() keeps the variant at one class of specificity, so the collapse
+     at 1080px still wins on source order. Same shape as the blog post's. */
+  .post-layout:where(.no-toc) {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .post-rail,
+  .post-toc {
+    position: relative;
+    align-self: stretch;
+  }
+
+  .post-rail {
+    border-right: 1px solid var(--line);
+  }
+
+  .post-toc {
+    border-left: 1px solid var(--line);
+  }
+
+  .post-rail-sticky,
+  .post-toc-sticky {
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+    padding: 1.75rem 1.5rem;
+  }
+
+  .post-toc-sticky {
+    max-height: calc(100vh - var(--nav-h) - 48px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .post-content {
+    padding: 1.75rem 2.75rem 3rem;
+    min-width: 0;
+  }
+
+  /* ---- Facts rail ---- */
+
+  .facts {
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .facts dt,
+  .rail-label,
+  .post-toc-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .facts dd {
+    margin: 0.3rem 0 0;
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .rail-group {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .rail-label,
+  .post-toc-label {
+    margin-bottom: 0.75rem;
+  }
+
+  .res {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .res a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--body);
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .rail-cite {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.75rem;
+    height: 36px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .rail-cite:hover {
+    border-color: var(--copper);
+    color: var(--copper);
+  }
+
+  /* ---- Contents rail ---- */
+
+  .post-toc-sticky ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .post-toc-sticky li {
+    margin-bottom: 0.1rem;
+  }
+
+  .post-toc-sticky a {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.3rem 0 0.3rem 0.7rem;
+    border-left: 2px solid var(--line);
+    font-family: var(--body);
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .post-toc-sticky li.toc-sub a {
+    padding-left: 1.4rem;
+    font-size: 12px;
+  }
+
+  /* A fixed-width number column, so titles start on one line whether the
+     section is 3 or 11. */
+  .toc-n {
+    flex: none;
+    min-width: 1.4em;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--text-dim) 75%, transparent);
+  }
+
+  .post-toc-sticky li.toc-cite {
+    margin-top: 0.6rem;
+  }
+
+  .post-toc-sticky a:hover {
+    color: var(--text);
+  }
+
+  .post-toc-sticky a.active {
+    color: var(--text);
+    border-left-color: var(--copper);
+    font-weight: 500;
+  }
+
+  .post-toc-sticky a.active .toc-n {
+    color: var(--copper);
+  }
+
+  /* ---- Abstract ---- */
+
+  .abstract {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 1.25rem 1.4rem 1.35rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .abstract-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 0.6rem;
+  }
+
+  .abstract p {
+    font-family: var(--body);
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .abstract .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.3rem 0.75rem;
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.875rem;
+    color: var(--text-dim);
+  }
+
+  .keywords .abstract-label {
+    margin: 0;
+    color: var(--text-dim);
+  }
+
+  /* section is padded by the global rule; these sit in the content column. */
+  section {
+    padding-block: 0;
+  }
+
+  /* ---- Prose ---- */
+
+  /* Running text in --body and headings in --display, the blog's split, so a
+     reader moving between the two collections is reading one publication. */
   .prose {
-    margin-top: 3.5rem;
-    border-top: 1px solid var(--hairline);
-    padding-top: 3.5rem;
+    font-family: var(--body);
+    counter-reset: sec fig;
   }
 
   .prose :global(p) {
     margin: 0 0 1.4rem;
   }
 
-  /* A paragraph that is one italic run is this site's caption convention:
-     set it like a figcaption, snug under the figure it annotates. */
+  .prose :global(h2),
+  .prose :global(h3) {
+    font-family: var(--display);
+  }
+
+  .prose :global(h2) {
+    font-size: 1.625rem;
+    margin: 3.25rem 0 1.25rem;
+    counter-increment: sec;
+    counter-reset: sub;
+    scroll-margin-top: calc(var(--nav-h) + 24px);
+  }
+
+  .prose :global(h3) {
+    font-size: 1.15rem;
+    margin: 2.5rem 0 1rem;
+    counter-increment: sub;
+    scroll-margin-top: calc(var(--nav-h) + 24px);
+  }
+
+  /* Section numbers, as a paper sets them: the number in the margin of the
+     heading's own line, in mono so 1 and 11 sit on the same grid. They are the
+     numbers the contents rail and the research index cite, and
+     numberSections in src/research.ts counts them the same way. */
+  .prose :global(h2)::before {
+    content: counter(sec);
+    display: inline-block;
+    min-width: 2.1em;
+    font-family: var(--mono);
+    font-size: 0.7em;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--copper);
+    vertical-align: 0.12em;
+  }
+
+  .prose :global(h3)::before {
+    content: counter(sec) '.' counter(sub);
+    display: inline-block;
+    min-width: 2.9em;
+    font-family: var(--mono);
+    font-size: 0.75em;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--copper);
+  }
+
+  /* A paragraph that is one italic run is this site's caption convention.
+     Directly under an image it is a figure caption, and gets a figure number
+     the way a paper's would. */
   .prose :global(p:has(> em:only-child)) {
     margin: 0 0 2.4rem;
     font-size: 0.85rem;
@@ -147,14 +732,83 @@ const jsonLd = {
     color: var(--text-dim);
   }
 
-  .prose :global(h2) {
-    font-size: 1.5rem;
-    margin: 3.25rem 0 1.25rem;
+  .prose :global(p:has(> img)) {
+    counter-increment: fig;
+    margin-bottom: 0.9rem;
   }
 
-  .prose :global(h3) {
-    font-size: 1.15rem;
-    margin: 2.5rem 0 1rem;
+  .prose :global(p:has(> img) + p:has(> em:only-child))::before,
+  .prose :global(figcaption)::before {
+    content: 'Figure ' counter(fig) '. ';
+    font-family: var(--mono);
+    font-size: 0.95em;
+    color: var(--text);
+  }
+
+  /* The other figure form, an MDX <figure> with a <figcaption> (the global
+     sheet sets its type). MDX wraps the caption's text in a <p>, which would
+     drop it onto the line under its own figure number. */
+  .prose :global(figure:not(.embed)) {
+    counter-increment: fig;
+  }
+
+  /* An X post (XPost.astro), on the blog post's rule: widgets.js swaps the
+     blockquote for an iframe with inline margins, so the figure carries the
+     rhythm and the post is centred at the widget's own width. It is a source
+     being quoted rather than a figure of the study, so it takes no number. */
+  .prose :global(.embed) {
+    margin: 1.6rem 0;
+  }
+
+  .prose :global(.embed .twitter-tweet) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Two pages side by side, each an anchor round its image, on the blog
+     post's rule: markdown puts the two links in one paragraph, and that
+     paragraph is the row. Under 560px the pages would be too small to read as
+     pages, so they stack. The direct child only: the caption's own <p>,
+     which MDX wraps its text in, would otherwise become a flex row too and
+     drop below its figure number. */
+  .prose :global(figure.two-up > p) {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+  }
+
+  .prose :global(figure.two-up a) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .prose :global(figure.two-up a:hover img) {
+    border-color: var(--copper);
+  }
+
+  @media (max-width: 560px) {
+    .prose :global(figure.two-up > p) {
+      flex-direction: column;
+    }
+  }
+
+  .prose :global(figcaption p) {
+    display: inline;
+    margin: 0;
+  }
+
+  /* Back matter carries no number; numberSections skips the same slug. */
+  .prose :global(h2#references) {
+    counter-increment: none;
+  }
+
+  .prose :global(h2#references)::before {
+    content: none;
+  }
+
+  /* The targets of the [n] marks, empty anchors at the head of each entry. */
+  .prose :global(a[id]) {
+    scroll-margin-top: calc(var(--nav-h) + 24px);
   }
 
   .prose :global(ul),
@@ -186,9 +840,7 @@ const jsonLd = {
     margin: 0 0 1.4rem;
   }
 
-  /* Terminal block, on the quickstart's exact metrics (InstallBlock.astro):
-     the dashed ink border, 20px 22px padding, 1.75 leading, and the 13px
-     phone step. One code surface across the site, not two near-misses.
+  /* Terminal block, on the quickstart's exact metrics (InstallBlock.astro).
      Direct child only: the pre inside FileBlock's figure carries that
      component's own metrics and must not pick up a second frame. */
   .prose > :global(pre) {
@@ -200,21 +852,10 @@ const jsonLd = {
     line-height: 1.75;
   }
 
-  /* Shiki dual-theme tokens (defaultColor off in astro.config): each span
-     carries both palettes as custom properties, resolved here against the
-     color-scheme the theme toggle sets. Same rule as FileBlock.astro. */
+  /* Shiki dual-theme tokens (defaultColor off in astro.config), resolved
+     against the color-scheme the theme toggle sets. Same rule as FileBlock. */
   .prose > :global(pre span) {
     color: light-dark(var(--shiki-light), var(--shiki-dark));
-  }
-
-  @media (max-width: 720px) {
-    .prose > :global(pre) {
-      padding: 18px 16px;
-    }
-
-    .prose > :global(pre code) {
-      font-size: 0.8125rem; /* 13px, the quickstart's phone size */
-    }
   }
 
   .prose :global(:not(pre) > code) {
@@ -229,7 +870,7 @@ const jsonLd = {
     width: 100%;
     height: auto;
     border: 1px solid var(--hairline);
-    margin: 0 0 1.4rem;
+    margin: 0;
   }
 
   .prose :global(table) {
@@ -257,10 +898,32 @@ const jsonLd = {
     vertical-align: top;
   }
 
+  /* Big screens: 18px in the 800px measure is the line length 17px had at
+     760, the same step the blog post takes. */
+  @media (min-width: 1200px) {
+    .prose {
+      font-size: 1.125rem;
+    }
+  }
+
+  /* ---- Cite ---- */
+
+  .post-cite {
+    margin-top: 3.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--line);
+    scroll-margin-top: calc(var(--nav-h) + 24px);
+  }
+
+  .post-cite h2 {
+    font-size: 1.35rem;
+    margin-bottom: 1.25rem;
+  }
+
   .end {
-    margin-top: 4rem;
+    margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--hairline);
+    border-top: 1px solid var(--line);
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
@@ -268,37 +931,94 @@ const jsonLd = {
     font-size: 0.8rem;
   }
 
-  /* Big screens. 760px at 17px is already around 80 characters a line, so
-     widening the column on its own would push the measure past comfortable
-     rather than improve it. Width and type scale move together instead: 18px in
-     an 800px column is the same line length as 17px in 760, on a page that no
-     longer looks marooned in the middle of a large display. */
-  @media (min-width: 1200px) {
-    .wrap {
-      max-width: 800px;
+  /* ---- Collapse ---- */
+
+  /* Wins over the no-toc variant by source order alone, because the variant is
+     declared with :where() and so never exceeds this rule's one class. The
+     facts rail becomes a strip above the article; the contents rail goes. */
+  @media (max-width: 1080px) {
+    .post-layout {
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .prose {
-      font-size: 1.125rem;
+    .post-rail,
+    .post-toc {
+      border: 0;
+    }
+
+    .post-rail {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .post-rail-sticky {
+      position: static;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.25rem 2.5rem;
+      padding: 1.25rem 2rem;
+    }
+
+    .facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2.5rem;
+    }
+
+    .rail-group {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .res {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+    }
+
+    .rail-cite {
+      margin: 0 0 0 auto;
+      padding: 0 1rem;
+    }
+
+    .post-content {
+      padding: 2rem 2rem 2.5rem;
+    }
+
+    .post-toc {
+      display: none;
     }
   }
 
-  /* Tables can exceed the measure on a phone; let the table scroll rather than
-     pushing the page body sideways. */
+  @media (max-width: 900px) {
+    .post-frame {
+      border-inline: 0;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .post-head {
+      padding: 24px 20px 22px;
+    }
+
+    .post-content {
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .post-rail-sticky {
+      padding: 1.1rem 1.25rem;
+    }
+
+    .rail-cite {
+      margin-left: 0;
+    }
+  }
+
+  /* 720, not 640: these are about the measure, not the frame. Tables can
+     exceed it on a phone; let one scroll rather than pushing the page body
+     sideways. */
   @media (max-width: 720px) {
-    article {
-      padding-block: 139px var(--pad-y);
-    }
-
-    .prose {
-      margin-top: 2.5rem;
-      padding-top: 2.5rem;
-    }
-
-    .standfirst {
-      font-size: 1.05rem;
-    }
-
     .prose :global(table) {
       display: block;
       overflow-x: auto;
@@ -308,6 +1028,14 @@ const jsonLd = {
     .prose :global(td) {
       padding-right: 0.85rem;
       min-width: 7.5rem;
+    }
+
+    .prose > :global(pre) {
+      padding: 18px 16px;
+    }
+
+    .prose > :global(pre code) {
+      font-size: 0.8125rem; /* 13px, the quickstart's phone size */
     }
   }
 </style>

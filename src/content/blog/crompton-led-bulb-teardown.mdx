@@ -45,7 +45,7 @@ frame.
   </figcaption>
 </figure>
 
-## Running copperhead backwards
+## Method
 
 copperhead usually goes from a written brief to a circuit board. Its reverse engineering
 framework runs the other way, from photos to the circuit, the parts, the risks and a
@@ -64,7 +64,7 @@ videos<sup><a href="#ref-1">[1]</a><a href="#ref-2">[2]</a><a href="#ref-3">[3]<
 YouTube wouldn't let it download them, so it read what it could from thumbnails, the
 first minute of one video and storyboard frames 160 pixels wide.
 
-## Taking it apart
+## Disassembly
 
 The diffuser dome comes off the housing. Under it is an aluminium cup, and the LED board
 sits on that cup on a layer of thermal grease, held by two self-tapping screws. That
@@ -87,7 +87,7 @@ together.
   </figcaption>
 </figure>
 
-## A driver with no big capacitor on the mains side
+## The driver
 
 The driver is about 48 by 24 mm with roughly 20 parts on one copper layer. The bigger
 through-hole parts sit on one face and the small surface-mount parts are glued to the
@@ -162,7 +162,7 @@ The codes also date the bulb, if I'm reading them right. The driver's board name
 fits November 2018. The housing says February 2019. So this board revision is dated
 about ten months before the bulb was built.
 
-## The LEDs run hot
+## LED temperature
 
 The LED board's silkscreen says `NBL7W9S1P2835V1.0`, which reads as a 7 W board with
 nine 2835 LEDs in series. Working back from the driver, it's being fed about 8.1 W.
@@ -191,7 +191,7 @@ what made my bulb dim and flicker because I never powered it again to check. But
 a repair video of another flickering Crompton bulb<sup><a href="#ref-1">[1]</a></sup>
 that shows the same board with the same kind of burn on a different LED.
 
-## Pinning down the chip
+## Identifying the controller
 
 Working from the circuit around it, the first pass said it was a Bright Power
 Semiconductor part from the BP2335 family<sup><a href="#ref-6">[6]</a></sup>. Then I
@@ -223,7 +223,7 @@ The record now calls it BP2336J and the circuit around it backs that up. The evi
 alone puts it at 0.55, and I had it commit at 0.75 so the work could keep moving. A
 couple of beeps from a multimeter on continuity will settle it.
 
-## Numbers I don't like
+## Design margins
 
 If an LED fails open, the chip is meant to shut down when the output reaches about 108
 V<sup><a href="#ref-6">[6]</a></sup>. The capacitor holding that output is rated 100 V.
@@ -240,7 +240,7 @@ prints no surge rating at all.
 With no big capacitor on the mains side, copperhead also expects 17 to 25% flicker at
 100 Hz, which is too fast to see directly. It rates that figure as a weak estimate.
 
-## What copperhead would change
+## Suggested changes
 
 copperhead's verdict is that the design was built to meet the standards as cheaply as
 possible, with reliability second. It meets the power factor and efficiency it has
@@ -259,7 +259,7 @@ anyone builds it:
 - every resistor in a high-voltage divider is checked against its working voltage
 - the varistor's clamp voltage is checked against the switch's breakdown voltage
 
-## What I still don't know
+## Limitations
 
 Everything here came from photos, so none of it has been measured yet. The copper is
 hidden under solid green solder mask, so the 16 connections in the circuit come from the
@@ -286,7 +286,7 @@ switched on.
   </figcaption>
 </figure>
 
-## The full report
+## Full report
 
 Everything above is in the report<sup><a href="#ref-13">[13]</a></sup> with the working
 shown. The full version runs to 59 pages, and its appendices come straight out of
