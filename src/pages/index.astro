@@ -10,9 +10,8 @@ import Footer from "../components/Footer.astro";
 import PricingTiers from "../components/PricingTiers.astro";
 import Faq from "../components/Faq.astro";
 
-// Sections are told apart by tone and a hairline: every other one sits on a
-// slightly lighter band, and each starts on the same 1px rule the footer's
-// top edge draws. Demo only
+// Sections share the page colour and are told apart by a hairline: each one
+// starts on the same 1px rule the footer's top edge draws. Demo only
 // renders once public/copperhead-demo.mp4 exists — the hero already carries
 // the animated terminal.
 ---
@@ -32,21 +31,11 @@ import Faq from "../components/Faq.astro";
 </Base>
 
 <style>
-  /* A band needs air on both sides of its content, so every section keeps both
+  /* A rule needs air on both sides of it, so every section keeps both
      paddings, cut to 70% so two of them meeting do not open a 272px gap. The
      hero keeps its own: its dot field ends at its bottom edge. */
   main > :global(section:not(.hero)) {
     padding-block: calc(var(--pad-y) * 0.7);
     border-top: 1px solid var(--hairline);
-  }
-
-  /* nth-of-type rather than naming the sections, so the alternation holds when
-     Demo appears. The hero is the first, so the bands fall on the evens. A
-     flat fill with a hard edge, and --bg is pointed at it so the cells, via
-     dots and copper washes that are filled with the page colour match the
-     ground they are on. */
-  main > :global(section:nth-of-type(even)) {
-    --bg: var(--band);
-    background: var(--band);
   }
 </style>

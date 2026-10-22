@@ -1,0 +1,7 @@
+# Cloudflare applies these to the static assets and does not serve this file.
+# One rule per line: source, destination, status.
+
+# The diffpair study's papers shipped under /blog/ although the study is a
+# research article. They moved beside it; the old URLs had already gone out.
+/blog/diffpair-meanders-report.pdf       /research/diffpair-meanders.pdf       301
+/blog/diffpair-meanders-report-ieee.pdf  /research/diffpair-meanders-ieee.pdf  301

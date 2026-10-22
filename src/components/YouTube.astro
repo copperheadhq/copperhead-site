@@ -1,0 +1,40 @@
+---
+/**
+ * A YouTube video in an article body, for .mdx files.
+ *
+ * YouTube's privacy-enhanced player (youtube-nocookie.com), loaded lazily so a
+ * reader who never scrolls down to it never fetches the player. It sits in the
+ * same unnumbered .embed figure as XPost.astro: a video about a study is not
+ * one of the study's figures. No figcaption, because the article sheet prefixes
+ * every caption with a figure number; the video's own title labels it.
+ */
+interface Props {
+  /** The video id: the v= parameter of its watch URL. */
+  id: string;
+  /** The video's title, which is what a screen reader announces for the frame. */
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<figure class="embed">
+  <iframe
+    src={`https://www.youtube-nocookie.com/embed/${id}`}
+    title={title}
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen></iframe>
+</figure>
+
+<style>
+  /* Sizing only, no frame: YouTube's player as it comes, at 16:9 across the
+     column, so it neither overflows a phone nor sits at a fixed 560px. */
+  iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+</style>

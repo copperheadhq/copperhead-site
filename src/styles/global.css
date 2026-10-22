@@ -123,9 +123,6 @@
   --green:     light-dark(#0E5A38, #3FAF7A);
   --text:      light-dark(#0A0A0A, #EDEDEF);
   --text-dim:  light-dark(#57575E, #9B9BA5);
-  /* the alternate home-page section: a step off the page toward --panel, so
-     the bands read as tone rather than as cards (see index.astro) */
-  --band:      light-dark(#F5F5F6, #0F0F12);
 
   --display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, sans-serif;
