@@ -25,7 +25,7 @@ export const groups: FaqGroup[] = [
     title: 'The basics',
     items: [
       {
-        q: 'What is copperhead?',
+        q: 'What is Copperhead?',
         a: `An open source AI agent that designs, documents and verifies printed circuit boards. You describe a change or hand it a product brief, and it edits your real KiCad files, updates every document that references them, and runs KiCad's own checks until they pass. <a href="/blog/meet-copperhead/">Longer introduction here</a>.`,
       },
       {
@@ -63,7 +63,7 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'What does a run cost?',
-        a: `A single change request is roughly 0.10 to 1.00 dollars in model tokens. A full <code>create</code> pipeline run is five to ten times that. You are billed by your model provider directly; copperhead itself is free.`,
+        a: `A single change request is roughly 0.10 to 1.00 dollars in model tokens. A full <code>create</code> pipeline run is five to ten times that. You are billed by your model provider directly; Copperhead itself is free.`,
       },
     ],
   },

@@ -9,7 +9,7 @@ This form is a gate, not a general application. The listing states hard requirem
 says outright that the role is not suitable for beginners, so the form asks for evidence
 rather than for claims.
 
-**Form title:** Forward Deployed Hardware Engineer, copperhead
+**Form title:** Forward Deployed Hardware Engineer, Copperhead
 **Intro text:**
 
 > A six to eight week paid contract in Bengaluru, in person, around an active Raspberry

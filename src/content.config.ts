@@ -71,7 +71,7 @@ const research = defineCollection({
     status: z.string().optional(),
     /**
      * Byline, in order, each with the institution it is credited to. Defaults
-     * to the blog's defaultAuthor at copperhead (authorsOf in src/research.ts),
+     * to the blog's defaultAuthor at Copperhead (authorsOf in src/research.ts),
      * so the field exists for a co-authored piece rather than for every one.
      */
     authors: z

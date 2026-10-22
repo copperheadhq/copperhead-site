@@ -23,7 +23,7 @@ const posted = openRoles.filter((r) => jobPostingJsonLd(r));
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Careers at copperhead",
+  name: "Careers at Copperhead",
   url: new URL("/careers/", site).href,
   ...(posted.length
     ? {
@@ -41,10 +41,10 @@ const jsonLd = {
 ---
 
 <Base
-  title="Careers · copperhead"
-  description="Open roles at copperhead, an open source agent that designs circuit boards and verifies its own work against KiCad."
+  title="Careers · Copperhead"
+  description="Open roles at Copperhead, an open source agent that designs circuit boards and verifies its own work against KiCad."
   path="/careers/"
-  ogImageAlt="Careers at copperhead"
+  ogImageAlt="Careers at Copperhead"
   jsonLd={jsonLd}
 >
   <Navbar home={false} />

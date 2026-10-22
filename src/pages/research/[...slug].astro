@@ -73,14 +73,14 @@ const jsonLd = {
     name: p.name,
     ...(p.affiliation && { affiliation: { '@type': 'Organization', name: p.affiliation } }),
   })),
-  publisher: { '@type': 'Organization', name: 'copperhead', url: site, sameAs: links.chouhan },
+  publisher: { '@type': 'Organization', name: 'Copperhead', url: site, sameAs: links.chouhan },
 };
 
 const ext = 'M4.5 2.5h5v5M9.5 2.5 3 9';
 ---
 
 <Base
-  title={`copperhead research: ${article.data.title}`}
+  title={`Copperhead research: ${article.data.title}`}
   description={article.data.description}
   path={path}
   ogType="article"
@@ -104,7 +104,7 @@ const ext = 'M4.5 2.5h5v5M9.5 2.5 3 9';
       ))
     }
     <meta name="citation_publication_date" content={scholarDate(article.data.date)} />
-    <meta name="citation_publisher" content="copperhead" />
+    <meta name="citation_publisher" content="Copperhead" />
     <meta name="citation_abstract_html_url" content={url} />
     {
       article.data.keywords && (

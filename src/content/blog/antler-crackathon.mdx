@@ -1,10 +1,10 @@
 ---
-title: "copperhead: Cursor for circuit boards"
-description: "copperhead is an AI agent that designs, documents and validates real PCBs from a prompt, working on your existing KiCad repository. Built and proven on a shipping open source board."
+title: "Copperhead: Cursor for circuit boards"
+description: "Copperhead is an AI agent that designs, documents and validates real PCBs from a prompt, working on your existing KiCad repository. Built and proven on a shipping open source board."
 date: 2026-07-18
 kind: "Submission"
 cover: "antler-crackathon"
-coverAlt: "A copperhead title card: a trace routed round two corners into a via."
+coverAlt: "A Copperhead title card: a trace routed round two corners into a via."
 deck: "/Copperhead.pdf"
 ---
 
@@ -16,7 +16,7 @@ Most Claude demos are software. This one is a circuit board.
 
 <figure class="article-figure">
   <a class="deck-card" href={frontmatter.deck} target="_blank" rel="noopener noreferrer">
-    <img src="/Copperhead.png" alt="Title slide of the copperhead pitch deck" width="960" height="540" loading="lazy" decoding="async" />
+    <img src="/Copperhead.png" alt="Title slide of the Copperhead pitch deck" width="960" height="540" loading="lazy" decoding="async" />
     <span class="deck-cta">View the full deck (PDF)</span>
   </a>
   <figcaption>The Crackathon pitch deck, as submitted</figcaption>
@@ -30,7 +30,7 @@ ERC and DRC until the checks pass.
 
 | Submission  |                                                                                     |
 | ----------- | ----------------------------------------------------------------------------------- |
-| Team        | copperhead                                                                          |
+| Team        | Copperhead                                                                          |
 | Built by    | Animesh Chouhan                                                                     |
 | Repo        | [copperheadhq/copperhead](https://github.com/copperheadhq/copperhead)               |
 | Proof board | [animesh-chouhan/open-telegraph](https://github.com/animesh-chouhan/open-telegraph) |
@@ -38,7 +38,7 @@ ERC and DRC until the checks pass.
 | License     | Apache-2.0                                                                          |
 
 ![Open Telegraph board, a 40 by 40 mm ESP32-S3 Morse key, 3D render](/blog/figures/pcb.png)
-_Open Telegraph, the board whose build produced copperhead, then was redesigned through it_
+_Open Telegraph, the board whose build produced Copperhead, then was redesigned through it_
 
 ## The problem
 
@@ -73,8 +73,8 @@ a justification per line, an ERC-clean schematic, a DRC-clean draft layout,
 gerbers, renders, a BOM you can order and a bring-up plan. Every stage is gated
 by real validation tooling before the next one starts.
 
-![copperhead routing a board](/routing.gif)
-_copperhead routing a board_
+![Copperhead routing a board](/routing.gif)
+_Copperhead routing a board_
 
 The draft layout is correct but not optimal, and it says so itself, in a
 `LAYOUT.md` that lists what a specialist should redo before fab.
@@ -97,7 +97,7 @@ requirements, because drift is a build failure.
 
 On a real board:
 
-|                              | Today                 | With copperhead             |
+|                              | Today                 | With Copperhead             |
 | ---------------------------- | --------------------- | --------------------------- |
 | Idea to manufacturable files | Weeks to months       | Days                        |
 | Docs vs. schematic           | Drift by default      | Regenerated on every change |
@@ -120,7 +120,7 @@ self-verifies, going back to updating five documents by hand feels broken.
 | Siemens Fuse | Agentic AI across Xpedition and HyperLynx   | Enterprise-only, locked toolchain                        |
 
 Everyone else is an autorouter, a walled-garden editor or an enterprise EDA
-add-on. copperhead is the only agentic workflow that runs on open, real files in
+add-on. Copperhead is the only agentic workflow that runs on open, real files in
 the repo you already have. "Cursor on your repo," not "come use our IDE."
 
 ## Market
@@ -131,7 +131,7 @@ the first user in Berlin and the first user in Bengaluru run the same
 `npm install` against the same file formats.
 
 The market underneath this is specific and growing. EDA for PCBs and multichip
-modules, the segment copperhead actually plays in, is worth $9.8B today and
+modules, the segment Copperhead actually plays in, is worth $9.8B today and
 projected to reach $18.2B by 2034 at a 7.3% CAGR, inside a broader $20B+ EDA
 market being pulled toward AI-enhanced flows and cloud deployment.
 
@@ -139,7 +139,7 @@ It is also concentrated: Cadence, Synopsys, Siemens EDA and Altium dominate,
 selling seats into closed enterprise toolchains (Allegro, Xpedition, Altium
 Designer) priced and packaged for teams that already have a hardware department.
 The one tool in that top tier that is not a walled seat is KiCad. That is the
-opening: copperhead enters from underneath, on the open file formats a single
+opening: Copperhead enters from underneath, on the open file formats a single
 builder already has in their repo, in Asia-Pacific manufacturing hubs and
 everywhere else at once.
 
@@ -148,7 +148,7 @@ everywhere else at once.
 Three segments, in order: indie hardware builders, crowdfunded-device startups
 and small EE consultancies who bill by the board.
 
-copperhead is Apache-2.0 and Open Telegraph is fully public, so the first
+Copperhead is Apache-2.0 and Open Telegraph is fully public, so the first
 hundred users land through the repo itself, Hacker News,
 r/PrintedCircuitBoard, the KiCad community, with the board as the proof that none
 of this is a demo. Monetization is a design-agent SaaS on top of the open CLI:
@@ -156,7 +156,7 @@ hosted runs, longer context over a design history and team-level review.
 
 ## Try it
 
-copperhead is open source and now live at [copperhead.sh](/). Docs:
+Copperhead is open source and now live at [copperhead.sh](/). Docs:
 [copperhead.sh/docs](https://copperhead.sh/docs).
 
 <InstallBlock lines={quickstart} />
@@ -168,7 +168,7 @@ proprietary format and no editor to move into.
 
 > **What this looks like live**
 >
-> One prompt against a real board. copperhead reads the design docs, proposes the
+> One prompt against a real board. Copperhead reads the design docs, proposes the
 > change, edits the KiCad schematic, carries the new pin across every doc and the
 > firmware scaffold, runs ERC and DRC, reads the violations back and commits with
 > the reasoning attached. A circuit board, redesigned in front of you.
@@ -176,12 +176,12 @@ proprietary format and no editor to move into.
 ## Summary
 
 The Morse key is the proof; the agent is the product. Building Open Telegraph
-produced copperhead, and redesigning the board through copperhead proved it. Now
+produced Copperhead, and redesigning the board through Copperhead proved it. Now
 that loop is packaged so anyone can run it: one person, one repo, from idea to
 manufacturable files in days instead of months. For the longer story of how it
 came together, see
 [building open hardware with Claude](https://chouhan.ai/building-with-claude.html).
 
-[copperhead on GitHub](https://github.com/copperheadhq/copperhead) ·
+[Copperhead on GitHub](https://github.com/copperheadhq/copperhead) ·
 <a href={frontmatter.deck}>The deck (PDF)</a> ·
 [Open Telegraph](https://chouhan.ai/products/open-telegraph.html)

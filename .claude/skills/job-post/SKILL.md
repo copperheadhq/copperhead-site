@@ -25,8 +25,9 @@ entry and the structured data all follow from it. Do not add a page by hand.
 `slug` is what a candidate bookmarks and what a recruiter pastes into Slack. Set it
 once and leave it alone. Renaming one silently breaks every link that already exists.
 
-`copperhead` is lowercase everywhere, including sentence-initial and including inside
-a listing pasted from somewhere that capitalised it.
+The name is Copperhead, with a capital C, including inside a listing pasted from
+somewhere that lowercased it. Only the logo wordmark and what a candidate types
+(`npm i -g copperhead`, the repo, the domain) stay lowercase.
 
 ## The two gates
 

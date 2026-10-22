@@ -33,7 +33,7 @@ check and still be the wrong schematic. And the error that matters is discovered
 fabrication run, weeks and a board spin later, not at a rerun.
 
 copperbench is built for that gap. It measures how language models behave **inside
-the copperhead harness** on real KiCad projects, using electrical verification as a
+the Copperhead harness** on real KiCad projects, using electrical verification as a
 partial oracle and pairing it with end-state assertions that state what the requested
 change was: whether the change gets made, whether it survives verification, whether
 it stays inside recorded budgets, whether the model refuses when refusal is the
@@ -164,7 +164,7 @@ organisation's conventions.
 
 ## Surgicality
 
-copperhead's own surgicality criterion states an edit should touch at most 5 percent
+Copperhead's own surgicality criterion states an edit should touch at most 5 percent
 of a file's lines. On the real schematic that permits 424 lines, so the constraint
 stops constraining where it starts to matter.
 
@@ -282,7 +282,7 @@ than reasoning, and the gap puts a number on how much.
 ## Reproducibility
 
 Every result record carries a comparability stamp: schema version, suite version,
-task manifest hash, fixture hash, copperhead version and commit, `kicad-cli` version,
+task manifest hash, fixture hash, Copperhead version and commit, `kicad-cli` version,
 Node version, platform. Records merge into a shared table only when those agree.
 Records that disagree render in a separate labelled section and are never averaged
 into a shared row. Editing any task manifest, any fixture or the assertion
@@ -295,14 +295,14 @@ build failure. The whitepaper goes further: in its results-bearing sections a
 quantity may appear only through a macro generated from a result snapshot, and a
 literal numeral there fails the build.
 
-copperhead takes the same stance toward its own design documents, where a document
+Copperhead takes the same stance toward its own design documents, where a document
 disagreeing with the thing it describes is a build failure. Here that stance is
 turned on this project's claims about itself. A paper whose tables could drift from
 the records that produced them would undercut the argument it is making.
 
 Before any artifact is written into the results tree it is scanned against a
 credential pattern set, and a match hard-fails the run instead of being scrubbed.
-That set is a superset of what copperhead redacts at write time, because a scanner
+That set is a superset of what Copperhead redacts at write time, because a scanner
 running the redactor's own patterns would miss whatever the redactor missed.
 Benchmark output is the surface most likely to be published.
 
@@ -314,7 +314,7 @@ schematic establishes that a design is legal and self-consistent, which is a flo
 **Not design quality.** Whether a part choice is wise or a topology sensible. The
 rubric tier gestures at this and is labelled as opinion.
 
-**Not model capability in general.** Every result is conditioned on copperhead's
+**Not model capability in general.** Every result is conditioned on Copperhead's
 prompts, tools and gates. A model that scores poorly here may do better in a
 different harness, and that would be a finding about the harness as much as about the
 model.

@@ -4,10 +4,10 @@ Built at binary.so and live at [binary.so/evoDv0z](https://binary.so/evoDv0z), w
 the `applyUrl` of the `founding-software-engineer` role in
 [src/careers.ts](../../../../src/careers.ts).
 
-**Form title:** Founding Software Engineer - AI Infrastructure, copperhead
+**Form title:** Founding Software Engineer - AI Infrastructure, Copperhead
 **Intro text:**
 
-> copperhead is an open source agent that designs, documents and verifies real circuit
+> Copperhead is an open source agent that designs, documents and verifies real circuit
 > boards. This role builds the infrastructure underneath the agents, on-site in
 > Bengaluru: the execution loops, sandboxes, job pipelines, evaluation harnesses and
 > tracing that decide whether an agent's work can be trusted. The questions below are

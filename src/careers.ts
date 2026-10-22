@@ -189,7 +189,7 @@ export const roles: Role[] = [
       'Improve system reliability, performance, observability and test coverage.',
       'Own projects from first experiment through to production deployment.',
       'Contribute to technical documentation and open-source engineering practices.',
-      'Help establish copperhead’s engineering culture and development processes.',
+      'Help establish Copperhead’s engineering culture and development processes.',
     ],
     fitHeading: 'Hard requirements',
     fit: [
@@ -250,7 +250,7 @@ export const roles: Role[] = [
       'Integrate research prototypes with KiCad and deterministic engineering tools.',
       'Analyse failures, and turn the experiments that look promising into production systems.',
       'Document findings and contribute to technical reports or research publications.',
-      'Contribute directly to copperhead’s open-source codebase.',
+      'Contribute directly to Copperhead’s open-source codebase.',
     ],
     fit: [
       'Strong foundations in machine learning and deep learning.',
@@ -291,20 +291,20 @@ export const roles: Role[] = [
     summary:
       'Own a live Raspberry Pi CM5 carrier-board project from requirements through bring-up, on a six to eight week contract in Bengaluru.',
     context: [
-      'We need an advanced PCB engineer who can own complex customer hardware projects from requirements through manufacturing and board bring-up. You would work directly with customers, design production-grade boards natively in KiCad and use copperhead across the whole engineering workflow, which means your experience on real hardware shapes the product about as directly as it shapes the boards.',
+      'We need an advanced PCB engineer who can own complex customer hardware projects from requirements through manufacturing and board bring-up. You would work directly with customers, design production-grade boards natively in KiCad and use Copperhead across the whole engineering workflow, which means your experience on real hardware shapes the product about as directly as it shapes the boards.',
       'This is a senior, execution-heavy role. It is not suitable for beginners, or for engineers whose experience stops at basic microcontroller boards. The engagement starts as a paid contract of six to eight weeks around an active CM5 carrier-board project, and work that goes well can lead to a longer-term or founding hardware role. It is in person in Bengaluru for the whole engagement and remote applications will not be considered.',
     ],
     work: [
       'Work directly with customers to understand product requirements, constraints and existing designs.',
       'Own system architecture, component selection, schematic design and PCB layout.',
       'Design and modify complex multilayer boards natively in KiCad.',
-      'Use copperhead to design, document and verify customer projects.',
+      'Use Copperhead to design, document and verify customer projects.',
       'Define stack-ups, impedance requirements, routing constraints and length-matching rules.',
       'Conduct schematic, layout, ERC, DRC, DFM and design reviews.',
       'Prepare BOMs, fabrication files, assembly files and production documentation.',
       'Coordinate prototype fabrication and assembly.',
       'Lead board bring-up, validation, debugging and design revisions.',
-      'Translate what you learn in the field into improvements to copperhead’s tools and verification systems.',
+      'Translate what you learn in the field into improvements to Copperhead’s tools and verification systems.',
     ],
     fitHeading: 'Hard requirements',
     fit: [
@@ -361,10 +361,10 @@ export const roles: Role[] = [
     address: { locality: 'Bengaluru', region: 'Karnataka', country: 'IN' },
     commitment: 'Full-time',
     summary:
-      'Own production-grade multilayer boards from written brief to bring-up in KiCad, and turn the way you make those decisions into rules copperhead can check.',
+      'Own production-grade multilayer boards from written brief to bring-up in KiCad, and turn the way you make those decisions into rules Copperhead can check.',
     context: [
-      'We need a senior PCB engineer who can own complex hardware projects from requirements and system architecture through schematic design, layout, simulation, fabrication, bring-up and validation. The boards span high-speed digital, RF, mixed-signal, power and embedded systems, they are designed natively in KiCad and copperhead is used across the whole workflow, so you would be designing real customer hardware and using the product on it every day.',
-      'The other half of the role is encoding how an experienced hardware engineer reasons about architecture, component selection, constraints, simulation, verification and manufacturability, so that copperhead makes better engineering decisions and can tell whether a board is ready to build. That means finding the failure modes in AI-generated hardware and working with the software and AI engineers to fix them systematically, which is slower and less glamorous than the layout work and is the part that changes the product. It is a hands-on role for someone who has shipped complex hardware and wants to help build the next generation of electronic design automation, full-time and on-site in Bengaluru.',
+      'We need a senior PCB engineer who can own complex hardware projects from requirements and system architecture through schematic design, layout, simulation, fabrication, bring-up and validation. The boards span high-speed digital, RF, mixed-signal, power and embedded systems, they are designed natively in KiCad and Copperhead is used across the whole workflow, so you would be designing real customer hardware and using the product on it every day.',
+      'The other half of the role is encoding how an experienced hardware engineer reasons about architecture, component selection, constraints, simulation, verification and manufacturability, so that Copperhead makes better engineering decisions and can tell whether a board is ready to build. That means finding the failure modes in AI-generated hardware and working with the software and AI engineers to fix them systematically, which is slower and less glamorous than the layout work and is the part that changes the product. It is a hands-on role for someone who has shipped complex hardware and wants to help build the next generation of electronic design automation, full-time and on-site in Bengaluru.',
     ],
     work: [
       'Own end-to-end development of complex multilayer PCBs, from requirements to manufacturing and validation.',
@@ -382,13 +382,13 @@ export const roles: Role[] = [
       'Coordinate prototype fabrication and assembly.',
       'Lead board bring-up, validation, debugging and design revisions.',
       'Work directly with customers to understand requirements, constraints and existing hardware.',
-      'Use copperhead to design, document, simulate and verify real customer projects.',
-      'Bring PCB and electronics domain knowledge into copperhead’s AI workflows: how the system reasons about design decisions, constraints, trade-offs and verification.',
+      'Use Copperhead to design, document, simulate and verify real customer projects.',
+      'Bring PCB and electronics domain knowledge into Copperhead’s AI workflows: how the system reasons about design decisions, constraints, trade-offs and verification.',
       'Convert expert hardware engineering knowledge into structured rules, reference designs, evaluation benchmarks and automated verification workflows.',
       'Develop engineering test cases and reference designs for evaluating AI-generated hardware.',
       'Identify failure modes in AI-generated hardware and work with software and AI engineers to fix them systematically.',
       'Work closely with software and AI engineers on schematic generation, placement, routing, simulation and verification capabilities.',
-      'Mentor engineers and contribute to copperhead’s open-source engineering ecosystem.',
+      'Mentor engineers and contribute to Copperhead’s open-source engineering ecosystem.',
     ],
     fit: [
       'Five or more years of professional electronics, PCB or hardware engineering experience.',
@@ -456,7 +456,7 @@ export const roles: Role[] = [
     summary:
       'Build the agent infrastructure, sandboxes, job pipelines and evaluation harnesses that let AI create, modify and verify real PCB designs reliably.',
     context: [
-      'copperhead’s agents help engineers create, modify and verify real PCB designs using frontier models, deterministic engineering tools and open-source EDA infrastructure. This role builds the infrastructure that makes that reliable: the execution loops, sandboxes, queues, evaluation harnesses and tracing that sit underneath every agent, rather than another thin wrapper around a model API.',
+      'Copperhead’s agents help engineers create, modify and verify real PCB designs using frontier models, deterministic engineering tools and open-source EDA infrastructure. This role builds the infrastructure that makes that reliable: the execution loops, sandboxes, queues, evaluation harnesses and tracing that sit underneath every agent, rather than another thin wrapper around a model API.',
       'It is a hands-on engineering role for someone who enjoys building AI systems, backend infrastructure and developer tools from the ground up. You would join at the founding stage, take real ownership from the first day and shape the product, the architecture and the company, most of it in the open alongside the developer and hardware community already using the tool, for a competitive salary and meaningful equity. Whatever you have built before, you should be able to explain what you personally owned, the tradeoffs you made and how the system behaved when something failed.',
     ],
     work: [
@@ -473,7 +473,7 @@ export const roles: Role[] = [
       'Build logging and tracing systems that make agent behaviour inspectable and reproducible.',
       'Own projects from initial exploration and prototyping through production deployment.',
       'Contribute to technical documentation and open-source engineering practices.',
-      'Help establish copperhead’s engineering culture, architecture and development processes.',
+      'Help establish Copperhead’s engineering culture, architecture and development processes.',
     ],
     fit: [
       'Strong software engineering in Python, TypeScript, Go, Rust or a similar language.',
@@ -643,7 +643,7 @@ export function jobPostingJsonLd(role: Role): Record<string, unknown> | null {
     // up in a job index twice.
     identifier: {
       '@type': 'PropertyValue',
-      name: 'copperhead',
+      name: 'Copperhead',
       value: role.slug,
     },
     url: new URL(rolePath(role.slug), site).href,
@@ -651,7 +651,7 @@ export function jobPostingJsonLd(role: Role): Record<string, unknown> | null {
     ...(salary ? { baseSalary: salary } : {}),
     hiringOrganization: {
       '@type': 'Organization',
-      name: 'copperhead',
+      name: 'Copperhead',
       // The URL Google reconciles the posting against is the site serving it.
       // chouhan.ai is the same organisation and belongs in sameAs, which is the
       // property for exactly that: naming it as the canonical url is what

@@ -1,7 +1,7 @@
 # GitHub only keeps repository traffic (views, clones, referrers, popular paths)
 # for a rolling 14 days, and serves nothing older through any API. The only way
 # to have a year of it is to have been writing it down all along. This workflow
-# is that: once a day it snapshots the traffic API for the copperhead repo,
+# is that: once a day it snapshots the traffic API for the Copperhead repo,
 # appends the new rows to a long-lived time series and commits the result to
 # this repo's `github-repo-stats` branch.
 #
@@ -17,7 +17,7 @@
 #
 # Requires repo secret GHRS_GITHUB_API_TOKEN. The default GITHUB_TOKEN cannot do
 # this job at all: it is scoped to the repo the workflow runs in (copperhead-site)
-# and the traffic being read belongs to a different one (copperhead).
+# and the traffic being read belongs to a different one (Copperhead).
 #
 # Least privilege is a fine-grained PAT covering both repos:
 #   copperheadhq/copperhead       Administration: read   (traffic endpoints)
@@ -39,7 +39,7 @@ on:
 
 jobs:
   repo-stats:
-    name: Snapshot copperhead traffic
+    name: Snapshot Copperhead traffic
     runs-on: ubuntu-latest
     steps:
       # Pinned to a commit SHA, not the v1.4.2 tag it belongs to. This is a

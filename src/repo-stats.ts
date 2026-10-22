@@ -1,5 +1,5 @@
 /**
- * Build-time read of the long-run traffic history for the copperhead repo.
+ * Build-time read of the long-run traffic history for the Copperhead repo.
  *
  * GitHub's traffic API only remembers 14 days. .github/workflows/repo-stats.yml
  * runs jgehrcke/github-repo-stats once a day to snapshot it and append to CSVs on
@@ -25,7 +25,7 @@
  * disagree.
  *
  * Deliberately a literal rather than derived from `repo` in src/config.ts.
- * copperhead moved from the chouhanindustries org to copperheadhq. ghrs lays its
+ * Copperhead moved from the chouhanindustries org to copperheadhq. ghrs lays its
  * output out under <owner>/<repo>/ on the data branch and stamps that same prefix
  * onto every popular-path row, so the whole existing series lives under the
  * pre-rename slug. Following the rename here would point the build at a directory

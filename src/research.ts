@@ -10,9 +10,9 @@ type Article = CollectionEntry<'research'>;
 /** Canonical path for a research article, from its collection id (the filename slug). */
 export const articlePath = (id: string) => `/research/${id}/`;
 
-/** The byline of an article that does not name one: the blog's author, at copperhead. */
+/** The byline of an article that does not name one: the blog's author, at Copperhead. */
 export const authorsOf = (a: Article) =>
-  a.data.authors ?? [{ name: defaultAuthor, affiliation: 'copperhead' }];
+  a.data.authors ?? [{ name: defaultAuthor, affiliation: 'Copperhead' }];
 
 /** 'Animesh Chouhan' as 'Chouhan, Animesh', the form BibTeX and Google Scholar both read. */
 const inverted = (name: string) => {
@@ -109,7 +109,7 @@ export const bibtex = (a: Article) => {
   const fields: [string, string][] = [
     ['author', `{${authors.map((p) => inverted(p.name)).join(' and ')}}`],
     ['title', `{{${tex(a.data.title)}}}`],
-    ['howpublished', '{copperhead research}'],
+    ['howpublished', '{Copperhead research}'],
     ['year', `{${year}}`],
     // Unbraced: jan..dec are BibTeX's own month macros, which every style
     // knows how to print.
@@ -130,5 +130,5 @@ export const citation = (a: Article) => {
     names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0];
   const title = a.data.title.replace(/[.?!]$/, '');
   const end = /[?!]$/.test(a.data.title) ? a.data.title.at(-1) : '.';
-  return `${byline} (${a.data.date.getUTCFullYear()}). ${title}${end} copperhead research. ${new URL(articlePath(a.id), site).href}`;
+  return `${byline} (${a.data.date.getUTCFullYear()}). ${title}${end} Copperhead research. ${new URL(articlePath(a.id), site).href}`;
 };

@@ -1,4 +1,4 @@
-# copperhead copy
+# Copperhead copy
 
 The written half of the brand. `README.md` in this folder covers the mark,
 the wordmark and the palette; this file covers the words that go next to
@@ -10,14 +10,15 @@ Pick the block that fits the space you are filling. Do not mix two of them
 into a new one, and do not trim a longer block to fake a shorter one when a
 shorter one already exists here.
 
-The name is always lowercase `copperhead`, as artwork and in running prose
-alike, including at the start of a sentence. Every surface on the site sets
-it that way. A sentence that reads badly opening on it gets rewritten, not
-capitalized.
+The name is Copperhead, with a capital C, in running prose, titles, metadata
+and alt text alike. The exception is the logo: the wordmark in the lockup is
+lowercase `copperhead` artwork and stays that way. Anything a reader types
+stays lowercase too, because that is how it is typed: the CLI (`copperhead
+create`), the npm package, the repo and the domain.
 
 ## Name
 
-**copperhead**
+**Copperhead**
 
 ## Tagline
 
@@ -30,7 +31,7 @@ knows what Cursor is. Use the one-liner instead where they might not.
 
 ## One-liner
 
-> copperhead is an open source AI agent that edits your real KiCad files and
+> Copperhead is an open source AI agent that edits your real KiCad files and
 > runs ERC and DRC until they pass.
 
 The default sentence. Repo description, package description, meta
@@ -41,7 +42,7 @@ ship" is a sentence any EDA vendor could run unchanged.
 
 ## Short description
 
-> copperhead turns product requirements into real, editable KiCad designs.
+> Copperhead turns product requirements into real, editable KiCad designs.
 > It helps with circuit architecture, component selection, schematic
 > capture, PCB layout, documentation and verification through
 > deterministic ERC and DRC feedback loops.
@@ -70,7 +71,7 @@ Sized for the ~160 character bio fields. Pair it with the tile
 
 ## Positioning statement
 
-> copperhead treats every PCB like a codebase: structured intent, traceable
+> Copperhead treats every PCB like a codebase: structured intent, traceable
 > decisions, version-controlled changes, executable verification and
 > recoverable workflows.
 
@@ -83,7 +84,7 @@ belongs on an about page or in a deck, not on the fold.
 
 > Hardware engineering is becoming programmable.
 >
-> copperhead is the AI-native workspace for designing, reviewing and
+> Copperhead is the AI-native workspace for designing, reviewing and
 > verifying electronics.
 
 For a launch post, a keynote slide or anywhere the claim is allowed to be
@@ -102,7 +103,7 @@ condition, which is what that reader is checking for.
 ## Pitch version
 
 > Hardware teams still design circuit boards through fragmented tools,
-> manual datasheet work and endless review cycles. copperhead brings the
+> manual datasheet work and endless review cycles. Copperhead brings the
 > agentic software workflow to electronics, helping engineers move from
 > requirements to verified PCB designs while keeping every decision
 > inspectable and every output editable.

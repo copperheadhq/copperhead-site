@@ -21,8 +21,9 @@ the index card blurb and the meta description, so write it as one or two full
 sentences, not a fragment.
 
 Prose is hard-wrapped at 88 columns. Frontmatter values, tables, component props and
-code blocks are exempt and stay on one line. `copperhead` is lowercase everywhere,
-including sentence-initial.
+code blocks are exempt and stay on one line. The name is Copperhead, with a capital C,
+in prose, titles and alt text. Only the logo wordmark and what a reader types stay
+lowercase: `copperhead create`, `npm i -g copperhead`, the repo and the domain.
 
 If the post needs numbers you were not given, ask for them. Never invent a token
 count, a runtime, a price or a benchmark result. Every number in these posts is read
@@ -201,7 +202,7 @@ carrying no directory, no theme suffix and no extension, and `coverArt` in
 
 ```yaml
 cover: '<slug>'
-coverAlt: 'A copperhead title card: <what the drawing shows, not what the post argues>.'
+coverAlt: 'A Copperhead title card: <what the drawing shows, not what the post argues>.'
 ```
 
 A `cover` naming a card nobody rendered throws at build time rather than

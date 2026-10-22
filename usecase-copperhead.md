@@ -1,8 +1,8 @@
-# Use-Case Description — copperhead
+# Use-Case Description — Copperhead
 
 ## Agent Objective
 
-copperhead is an open source AI agent for end-to-end hardware product development. It takes a product brief (requirements, constraints, budgets) and produces a complete, verified electronics design: KiCad schematics, a first-draft PCB layout, gerbers, an orderable BOM, firmware scaffold and a bring-up plan. It also iterates on existing designs: a single natural-language request ("cut the sleep current", "move the key off a strapping pin") is turned into surgical edits on real KiCad source files, propagated across every design document and verified with KiCad's own ERC/DRC tooling before anything is reported done.
+Copperhead is an open source AI agent for end-to-end hardware product development. It takes a product brief (requirements, constraints, budgets) and produces a complete, verified electronics design: KiCad schematics, a first-draft PCB layout, gerbers, an orderable BOM, firmware scaffold and a bring-up plan. It also iterates on existing designs: a single natural-language request ("cut the sleep current", "move the key off a strapping pin") is turned into surgical edits on real KiCad source files, propagated across every design document and verified with KiCad's own ERC/DRC tooling before anything is reported done.
 
 The problem it solves: hardware design requires holding dozens of cross-cutting constraints simultaneously (power budgets, strapping pins, leakage currents, RF keepouts), and every change touches multiple artifacts that silently drift apart. Drift ships to fabrication at $5–50K and 6–8 weeks per respin.
 
@@ -49,7 +49,7 @@ Technical level is high; interaction is via CLI and a live web viewer, on the us
 
 ## Role Descriptions
 
-- **Client**: copperhead — open source hardware project (chouhan.ai); copperhead is our open source (Apache-2.0) design agent
+- **Client**: Copperhead — open source hardware project (chouhan.ai); Copperhead is our open source (Apache-2.0) design agent
 - **Customer**: hardware teams and individual engineers adopting the agent on their own repositories
 - **User**: the engineer invoking the CLI/viewer — typically also the customer at current stage
 

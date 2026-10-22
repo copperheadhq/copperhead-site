@@ -1,6 +1,6 @@
 # copperhead-site — Website Specification
 
-Single-page marketing site for copperhead. Live at **copperhead.chouhan.ai**. Content is final in website-content.md; visual system in brand-and-business.md §1. This spec covers structure, implementation and acceptance.
+Single-page marketing site for Copperhead. Live at **copperhead.chouhan.ai**. Content is final in website-content.md; visual system in brand-and-business.md §1. This spec covers structure, implementation and acceptance.
 
 ## 1. Goals
 
@@ -108,7 +108,7 @@ Routes: `/blog/` (index), `/blog/<slug>/` (posts), `/blog/faq/`.
 
 ## 9. Repo & deploy
 
-- Repo: `copperhead-site` (MIT). Description: "Website for copperhead, the open source AI agent for PCB design. Live at copperhead.chouhan.ai"
+- Repo: `copperhead-site` (MIT). Description: "Website for Copperhead, the open source AI agent for PCB design. Live at copperhead.chouhan.ai"
 - Structure (Astro): `src/pages/index.astro`, `src/components/` (Hero, Stepper, Invariants, Outputs, Proof, Quickstart, Footer), `public/` (video, og, favicon, fonts)
 - Deploy: same host as chouhan.ai (GitHub Pages or Cloudflare Pages). DNS: CNAME `copperhead` → host. HTTPS enforced
 - CI: build on push to main; link-check step (no dead links to repo/blog)
@@ -119,7 +119,7 @@ Routes: `/blog/` (index), `/blog/<slug>/` (posts), `/blog/faq/`.
 - **W-2** Both hero buttons work; GitHub button reachable within one interaction from any scroll position
 - **W-3** Quickstart copy button copies the exact five-line block
 - **W-4** Lighthouse mobile ≥ 95 across performance/a11y/SEO
-- **W-5** Every claim on the page is demonstrable in the copperhead repo today (manual review against README)
+- **W-5** Every claim on the page is demonstrable in the Copperhead repo today (manual review against README)
 - **W-6** No em-dashes anywhere in rendered copy (grep the built HTML)
 - **W-7** OG preview renders correctly (test with an OG checker)
 - **W-8** Renders correctly at 360px, 768px, 1440px widths

@@ -69,7 +69,7 @@ export const readingTime = (body: string) => {
  */
 export const faqCover = {
   cover: 'faq',
-  alt: 'A copperhead title card: one trace entering a junction and leaving it as three.',
+  alt: 'A Copperhead title card: one trace entering a junction and leaving it as three.',
 };
 
 /** URL-safe form of a `kind` label, used as a filter chip's value. */

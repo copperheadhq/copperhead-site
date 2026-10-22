@@ -1,12 +1,12 @@
 ---
 title: "Reverse engineering a Crompton LED bulb from photographs"
-description: "My Crompton LED bulb went dim and started to flicker. I replaced it, then reverse engineered the old one from 54 phone photos with copperhead. It found an LED board driven past its own label, a burn mark on one of the LEDs and a controller chip it could only name as a best guess."
+description: "My Crompton LED bulb went dim and started to flicker. I replaced it, then reverse engineered the old one from 54 phone photos with Copperhead. It found an LED board driven past its own label, a burn mark on one of the LEDs and a controller chip it could only name as a best guess."
 date: 2026-10-12
 kind: "Teardown"
 cover: "crompton-led-bulb-teardown"
-coverAlt: "A copperhead title card: the lamp's driver board, copper side up, with every part boxed and labelled with its role and value."
+coverAlt: "A Copperhead title card: the lamp's driver board, copper side up, with every part boxed and labelled with its role and value."
 ogImage: "/blog/crompton-led-bulb-teardown-og.jpg"
-ogImageAlt: "A copperhead share card: the title Reverse engineering a Crompton LED bulb from photographs beside the lamp's driver board, copper side up, with every part boxed and labelled with its role and value."
+ogImageAlt: "A Copperhead share card: the title Reverse engineering a Crompton LED bulb from photographs beside the lamp's driver board, copper side up, with every part boxed and labelled with its role and value."
 ---
 
 import { Image } from "astro:assets";
@@ -47,7 +47,7 @@ frame.
 
 ## Method
 
-copperhead usually goes from a written brief to a circuit board. Its reverse engineering
+Copperhead usually goes from a written brief to a circuit board. Its reverse engineering
 framework runs the other way, from photos to the circuit, the parts, the risks and a
 record of how sure it is about every claim.
 
@@ -170,7 +170,7 @@ That's around 16% over the board's own label, close to 0.9 W per LED.
 
 It's a lot of heat for a small square of board. About 5.7 W of it has to leave through a
 smear of thermal grease, into the aluminium cup and out through a plastic housing.
-Nothing in the circuit watches the LED temperature. copperhead also flags the output
+Nothing in the circuit watches the LED temperature. Copperhead also flags the output
 capacitor, a 105 °C part sealed in the neck, as the part most likely to limit how long
 the bulb lasts.
 
@@ -199,12 +199,12 @@ read the marking by eye. I read it several times and got a different answer almo
 time: BP2836, then BP2336 or BP2338, then BP2636. The photos weren't any better and read
 BP2835, BP2865 or BP2885 depending on the light.
 
-copperhead took my first read and rebuilt everything around BP2836 until it noticed
+Copperhead took my first read and rebuilt everything around BP2836 until it noticed
 BP2836 only comes in a through-hole package<sup><a href="#ref-7">[7]</a></sup> and this
 chip is surface mount. Next it settled on BP2336J and marked it verified because the
 second and third lines of the marking were in the right format.
 
-That was too strong and copperhead pulled it back. The same maker prints that format on
+That was too strong and Copperhead pulled it back. The same maker prints that format on
 several different chips<sup><a href="#ref-8">[8]</a><a href="#ref-9">[9]</a></sup>, so a
 matching format only identifies the maker.
 
@@ -237,12 +237,12 @@ whether the varistor catches a spike before the chip does. Crompton's current 9 
 advertise 4 kV surge protection<sup><a href="#ref-10">[10]</a></sup>, and this 2019 one
 prints no surge rating at all.
 
-With no big capacitor on the mains side, copperhead also expects 17 to 25% flicker at
+With no big capacitor on the mains side, Copperhead also expects 17 to 25% flicker at
 100 Hz, which is too fast to see directly. It rates that figure as a weak estimate.
 
 ## Suggested changes
 
-copperhead's verdict is that the design was built to meet the standards as cheaply as
+Copperhead's verdict is that the design was built to meet the standards as cheaply as
 possible, with reliability second. It meets the power factor and efficiency it has
 to<sup><a href="#ref-11">[11]</a><a href="#ref-12">[12]</a></sup> on very few parts, and
 the LEDs run hot against the board's label. The changes it suggests are small. Use a 160
@@ -250,7 +250,7 @@ V output capacitor. Either add a few LEDs or swap the sense resistor for 2.4 Ω,
 brings the current down to about 83 mA for roughly 15% less light. Run a proper surge
 test at 1 and 2.5 kV before touching the varistor.
 
-Each of these findings also becomes a rule copperhead can check on a new design before
+Each of these findings also becomes a rule Copperhead can check on a new design before
 anyone builds it:
 
 - the output capacitor is rated at least 1.1 times the overvoltage trip
@@ -269,7 +269,7 @@ It's also one bulb from 2019, and Crompton's newer ones may be built differently
 the repair videos already shows a Crompton 9 W driver of a different
 design<sup><a href="#ref-3">[3]</a></sup>.
 
-The next step is a multimeter. copperhead has already marked about 40 pairs of points to
+The next step is a multimeter. Copperhead has already marked about 40 pairs of points to
 probe across the photos, all with the bulb unplugged. It also wants a sharper photo of
 the chip. Measuring it with power on is a job for someone with an isolation transformer.
 Every part of this lamp, the LED board included, sits at mains voltage when it's
@@ -281,7 +281,7 @@ switched on.
     alt="The driver's copper face with about thirty probe points circled in seven colours and the controller's pins numbered 1 to 8, pin 7 being an empty pad. Underneath is a printed list of seven continuity checks between named pins and component legs, preceded by an instruction to unplug the lamp and discharge the large capacitor through a 1 k resistor."
   />
   <figcaption>
-    The copper side of the probe map copperhead drew on my own photo, carrying checks 1
+    The copper side of the probe map Copperhead drew on my own photo, carrying checks 1
     to 7. The rest are on the other photos, and checks 1 and 5 decide what the chip is.
   </figcaption>
 </figure>
@@ -290,9 +290,9 @@ switched on.
 
 Everything above is in the report<sup><a href="#ref-13">[13]</a></sup> with the working
 shown. The full version runs to 59 pages, and its appendices come straight out of
-copperhead's data: the parts list, the connections with a confidence on each, the
+Copperhead's data: the parts list, the connections with a confidence on each, the
 evidence and all 19 unknowns. The summary<sup><a href="#ref-14">[14]</a></sup> is five
-pages. copperhead wrote the report's text and drew its figures, and I didn't edit
+pages. Copperhead wrote the report's text and drew its figures, and I didn't edit
 either. My part was the photos, a few reads of the chip by eye and telling it when to
 stop guessing and commit.
 
@@ -301,13 +301,13 @@ stop guessing and commit.
     <a href="/blog/crompton-led-bulb-teardown-report-rev1.6.1.pdf">
       <Image
         src={reportCover}
-        alt="Cover of the full teardown report, revision 1.6.1, marked draft and public and written by copperhead, with the manufacturer's photo of Crompton's current 9 W bulb and its box."
+        alt="Cover of the full teardown report, revision 1.6.1, marked draft and public and written by Copperhead, with the manufacturer's photo of Crompton's current 9 W bulb and its box."
       />
     </a>
     <a href="/blog/crompton-led-bulb-teardown-summary-rev1.6.1.pdf">
       <Image
         src={summaryCover}
-        alt="Cover of the five-page executive summary, revision 1.6.1, marked draft and public and written by copperhead, with the same photo of the bulb and its box."
+        alt="Cover of the five-page executive summary, revision 1.6.1, marked draft and public and written by Copperhead, with the same photo of the bulb and its box."
       />
     </a>
   </p>
@@ -415,7 +415,7 @@ October 2026 and checked again on 12 October 2026.
     pages.\
     [/blog/crompton-led-bulb-teardown-report-rev1.6.1.pdf](/blog/crompton-led-bulb-teardown-report-rev1.6.1.pdf)\
     Every number in this post with its working, its evidence label and its confidence,
-    plus the appendices copperhead generated from its own data.
+    plus the appendices Copperhead generated from its own data.
 
 14. <a id="ref-14"></a>
     Teardown executive summary TD-2026-CRM-001, revision 1.6.1, 5 pages.\

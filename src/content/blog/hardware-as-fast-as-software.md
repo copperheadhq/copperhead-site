@@ -4,7 +4,7 @@ description: "Two boards for Kyra, glasses and a ring, taken from a two-sentence
 date: 2026-09-02
 kind: "Engineering"
 cover: "hardware-as-fast-as-software"
-coverAlt: "A copperhead title card: a Formula 1 car in side profile as a single copper silhouette, speed lines behind it."
+coverAlt: "A Copperhead title card: a Formula 1 car in side profile as a single copper silhouette, speed lines behind it."
 ---
 
 On 27 August I [replied](https://x.com/animeshsingh38/status/2093044844423946444) to
@@ -471,7 +471,7 @@ day for two boards, and every claim in it traces to a commit, a decision number 
 assumption with its consequence written down.
 
 Software teams take that for granted: a spec, a design, a build, a diff, a log. Hardware
-mostly does not have it, and copperhead is built to supply
+mostly does not have it, and Copperhead is built to supply
 it<sup><a href="#ref-11">[11]</a></sup>.
 
 ## References
@@ -557,7 +557,7 @@ built from.
    controller and the second MCU.
 
 11. <a id="ref-11"></a>
-   copperhead.\
+   Copperhead.\
    <https://copperhead.sh>\
    The pipeline that produced the record: copperhead create, version 0.10.0, eight
    stages, of which the first three were run here.

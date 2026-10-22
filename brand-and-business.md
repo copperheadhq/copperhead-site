@@ -1,4 +1,4 @@
-# copperhead - Brand, Website, Pitch & Business
+# Copperhead - Brand, Website, Pitch & Business
 
 _(Companion to SPEC.md and pitch-script.md. Website copy follows Chouhan voice: precise, confident, understated. No em-dashes in customer-facing copy.)_
 
@@ -8,13 +8,13 @@ _(Companion to SPEC.md and pitch-script.md. Website copy follows Chouhan voice: 
 
 ### Identity
 
-- **Name:** copperhead (always lowercase, like the CLI command)
+- **Name:** Copperhead (capital C in prose; the logo wordmark and the CLI command stay lowercase `copperhead`)
 - **One-liner:** Cursor for circuit boards.
 - **Tagline options:**
   - "The agent that lives in your copper." (primary)
   - "From prompt to manufacturable board."
   - "Hardware design at software speed."
-- **Elevator:** copperhead is an open source AI agent that takes a product brief and produces a complete, verified hardware design: schematics, a first-draft board, gerbers, firmware and a build plan. It works on real KiCad files in your own repo, and nothing is done until the tools agree.
+- **Elevator:** Copperhead is an open source AI agent that takes a product brief and produces a complete, verified hardware design: schematics, a first-draft board, gerbers, firmware and a build plan. It works on real KiCad files in your own repo, and nothing is done until the tools agree.
 
 ### Voice
 
@@ -32,7 +32,7 @@ _(Companion to SPEC.md and pitch-script.md. Website copy follows Chouhan voice: 
 ### Naming conventions
 
 - CLI: `copperhead` · Repo: `animesh-chouhan/copperhead` · npm: `@chouhan/copperhead`
-- Hosted product (later): "copperhead cloud". Never "copperhead AI".
+- Hosted product (later): "Copperhead Cloud". Never "Copperhead AI".
 
 ---
 
@@ -72,7 +72,7 @@ The design runs locally forever. What's paid is _operational_: hosted compute an
 ### Unit economics sanity check
 
 - A respin costs $5–50K and 6–8 weeks. One caught strapping-pin trap pays for years of Team tier.
-- EE consultancies bill $150–300/hr; copperhead compresses exactly the billable drudgery (doc sync, BOM checks, verification loops). They are both customer and channel.
+- EE consultancies bill $150–300/hr; Copperhead compresses exactly the billable drudgery (doc sync, BOM checks, verification loops). They are both customer and channel.
 - LLM cost per `do` run: ~$0.10–1.00 (tool-loop, small context). Gross margin at $49/mo survives heavy use; cap runs or metered top-ups beyond fair use.
 
 ### Sequencing

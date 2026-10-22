@@ -1,6 +1,6 @@
 ---
 title: "Simulating serpentine length matching on a bent differential pair"
-description: "A post on X showed a U-bend skewing a differential pair by 9.5 ps and a serpentine putting it right. I had copperhead build the bend and six ways of fixing it and solve every one in openEMS. Matching the lengths exactly removed only 44 to 75 % of the skew."
+description: "A post on X showed a U-bend skewing a differential pair by 9.5 ps and a serpentine putting it right. I had Copperhead build the bend and six ways of fixing it and solve every one in openEMS. Matching the lengths exactly removed only 44 to 75 % of the skew."
 date: 2026-10-19
 kind: "Simulation"
 keywords: ["signal integrity", "differential pairs", "length matching", "serpentine tuning", "openEMS", "FDTD"]
@@ -48,7 +48,7 @@ for granted: equal length means equal delay. Length tuners that report in picose
 still get them from the length. A serpentine adds corners. It pulls one trace away from
 its partner and folds back on itself, and none of that shows up in a length report.
 
-So I asked copperhead to check it with a field solver instead of a ruler.
+So I asked Copperhead to check it with a field solver instead of a ruler.
 
 ## The untuned bend
 
@@ -57,7 +57,7 @@ whatever the radius. At a 20 mil pitch that's 1.596 mm, or 62.8 mil. Multiply by
 and divide by the speed of light and you have the skew.
 
 Which ε_eff you use matters. At 3.8 it comes to 10.4 ps. The post's 9.5 ps works out to
-ε_eff = 3.18, a perfectly normal number for FR-4 microstrip. copperhead's stackup is
+ε_eff = 3.18, a perfectly normal number for FR-4 microstrip. Copperhead's stackup is
 0.25 mm traces on 0.2 mm of ε_r 4.3, which has a single-line ε_eff of 3.15 by the
 Hammerstad-Jensen formula<sup><a href="#ref-7">[7]</a></sup>. So geometry says 9.45 ps.
 
@@ -75,11 +75,11 @@ openEMS said 9.3 ps. For the bend on its own, geometry is within 2 % at a 50 ps 
 
 ## Test boards
 
-copperhead built one fixture and changed nothing but the tuning. Every board has the
+Copperhead built one fixture and changed nothing but the tuning. Every board has the
 same stackup, the same launches and the same 12 mm legs.
 
 C, D and F are the usual fix in three styles: two sparse excursions, a dense accordion
-of four and one broad trombone. On each, copperhead solved the amplitude so that P and N
+of four and one broad trombone. On each, Copperhead solved the amplitude so that P and N
 come out exactly the same length, chamfered corners included. C far is C moved next to
 the launch. E is a control. It swings both traces out together, which adds delay to the
 pair and nothing to the difference between them. KiCad's DRC passed every board before
@@ -231,13 +231,13 @@ The more excursions, the less of the skew came back: 75 % with one, 61 % with tw
 
 ## Delay efficiency
 
-The obvious suspect is the lengths. copperhead built a transmission-line model of every
+The obvious suspect is the lengths. Copperhead built a transmission-line model of every
 board, calibrated on the solver's own straight pair so its coupled lines are the
 solver's coupled lines. It knows every length to the micrometre and predicts 0.2, 0.3
 and 0.3 ps for F, C and D. Length isn't what's missing.
 
 What the line model can't see is the corners and the coupling between folds. To pull
-those apart copperhead ran one more pair of boards. Each is a straight pair with 6 mm
+those apart Copperhead ran one more pair of boards. Each is a straight pair with 6 mm
 added to one trace in three excursions, once with the folds 1.0 mm apart and once at the
 0.15 mm clearance rule. Same corners and same added length. They aren't quite the same
 board, though. The tight one packs its folds into 2.15 mm against 6.40 mm, so P also
@@ -283,14 +283,14 @@ lots of small excursions still does worst.
 ## Stripline
 
 Microstrip runs its two modes at different speeds, so some of this could have been a
-microstrip quirk. copperhead put the same copper between two planes and ran it again, on
+microstrip quirk. Copperhead put the same copper between two planes and ran it again, on
 one mesh only.
 
 It wasn't. Geometry predicts the stripline bend to 0.6 % (10.97 ps against 11.04 ps).
 The tunings removed 81, 64 and 42 % of the skew. In microstrip they removed 75, 61 and
 44 %.
 
-Tight folds still cost 20 points. copperhead had written into the first draft of its
+Tight folds still cost 20 points. Copperhead had written into the first draft of its
 report that this penalty should shrink in stripline, because far-end coupling between
 parallel lines vanishes there. It doesn't shrink. My best guess, which nothing here
 tests, is that neighbouring folds carry current in opposite directions. The coupling
@@ -361,7 +361,7 @@ depends on the rest of the board, and none of this models that.
 
 ## Sizing from the residual
 
-If each excursion loses a fixed amount, the fix is to put that amount back. copperhead
+If each excursion loses a fixed amount, the fix is to put that amount back. Copperhead
 lengthened C, D and F by their own leftover skew, converted to length at the bend's
 rate. By CAD measure P is now longer than N. The line model says all three overshoot: to
 -1.9 ps for F, -3.0 ps for C and -4.5 ps for D.
@@ -395,19 +395,19 @@ For edge-coupled pairs around this pitch, in microstrip or stripline:
 - Keep a broad excursion short or it'll show up on the TDR.
 - Swinging the whole pair out does nothing for skew within the pair.
 
-## Why copperhead runs studies
+## Why Copperhead runs studies
 
 It's easy to build an AI for PCBs that's judged by the rules it follows. DRC passes, the
 length report reads zero, done. On this bend that bar passes a board that still carries
 5.2 ps of skew.
 
-copperhead works the other way round. It treats a rule as a claim to test, runs the
+Copperhead works the other way round. It treats a rule as a claim to test, runs the
 study that tests it and keeps the result as a check with a number on it. This post is
-one of those studies from start to finish. copperhead built the fixtures, ran the 140
+one of those studies from start to finish. Copperhead built the fixtures, ran the 140
 solves, caught its own mistakes (below) and wrote the report.
 
 The checks run on real designs through fang<sup><a href="#ref-8">[8]</a></sup>,
-copperhead's hardware kernel. A requirement that needs a simulation gets one. ngspice
+Copperhead's hardware kernel. A requirement that needs a simulation gets one. ngspice
 takes the circuits and Renode runs the firmware against the board it's written for. A
 value that breaks a requirement never reaches the design. One that nothing has measured
 yet stays unknown instead of passing.
@@ -419,7 +419,7 @@ to run.
 ## Errors during the study
 
 The first runs never finished. openEMS stops once the energy in the model has decayed,
-and here it stalled well short of the target. copperhead traced that to the DC content
+and here it stalled well short of the target. Copperhead traced that to the DC content
 of the pulse, which leaves a static field behind that never decays. Every run now stops
 at a fixed 2 ns instead, after checking that the signals at the ports have fallen at
 least 98 dB.
@@ -449,8 +449,8 @@ see on a VNA is the dense accordion leaving 5.2 ps where the length report says 
 
 ## Full report
 
-copperhead wrote the report and drew every figure in this post. It runs to 14 pages with
-the method, the mesh checks, the related work and the coupon plan. copperhead checked
+Copperhead wrote the report and drew every figure in this post. It runs to 14 pages with
+the method, the mesh checks, the related work and the coupon plan. Copperhead checked
 each of its 26 references against Crossref or its source
 page<sup><a href="#ref-9">[9]</a></sup>. The scripts, the S-parameter files and the raw
 solver runs are in the study's repository. A script fills in every number in this post
@@ -532,7 +532,7 @@ Each entry says which claim in the text it carries. Web sources were read on 19 
    The single-line ε_eff of 3.15 behind the 9.45 ps.
 
 8. <a id="ref-8"></a>
-   copperhead, fang.\
+   Copperhead, fang.\
    [https://github.com/copperheadhq/fang](https://github.com/copperheadhq/fang)\
    The hardware kernel and its verification questions: ngspice and Xyce for circuits,
    Renode for firmware, KiCad's ERC and Touchstone files for RF.

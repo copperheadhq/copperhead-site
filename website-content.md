@@ -6,9 +6,9 @@ Final copy, section by section, matching the layout in brand-and-business.md §2
 
 ## Meta / SEO
 
-- **Title:** copperhead. Cursor for circuit boards.
+- **Title:** Copperhead. Cursor for circuit boards.
 - **Description:** An open source AI agent that designs, documents and verifies real PCBs from a prompt. It works on your KiCad files, in your repo, and nothing is done until the checks pass.
-- **OG image:** board render on near-black with the copperhead wordmark
+- **OG image:** board render on near-black with the Copperhead wordmark
 - **URL:** copperhead.chouhan.ai (or chouhan.ai/copperhead)
 
 ---
@@ -17,7 +17,7 @@ Final copy, section by section, matching the layout in brand-and-business.md §2
 
 **H1:** Cursor for circuit boards.
 
-**Sub:** copperhead is an open source AI agent that designs, documents and verifies real PCBs from a prompt. On your files, in your repo, with KiCad's own checks as the gate.
+**Sub:** Copperhead is an open source AI agent that designs, documents and verifies real PCBs from a prompt. On your files, in your repo, with KiCad's own checks as the gate.
 
 **Buttons:** [View on GitHub] [Watch the demo]
 
@@ -96,11 +96,11 @@ Open Telegraph is a pocket-size Morse key: an ESP32-S3, one button, one RGB LED 
 
 **Section title:** Open because it has to be.
 
-Hardware engineers trust what they can inspect. copperhead is Apache-2.0, built on an open stack (KiCad, kicad-cli, OpenSpec), and everything it writes is plain markdown and JSON in your own repository. No proprietary formats, no lock-in, no black box.
+Hardware engineers trust what they can inspect. Copperhead is Apache-2.0, built on an open stack (KiCad, kicad-cli, OpenSpec), and everything it writes is plain markdown and JSON in your own repository. No proprietary formats, no lock-in, no black box.
 
 Transparency scales. Trust does not. A closed tool asks you to take its word; an open one hands you the source and invites you to check.
 
-copperhead is an open source project. The same commitment that puts every hardware schematic we make in public applies to the tool that designs them.
+Copperhead is an open source project. The same commitment that puts every hardware schematic we make in public applies to the tool that designs them.
 
 ---
 
@@ -122,7 +122,7 @@ copperhead do "add a second RGB LED on an RTC-capable pin"
 
 ## 9. Footer
 
-copperhead · an open source project
+Copperhead · an open source project
 [GitHub] [Discord] [X] [chouhan.ai]
 Apache-2.0. Hardware designs referenced here are CERN-OHL-S v2.0.
 Built at Antler Crackathon, Bengaluru.
@@ -143,6 +143,6 @@ Built at Antler Crackathon, Bengaluru.
 
 ## Show HN draft (post-launch)
 
-**Title:** Show HN: copperhead, an open source AI agent that designs real PCBs in your KiCad repo
+**Title:** Show HN: Copperhead, an open source AI agent that designs real PCBs in your KiCad repo
 
 **Body:** I design open hardware and got tired of the part of the job that is not engineering: keeping five documents, a BOM and a schematic from drifting apart every time one value changes. So I turned my workflow into an agent. It writes a change proposal first, edits the real KiCad s-expressions surgically, propagates the change across every doc, then runs kicad-cli ERC and DRC and fixes what they flag. It refused to add a pullup that would have leaked 33 uA against my 25 uA sleep budget, and cited the spec line. That was the moment it earned the repo it lives in. Proof board (a pocket Morse key) and the tool are both fully open. Happy to answer anything.

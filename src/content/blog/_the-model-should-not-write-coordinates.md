@@ -1,6 +1,6 @@
 ---
 title: 'The model should not be writing coordinates'
-description: 'A schematic that passes ERC can still be unreadable, because ERC checks the net graph and nothing checks the drawing. copperhead now has the model author intent and a deterministic engine compute every coordinate.'
+description: 'A schematic that passes ERC can still be unreadable, because ERC checks the net graph and nothing checks the drawing. Copperhead now has the model author intent and a deterministic engine compute every coordinate.'
 date: 2026-07-31
 kind: 'Engineering'
 ---
@@ -15,7 +15,7 @@ no opinion about the drawing.
 
 ## Where coordinates came from
 
-Until this week, every number in a copperhead schematic was a token the model
+Until this week, every number in a Copperhead schematic was a token the model
 sampled. Placement was not computed. It was generated, one s-expression at a time,
 through the same text-edit tool the agent uses on markdown.
 
@@ -77,7 +77,7 @@ its intent.
 This narrows the repair surface deliberately. Anything expressible as intent is
 fixable. Nothing else is.
 
-It also means an earlier claim on this blog now needs scoping. copperhead still
+It also means an earlier claim on this blog now needs scoping. Copperhead still
 never regenerates a schematic it did not draft, so surgical edits remain the rule
 for hand-drawn projects and for any board you bring to it. But for sheets the engine
 authored, regeneration from intent is the mechanism, not a fallback.

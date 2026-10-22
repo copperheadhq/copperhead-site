@@ -47,7 +47,7 @@ const kinds = [...counts.entries()].map(([kind, n]) => ({
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "copperhead research",
+  name: "Copperhead research",
   url: new URL("/research/", site).href,
   hasPart: articles.map((a) => ({
     "@type": "ScholarlyArticle",
@@ -61,8 +61,8 @@ const jsonLd = {
 ---
 
 <Base
-  title="Research · copperhead"
-  description="Method and measurement from copperhead, each article tied to the paper, code or data it rests on so the numbers can be reproduced and argued with."
+  title="Research · Copperhead"
+  description="Method and measurement from Copperhead, each article tied to the paper, code or data it rests on so the numbers can be reproduced and argued with."
   path="/research/"
   jsonLd={jsonLd}
 >

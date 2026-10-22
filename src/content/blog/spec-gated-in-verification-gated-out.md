@@ -4,11 +4,11 @@ description: 'The two invariants that make an agent safe to point at real design
 date: 2026-07-16
 kind: 'Engineering'
 cover: 'spec-gated-in-verification-gated-out'
-coverAlt: 'A copperhead title card: one trace running through two gate pads.'
+coverAlt: 'A Copperhead title card: one trace running through two gate pads.'
 ---
 
 An agent that can edit your schematic is only useful if you can predict what it
-won't do. copperhead gets that from two invariants that hold on every run.
+won't do. Copperhead gets that from two invariants that hold on every run.
 
 ## The spec gate
 

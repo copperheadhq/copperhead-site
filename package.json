@@ -21,7 +21,7 @@
   "devDependencies": {
     "playwright-core": "^1.56.1"
   },
-  "description": "Website for copperhead, the open source AI agent for PCB design. Live at copperhead.sh",
+  "description": "Website for Copperhead, the open source AI agent for PCB design. Live at copperhead.sh",
   "license": "MIT",
   "private": true
 }

@@ -7,7 +7,7 @@ import FileBlock from "../../components/FileBlock.astro";
   lang="sh"
   code={`mkdir usb-c-breakout && cd usb-c-breakout
 
-# a sentence: copperhead writes it to brief.md for you
+# a sentence: Copperhead writes it to brief.md for you
 copperhead create "a USB-C 5V power breakout, 3A, screw terminal and header, power LED"
 
 # or write brief.md yourself, in as much detail as you like, and point at it
@@ -60,7 +60,7 @@ pulled straight off the schematic. `BOM.md` arrives pre-filled with rows whose p
 number column reads `UNVERIFIED`. `LAYOUT.md` arrives with the literal
 `## Draft quality` heading that stage 5 is supposed to write.
 
-So in a repository that has been through `init`, and that is how copperhead gets
+So in a repository that has been through `init`, and that is how Copperhead gets
 pointed at an existing board, a gate that only asks whether the file exists marks
 stages complete that have produced nothing. Every gate looks for evidence instead:
 
@@ -100,13 +100,13 @@ Finished stages announce themselves and get skipped.
 One subtlety sits underneath that. If a resumed stage's work is sitting uncommitted,
 which is what a run stopped on a provider usage limit leaves behind, it gets
 committed before the pipeline moves on, so a later stage's rollback cannot wipe it.
-That commit only happens when every dirty path in the tree belongs to copperhead. If
+That commit only happens when every dirty path in the tree belongs to Copperhead. If
 your own uncommitted work is sitting next to it, the pipeline says so and leaves the
 whole thing alone.
 
 ## Inside a stage
 
-Each stage runs the same loop as any other copperhead run, and the two invariants of
+Each stage runs the same loop as any other Copperhead run, and the two invariants of
 [Spec-gated in, verification-gated out](/blog/spec-gated-in-verification-gated-out/)
 hold inside every one of them. Nothing starts without a validated change proposal,
 and nothing is done until the tools agree.

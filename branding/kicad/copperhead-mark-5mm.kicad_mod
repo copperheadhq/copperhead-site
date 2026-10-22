@@ -3,7 +3,7 @@
 	(generator "copperhead_branding")
 	(generator_version "1.0")
 	(layer "F.SilkS")
-	(descr "copperhead fiducial mark, 5 mm square, front silkscreen. Graphic only: no pads, excluded from BOM and position files.")
+	(descr "Copperhead fiducial mark, 5 mm square, front silkscreen. Graphic only: no pads, excluded from BOM and position files.")
 	(tags "logo copperhead silkscreen fiducial")
 	(attr board_only exclude_from_pos_files exclude_from_bom)
 	(property "Reference" "G***"

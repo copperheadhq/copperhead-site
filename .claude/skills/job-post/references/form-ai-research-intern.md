@@ -3,10 +3,10 @@
 Build at binary.so. The published URL goes in the `applyUrl` of the `ai-research-intern`
 role in [src/careers.ts](../../../../src/careers.ts).
 
-**Form title:** AI Research Intern, copperhead
+**Form title:** AI Research Intern, Copperhead
 **Intro text:**
 
-> copperhead is an open source agent that designs, documents and verifies real circuit
+> Copperhead is an open source agent that designs, documents and verifies real circuit
 > boards. This internship is aimed at the open research problems underneath it, full-time
 > and on-site in Bengaluru. Evidence of curiosity and strong experiments matters more
 > here than credentials, so the questions ask for both.

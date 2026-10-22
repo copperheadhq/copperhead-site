@@ -26,7 +26,7 @@
     "- [form-founding-ai-engineer.md , live at [binary.so/ejd7Mkv , and the live form is behind the spec",
     "Publish a fourth role, forget the option, and every application for it arrives labelled as something else.",
     "Stateful execution loops that plan work, call tools, inspect results and recover are the first thing on the listing's work list, and someone who has built one has an answer to \"how did it decide it was done\" that a demo does not.",
-    "copperhead is free to install and runs locally, so trying it costs a candidate ten minutes, and asking what they made of it is both a filter and the best product feedback in the pile.",
+    "Copperhead is free to install and runs locally, so trying it costs a candidate ten minutes, and asking what they made of it is both a filter and the best product feedback in the pile.",
     "It is deliberately not , because a fixed height plus silently shears off whatever sits at the bottom, and what sits at the bottom is the live-stats row.",
     "they say what the repository is, which is a different job from what the product is, and a reader on a file listing wants the former.",
     "The hero subhead is the one-liner with the Oxford comma dropped from \"design, verify, and ship\", and that is deliberate too.",
@@ -56,11 +56,10 @@
     "Space Grotesk throughout — display and text both — with JetBrains Mono for code, the wordmark and reference numbers, and DM Sans in the nav bar alone.",
     "both keywords, so light-dark() resolves off the OS preference until the toggle pins it, and so UA chrome (scrollbars, form controls, the caret) follows the theme it is painted on",
     "This comment used to claim 500, which was simply wrong, and the page was rendering a weight light of the reference everywhere.",
-    "The wrapper starts below the hero, because on their page the frame does too — the hero is the page's cover, not a cell of the grid, and ruling its flanks would fight the dot field already there.",
     "A bare URL in a references list is one unbreakable word, up to 580px of it, and on a phone it pushed the whole document sideways.",
     "It works on your KiCad files, in your repo, and nothing is done until the checks pass.",
     "**Footnote:** The draft layout is correct, not optimal, and says so itself.",
-    "copperhead is Apache-2.0, built on an open stack (KiCad, kicad-cli, OpenSpec), and everything it writes is plain markdown and JSON in your own repository.",
+    "Copperhead is Apache-2.0, built on an open stack (KiCad, kicad-cli, OpenSpec), and everything it writes is plain markdown and JSON in your own repository.",
     "This is a Docker action, so every run builds a Dockerfile from whatever the ref resolves to, and it runs with a token that can read traffic for the product repo and push branches here."
   ]
 }

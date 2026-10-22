@@ -4,7 +4,7 @@ description: 'Hardware design holds dozens of cross-cutting constraints at once,
 date: 2026-07-15
 kind: 'Problem'
 cover: 'drift-is-a-build-failure'
-coverAlt: 'A copperhead title card: two traces leaving one pad and arriving at different places.'
+coverAlt: 'A Copperhead title card: two traces leaving one pad and arriving at different places.'
 ---
 
 Ask a hardware engineer what the hard part of the job is and almost nobody says the
@@ -50,7 +50,7 @@ Nothing recorded that, so nothing defended it.
 ## The agent's role
 
 The propagation step is boring, mechanical and unforgiving, which makes it a poor
-use of an engineer's attention and a good fit for a machine. copperhead treats the
+use of an engineer's attention and a good fit for a machine. Copperhead treats the
 design documents as the source of truth, edits the real files rather than
 regenerating them, carries every change across every artifact that references it
 and then asks KiCad whether the result is valid.
