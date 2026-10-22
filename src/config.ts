@@ -42,6 +42,9 @@ export const links = {
   buildStory: 'https://chouhan.ai/building-with-claude',
   // Placeholder page on this site; chouhan.ai/research is a different thing.
   research: '/research/',
+  // The code and data behind the research articles, one folder per study. A
+  // research article without its own `code` repo falls back to this one.
+  researchRepo: 'https://github.com/copperheadhq/copperhead-research',
   // Fang, the hardware kernel behind simulation and verification, on its own
   // site (source: copperheadhq/fang). The About page links it.
   fang: 'https://fang.copperhead.sh/',
