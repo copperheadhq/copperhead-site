@@ -6,6 +6,7 @@ import { quickstart, links, pkg } from "../config";
 import { stats, compact } from "../stats";
 import { getCollection } from "astro:content";
 import { postPath } from "../blog";
+import { articlePath } from "../research";
 
 // Two-column hero, with a backer strip across the foot of the fold:
 //
@@ -47,9 +48,20 @@ import { postPath } from "../blog";
 // a checkout with no posts, and transiently whenever the content-layer cache in
 // .astro is cleared under a running dev server. Neither should take the home
 // page down with a TypeError.
-const [latest] = (await getCollection("blog")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+// Research articles count too: it read only the blog, so it went on announcing
+// the Crompton teardown after the diffpair study had replaced it.
+const [latest] = [
+  ...(await getCollection("blog")).map((p) => ({
+    href: postPath(p.id),
+    title: p.data.title,
+    date: p.data.date,
+  })),
+  ...(await getCollection("research")).map((a) => ({
+    href: articlePath(a.id),
+    title: a.data.title,
+    date: a.data.date,
+  })),
+].sort((a, b) => b.date.valueOf() - a.date.valueOf());
 
 const showStats = stats.stars !== null || stats.downloads !== null;
 ---
@@ -64,13 +76,13 @@ const showStats = stats.stars !== null || stats.downloads !== null;
       <div class="copy">
         {
           latest && (
-            <a class="chip" href={postPath(latest.id)}>
+            <a class="chip" href={latest.href}>
               <span class="chip-tag">
                 <span class="chip-dot" aria-hidden="true" />
                 New
               </span>
               <span class="chip-text">
-                <span class="chip-title">{latest.data.title}</span>
+                <span class="chip-title">{latest.title}</span>
                 <svg
                   class="chip-arrow"
                   viewBox="0 0 16 16"
