@@ -222,6 +222,10 @@ const args = process.argv.slice(2).filter((a) => !a.startsWith('--'))
 for (const path of args.length ? args.map((f) => resolve(f)) : collect('.')) {
   const file = relative(root, path)
   const source = readFileSync(path, 'utf8')
+  // A copy synced in by scripts/sync-pages.mjs is another repo's text: the
+  // legal masters follow their own style rules and counsel's wording, and a
+  // fix made here would be overwritten by the next sync.
+  if (file.startsWith('src/content/pages/') && /^source: /m.test(source)) continue
   const text = strip(file, source)
 
   if (inCollections(file)) {

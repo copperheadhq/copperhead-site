@@ -5,3 +5,9 @@
 # research article. They moved beside it; the old URLs had already gone out.
 /blog/diffpair-meanders-report.pdf       /research/diffpair-meanders.pdf       301
 /blog/diffpair-meanders-report-ieee.pdf  /research/diffpair-meanders-ieee.pdf  301
+
+# The short forms people type for the legal pages. The canonical URLs are the
+# /legal/ ones; anything that links here, such as the Google sign-in consent
+# screen, should use those.
+/privacy                                 /legal/privacy/                       301
+/terms                                   /legal/terms/                         301

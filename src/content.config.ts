@@ -98,4 +98,36 @@ const research = defineCollection({
   }),
 });
 
-export const collections = { blog, research };
+/**
+ * Standalone documents that need a sign-off before they go live, starting with
+ * the legal pages. Each entry names its own URL, and src/pages/[...path].astro
+ * renders it there.
+ *
+ * `draft` is the gate. A draft is built by `astro dev`, so it can be read in
+ * place with the site around it, and left out of every production build: no
+ * route, no sitemap entry, no footer link. The route also refuses to build a
+ * non-draft entry that still holds a bracketed placeholder, so a page cannot
+ * be signed off with "[Grievance Officer]" still in it.
+ */
+const pages = defineCollection({
+  loader: glob({ base: './src/content/pages', pattern: ['**/*.{md,mdx}', '!**/_*'] }),
+  schema: z.object({
+    title: z.string(),
+    /** The meta description. A full sentence. */
+    description: z.string(),
+    /** Site-root path with both slashes, e.g. '/legal/privacy/'. */
+    path: z.string().regex(/^\/[a-z0-9/-]+\/$/),
+    /** Short mono label over the title, e.g. 'Legal'. */
+    kind: z.string(),
+    /** The date of the text, shown as "Updated". */
+    updated: z.coerce.date(),
+    draft: z.boolean(),
+    /**
+     * Where the master lives, for an entry copied in by scripts/sync-pages.mjs.
+     * Edit the master and re-sync rather than editing the copy here.
+     */
+    source: z.string().optional(),
+  }),
+});
+
+export const collections = { blog, research, pages };
