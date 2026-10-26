@@ -41,12 +41,18 @@ contact in Section 2.2.
 India with CIN U62099KA2026PTC227555, having its registered office at 101, 1st Floor, Abhee
 Prince Apartment, Bellandur, Bangalore South, Bangalore-560103, Karnataka, India.
 
-**2.2 Questions about your personal data.** Write to privacy@copperhead.sh with questions about
-how Copperhead processes your personal data.
+**2.2 Questions about your personal data.** Animesh Singh Chouhan, Founder and CEO, can answer
+questions about how Copperhead processes your personal data. Write to contact@copperhead.sh.
 
 **2.3 Grievance Officer.** Complaints about how Copperhead handles your personal data can be
-sent to its Grievance Officer at privacy@copperhead.sh. Section 13 explains how complaints are
-handled.
+sent to its Grievance Officer:
+
+- Name: Animesh Singh Chouhan
+- Designation: Founder and CEO
+- Email: contact@copperhead.sh
+- Address: the registered office in Section 2.1
+
+Section 13 explains how complaints are handled.
 
 ## 3. Personal data we collect
 
@@ -430,7 +436,7 @@ personal data Copperhead holds about you, write to the contact in Section 2.2.
 - keeping service logs and backups.
 
 **11.2** No system is completely secure. If you believe your account or data has been
-compromised, write to security@copperhead.sh.
+compromised, write to contact@copperhead.sh.
 
 ## 12. Your rights
 
@@ -453,7 +459,7 @@ compromised, write to security@copperhead.sh.
   you die, or become unable to exercise them because of unsoundness of mind or infirmity of
   body.
 
-**12.2 How to exercise them.** Write to privacy@copperhead.sh. Include the email address of
+**12.2 How to exercise them.** Write to contact@copperhead.sh. Include the email address of
 your account and, if you sign in with GitHub, your GitHub username, so that Copperhead can
 identify you. Copperhead may ask for information to confirm your identity before acting on a
 request. You can also delete your account as described in Section 10.
@@ -485,7 +491,7 @@ does not knowingly collect their personal data.
 **14.2** Copperhead does not track, monitor the behaviour of, or direct targeted advertising at
 children. If Copperhead learns that it has processed a child's personal data without the
 verifiable consent of a parent or lawful guardian, it will delete that data and close the
-account. Write to privacy@copperhead.sh if you believe this has happened.
+account. Write to contact@copperhead.sh if you believe this has happened.
 
 ## 15. Personal data breaches
 

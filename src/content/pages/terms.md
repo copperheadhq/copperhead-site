@@ -87,7 +87,7 @@ use to sign in, secure. Do not share your credentials or let anyone else use you
 You are responsible for activity under your Account, except activity caused by Copperhead's
 breach of these Terms.
 
-**4.4 Unauthorised access.** Tell Copperhead promptly at security@copperhead.sh if you believe
+**4.4 Unauthorised access.** Tell Copperhead promptly at contact@copperhead.sh if you believe
 your Account has been accessed without authorisation.
 
 **4.5 Organisations.** Owners and administrators of an Organisation control its settings,
@@ -359,13 +359,19 @@ removing features or Model Providers.
 ## 19. Grievances and contact
 
 **19.1 Grievance Officer.** You can send complaints about the Service, these Terms or content
-on the Service to Copperhead's Grievance Officer at privacy@copperhead.sh.
+on the Service to Copperhead's Grievance Officer:
+
+- Name: Animesh Singh Chouhan
+- Designation: Founder and CEO
+- Email: contact@copperhead.sh
+- Address: 101, 1st Floor, Abhee Prince Apartment, Bellandur, Bangalore South,
+  Bangalore-560103, Karnataka, India
 
 **19.2 Timelines.** The Grievance Officer will acknowledge your complaint within forty-eight
 (48) hours and resolve it within one (1) month of receipt.
 
-**19.3 Other contact.** General questions: hello@copperhead.sh. Legal notices:
-legal@copperhead.sh. Security reports: security@copperhead.sh. The Privacy Policy explains how
+**19.3 Other contact.** Write to contact@copperhead.sh with general questions, legal notices
+and security reports. The Privacy Policy explains how
 to make requests and complaints about personal data.
 
 ## 20. General
@@ -389,7 +395,7 @@ perform caused by events beyond its reasonable control.
 **20.6 No waiver.** A delay or failure to enforce a right is not a waiver of it.
 
 **20.7 Notices.** Copperhead may give you notices by email to the address on your Account or
-in the Service. You may give notices to Copperhead at legal@copperhead.sh.
+in the Service. You may give notices to Copperhead at contact@copperhead.sh.
 
 **20.8 Language.** These Terms are written in English. If they are translated, the English
 version prevails to the extent the law permits.
