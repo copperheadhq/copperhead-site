@@ -4,6 +4,7 @@ import { site } from '../config';
 import { postPath } from '../blog';
 import { articlePath } from '../research';
 import { openRoles, rolePath } from '../careers';
+import { liveHrefs } from '../signoff';
 
 // Generated rather than kept in public/, so a new post cannot be forgotten here.
 export const GET: APIRoute = async () => {
@@ -23,6 +24,13 @@ export const GET: APIRoute = async () => {
     { loc: '/status/', changefreq: 'monthly', priority: '0.5' },
     { loc: '/about/', changefreq: 'monthly', priority: '0.6' },
     { loc: '/careers/', changefreq: 'monthly', priority: '0.6' },
+    // The pages collection, signed-off entries only (src/signoff.ts): a draft
+    // has no route in a production build, so it cannot be listed here either.
+    ...Object.values(await liveHrefs()).map((loc) => ({
+      loc: loc as string,
+      changefreq: 'monthly',
+      priority: '0.4',
+    })),
     // Unpublished roles are already filtered out of `openRoles`, so a draft
     // listing cannot be advertised here while having no page to land on. This
     // is also what enrols the section in `npm run check:layout`, which takes its

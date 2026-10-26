@@ -1,5 +1,11 @@
 ---
 import { links } from "../config";
+import { liveHrefs } from "../signoff";
+
+// Pages from the pages collection appear here only once signed off
+// (src/signoff.ts), so a draft never gets a link that would 404.
+const live = await liveHrefs();
+const ifLive = (id: string, label: string) => (live[id] ? [{ label, href: live[id] }] : []);
 
 // Footer in supermemory.ai's shape, measured off their /pricing page: a
 // full-bleed dark ground, a statement headline on the left against link columns
@@ -191,6 +197,14 @@ const social = [
       <span class="part">
         Hardware <a href="https://cern-ohl.web.cern.ch/">CERN-OHL-S v2.0</a>
       </span>
+      {
+        [...ifLive("privacy", "Privacy"), ...ifLive("terms", "Terms")].map((l) => (
+          <>
+            <span class="sep" aria-hidden="true"> · </span>
+            <span class="part"><a href={l.href}>{l.label}</a></span>
+          </>
+        ))
+      }
     </p>
   </div>
 
