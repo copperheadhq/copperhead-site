@@ -359,13 +359,7 @@ removing features or Model Providers.
 ## 19. Grievances and contact
 
 **19.1 Grievance Officer.** You can send complaints about the Service, these Terms or content
-on the Service to Copperhead's Grievance Officer:
-
-- Name: Animesh Singh Chouhan
-- Designation: Founder and CEO
-- Email: privacy@copperhead.sh
-- Address: 101, 1st Floor, Abhee Prince Apartment, Bellandur, Bangalore South,
-  Bangalore-560103, Karnataka, India
+on the Service to Copperhead's Grievance Officer at privacy@copperhead.sh.
 
 **19.2 Timelines.** The Grievance Officer will acknowledge your complaint within forty-eight
 (48) hours and resolve it within one (1) month of receipt.

@@ -41,18 +41,12 @@ contact in Section 2.2.
 India with CIN U62099KA2026PTC227555, having its registered office at 101, 1st Floor, Abhee
 Prince Apartment, Bellandur, Bangalore South, Bangalore-560103, Karnataka, India.
 
-**2.2 Questions about your personal data.** Animesh Singh Chouhan, Founder and CEO, can answer
-questions about how Copperhead processes your personal data. Write to privacy@copperhead.sh.
+**2.2 Questions about your personal data.** Write to privacy@copperhead.sh with questions about
+how Copperhead processes your personal data.
 
 **2.3 Grievance Officer.** Complaints about how Copperhead handles your personal data can be
-sent to its Grievance Officer:
-
-- Name: Animesh Singh Chouhan
-- Designation: Founder and CEO
-- Email: privacy@copperhead.sh
-- Address: the registered office in Section 2.1
-
-Section 13 explains how complaints are handled.
+sent to its Grievance Officer at privacy@copperhead.sh. Section 13 explains how complaints are
+handled.
 
 ## 3. Personal data we collect
 
