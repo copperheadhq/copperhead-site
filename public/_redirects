@@ -10,4 +10,6 @@
 # /legal/ ones; anything that links here, such as the Google sign-in consent
 # screen, should use those.
 /privacy                                 /legal/privacy/                       301
+/privacy/                                /legal/privacy/                       301
 /terms                                   /legal/terms/                         301
+/terms/                                  /legal/terms/                         301

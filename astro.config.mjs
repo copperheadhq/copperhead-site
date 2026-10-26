@@ -23,4 +23,9 @@ export default defineConfig({
     // round trip (spec §7 budget)
     inlineStylesheets: 'always',
   },
+  // src/pages/[...path].astro builds whatever path a pages entry names. If
+  // that path is one another route already builds, the default only warns
+  // and drops the entry, while src/signoff.ts still links it from the footer
+  // and the sitemap. Failing the build is the honest outcome.
+  prerenderConflictBehavior: 'error',
 });

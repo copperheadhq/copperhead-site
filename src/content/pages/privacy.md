@@ -1,6 +1,6 @@
 ---
 title: "Privacy Policy"
-description: "How Copperhead handles personal data on copperhead.sh and app.copperhead.sh."
+description: "How Copperhead handles personal data on copperhead.sh, app.copperhead.sh and workspaces.copperhead.sh."
 path: /legal/privacy/
 kind: Legal
 updated: 2026-10-25
@@ -282,8 +282,8 @@ in the app. Analytics requests pass through Copperhead's own servers, which forw
 cookies. Session recording, automatic capture of clicks and surveys are switched off, and
 page text is masked. Copperhead uses Google Analytics on copperhead.sh.
 
-**6.3 Your choices.** Cookies that keep you signed in, protect sign-in steps and admit you to
-your workspace are needed for the Service to work. You can block or delete other cookies and
+**6.3 Your choices.** Cookies that keep you signed in, protect the GitHub App installation step
+and admit you to your workspace are needed for the Service to work. You can block or delete other cookies and
 browser storage in your browser settings, and you can stop Google Analytics on every website
 with Google's opt-out browser add-on at tools.google.com/dlpage/gaoptout. Blocking necessary
 cookies will stop you from signing in.
@@ -443,8 +443,8 @@ compromised, write to contact@copperhead.sh.
 **12.1** Subject to the DPDP Act, you have the right to:
 
 - **access:** obtain a summary of the personal data Copperhead processes about you and its
-  processing activities, and the identities of the other Data Fiduciaries and Data Processors
-  it has shared that data with, with a description of the data shared;
+  processing activities, and the identities of the other Data Fiduciaries and Data Processors,
+  as the DPDP Act defines them, it has shared that data with, with a description of the data shared;
 - **correction and erasure:** have inaccurate or misleading data corrected, incomplete data
   completed and outdated data updated, and have your personal data erased unless Copperhead
   must keep it for the specified purpose or to comply with the law;
@@ -535,5 +535,3 @@ personal data in the United States and other countries, as Section 7 shows. Copp
 on the data protection terms of its service providers, including standard contractual clauses
 where they offer them, to protect personal data transferred outside the European Economic Area
 and the United Kingdom.
-
-before execution.*

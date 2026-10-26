@@ -1,6 +1,6 @@
 ---
 title: "Terms of Service"
-description: "For the Copperhead cloud platform at copperhead.sh and app.copperhead.sh."
+description: "These terms govern your use of the Copperhead cloud platform at copperhead.sh, app.copperhead.sh and workspaces.copperhead.sh."
 path: /legal/terms/
 kind: Legal
 updated: 2026-10-25
@@ -228,8 +228,8 @@ This information does not include the substance of Your Content.
   or an open-source licence covering the relevant component expressly permits it;
 - scrape, crawl or extract data from the Service by automated means, other than through
   interfaces Copperhead provides for that purpose;
-- circumvent or attempt to circumvent usage limits, allowances, access controls or plan
-  restrictions, including by creating multiple Accounts; or
+- circumvent or attempt to circumvent usage limits, allowances or access controls, including
+  by creating multiple Accounts; or
 - share your credentials, or sell, resell or sublicense access to the Service without
   Copperhead's written consent.
 
@@ -294,14 +294,16 @@ notice, or immediately if the breach cannot be remedied, or (b) for any reason o
 days' notice.
 
 **14.4 Your data.** Outputs written to your Connected Repositories remain there and are not
-affected when your Account closes. Before your Account closes, you can download the history of
-each Project kept by Copperhead, and the files your runs produced, from the Service. For
-thirty (30) days after Copperhead terminates under Section 14.3(b), Copperhead will provide, on
-request, an export of other Your Content held by the Service in a commonly used format. After
-your Account closes, Copperhead deletes or retains data as the Privacy Policy describes,
-including records it must keep by law and verification records kept for a fixed period.
+affected when your Account closes. Before your Account closes, you can download the files your
+runs produced from the Service and, if you are an owner or administrator, the history of each
+Project kept by Copperhead. For thirty (30) days after Copperhead terminates under Section
+14.3(b), Copperhead will provide, on request, an export of the rest of Your Content held by the
+Service in a commonly used format. After your Account closes, Copperhead deletes or retains
+data as the Privacy Policy describes, including records it must keep by law and verification
+manifests kept for a fixed period.
 
-**14.5 Survival.** Sections 6.3, 8, 12.3, 14.4, 15, 16, 17 and 20 survive termination.
+**14.5 Survival.** Sections 6.2, 6.3, 6.4, 8, 12.3, 14.4, 15, 16, 17 and 20 survive
+termination.
 
 ## 15. Disclaimers
 
@@ -336,7 +338,7 @@ applicable law.
 
 ## 17. Indemnity
 
-**17.1 By you.** You will defend and indemnify Copperhead, its officers, employees and service
+**17.1** You will defend and indemnify Copperhead, its officers, employees and service
 providers against third-party claims, and the resulting losses, damages, costs and reasonable
 legal fees, arising from (a) Your Content, (b) your breach of Section 10 or of applicable law,
 or (c) any product or hardware made, sold or used by you or on your behalf from Outputs.
@@ -351,7 +353,7 @@ a way that imposes an obligation on Copperhead without its written consent.
 thirty (30) days' notice of material changes by email or in the Service before they take
 effect, unless the law requires a change sooner. If you do not agree to a change, stop using
 the Service and close your Account before the change takes effect. If you continue to use the
-Service after that date, you accept the updated Terms.
+Service after the change takes effect, you accept the updated Terms.
 
 **18.2 Changes to the Service.** Copperhead may change the Service, including by adding or
 removing features or Model Providers.
@@ -379,8 +381,8 @@ to make requests and complaints about personal data.
 **20.1 Governing law.** These Terms are governed by the laws of India. Any dispute not resolved
 amicably is subject to the jurisdiction of the courts of Bengaluru, Karnataka.
 
-**20.2 Entire agreement.** These Terms and the Privacy Policy are the entire agreement between
-you and Copperhead about the Service.
+**20.2 Entire agreement.** These Terms, the Privacy Policy and any separate written agreement
+under Section 1.5 are the entire agreement between you and Copperhead about the Service.
 
 **20.3 Severability.** An unenforceable provision is read down to the extent needed and the
 rest remains effective.
@@ -390,7 +392,7 @@ consent. Copperhead may assign them to an affiliate, or to a successor to all or
 business, on notice to you.
 
 **20.5 Events beyond control.** Neither you nor Copperhead is liable for delay or failure to
-perform caused by events beyond its reasonable control.
+perform caused by events beyond their reasonable control.
 
 **20.6 No waiver.** A delay or failure to enforce a right is not a waiver of it.
 
@@ -399,5 +401,3 @@ in the Service. You may give notices to Copperhead at contact@copperhead.sh.
 
 **20.8 Language.** These Terms are written in English. If they are translated, the English
 version prevails to the extent the law permits.
-
-before execution.*

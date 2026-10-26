@@ -80,10 +80,11 @@ function legal(src, from) {
   const name = lines.findIndex((l) => /^\*\*[^*]+\*\*$/.test(l))
   const description = name >= 0 ? lines[name + 1].trim() : ''
   if (!description) fail(`${from}: no subtitle line under the bold document name`)
-  const body = lines
-    .slice(rule + 1)
-    .filter((l) => !l.startsWith('*This template is provided'))
-    .join('\n')
+  // The counsel footer is the last paragraph and wraps over two lines, so the
+  // body ends where it starts rather than losing only its first line.
+  const rest = lines.slice(rule + 1)
+  const footer = rest.findIndex((l) => l.startsWith('*This template is provided'))
+  const body = (footer < 0 ? rest : rest.slice(0, footer)).join('\n')
   return { updated: isoDate(date[1]), description: `${description}.`, body }
 }
 

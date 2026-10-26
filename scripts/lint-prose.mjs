@@ -225,7 +225,8 @@ for (const path of args.length ? args.map((f) => resolve(f)) : collect('.')) {
   // A copy synced in by scripts/sync-pages.mjs is another repo's text: the
   // legal masters follow their own style rules and counsel's wording, and a
   // fix made here would be overwritten by the next sync.
-  if (file.startsWith('src/content/pages/') && /^source: /m.test(source)) continue
+  const front = source.match(/^---\n([\s\S]*?)\n---$/m)
+  if (file.startsWith('src/content/pages/') && front && /^source: /m.test(front[1])) continue
   const text = strip(file, source)
 
   if (inCollections(file)) {
