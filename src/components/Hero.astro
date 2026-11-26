@@ -129,6 +129,7 @@ const [latest] = [
           maxlength="8000"
           placeholder="Describe the board you want to build"
           autocomplete="off"
+          enterkeyhint="send"
           spellcheck="true"></textarea>
 
         <button type="submit" class="send" aria-label="Start building in Copperhead Cloud">
@@ -163,13 +164,22 @@ const [latest] = [
       field.style.height = `${Math.min(field.scrollHeight, 220)}px`;
     };
     field.addEventListener("input", fit);
+    // A width change rewraps the text, so a grown box is fitted again; an
+    // empty one is left to its CSS height.
+    addEventListener("resize", () => {
+      if (field.value) fit();
+    });
 
     // The placeholder types itself: a fixed opening, then one prewritten board
     // after another, typed out, held and deleted. It is the placeholder
     // attribute being rewritten, not an overlay, so it disappears the moment
     // the reader types and never has to be kept out of the way of real text.
     // The static sentence in the markup is what a reader with reduced motion
-    // (or no script) sees.
+    // (or no script) sees, and what it returns to if reduced motion is turned
+    // on mid-visit. While the box has focus the current example stands still,
+    // whole, so nothing moves under a reader who is about to type.
+    const STILL = field.placeholder;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     const LEAD = "Ask Copperhead to design ";
     const IDEAS = [
       "a USB-C power breakout with a 3 A fuse",
@@ -184,12 +194,25 @@ const [latest] = [
     const HOLD = 1900; // a finished line stays this long
     const GAP = 380; // the pause on the bare opening before the next line
 
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (!reduce.matches) {
       let idea = 0;
       let shown = 0;
       let erasing = false;
 
       const tick = () => {
+        if (reduce.matches) {
+          field.placeholder = STILL;
+          return;
+        }
+        // Held whole while the box has focus; it is erased from there once
+        // focus leaves.
+        if (document.activeElement === field) {
+          shown = IDEAS[idea].length;
+          erasing = true;
+          field.placeholder = LEAD + IDEAS[idea];
+          setTimeout(tick, 400);
+          return;
+        }
         // Nothing to animate while there is real text in the field or the tab
         // is in the background; look again shortly.
         if (field.value || document.hidden) {
@@ -234,16 +257,26 @@ const [latest] = [
     // switch is a fade rather than a flash. Nothing waits on the fade. If the
     // app takes a moment, a thin copper bar runs along the top so the empty
     // screen reads as loading, not as stuck. The veil stays up until the
-    // app's page replaces this one.
+    // app's page replaces this one, or, if that never happens (the reader
+    // pressed Esc or Stop, or the app did not answer), for ten seconds, after
+    // which the page is handed back so the box works again.
     let leaving = false;
     let veil: HTMLElement | null = null;
+    let giveUp: ReturnType<typeof setTimeout> | undefined;
+
+    const stay = () => {
+      clearTimeout(giveUp);
+      veil?.remove();
+      veil = null;
+      leaving = false;
+    };
 
     const go = () => {
       if (leaving) return;
       leaving = true;
       const href = target();
 
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (!reduce.matches) {
         veil = document.createElement("div");
         veil.className = "handoff";
         veil.setAttribute("aria-hidden", "true");
@@ -251,6 +284,7 @@ const [latest] = [
         document.body.append(veil);
       }
 
+      giveUp = setTimeout(stay, 10_000);
       location.assign(href);
     };
 
@@ -265,21 +299,21 @@ const [latest] = [
       build();
     });
 
-    // Enter builds and Shift+Enter breaks the line, as in every chat box.
+    // Enter builds and Shift+Enter breaks the line, as in every chat box. An
+    // Enter that confirms an input method's candidate (Japanese, Chinese) is
+    // the input method's, not ours: Safari ends the composition before that
+    // keydown, so isComposing is already false there and only keyCode 229
+    // says so.
     field.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
-        e.preventDefault();
-        build();
-      }
+      if (e.key !== "Enter" || e.shiftKey || e.isComposing || e.keyCode === 229) return;
+      e.preventDefault();
+      build();
     });
 
     // Back from the app restores this page from the back/forward cache with
     // the veil still up. Take it down.
     addEventListener("pageshow", (e) => {
-      if (!e.persisted) return;
-      veil?.remove();
-      veil = null;
-      leaving = false;
+      if (e.persisted) stay();
     });
   }
 </script>
@@ -328,10 +362,13 @@ const [latest] = [
   /* No glow. Two were tried and both came out: one rising from the bottom
      edge, which put a coloured cloud under the backer logos, and one as a
      halo behind the panel, which read as a smudge round a box that is
-     otherwise all straight edges. The panel is set off by its frame, its
-     shadow and the copper ring it takes on focus, and the fold is flat. */
+     otherwise all straight edges. The panel is set off by its frame and the
+     lighter border it takes on focus, and the fold is flat.
+
+     The width is in rem, not px, so a reader with a larger default text size
+     gets a wider panel to match and the line counts below still hold. */
   .stage {
-    width: min(100%, 760px);
+    width: min(100%, 47.5rem);
     margin: clamp(22px, 4.4svh, 40px) auto 0;
   }
 
@@ -553,15 +590,24 @@ const [latest] = [
     transition: border-color 0.16s ease;
   }
 
+  /* The textarea draws no outline of its own, so this is its focus cue. The
+     transparent outline is for forced colours (Windows High Contrast), which
+     flattens the border change and paints the outline in the system colour. */
   .panel:focus-within {
     border-color: var(--text-dim);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
   }
 
+  /* Heights are counted in lines (lh) plus the 24px of padding, so they
+     follow the reader's text size; the px value before each is for a browser
+     without lh. */
   textarea {
     display: block;
     flex: 1;
     min-width: 0;
     min-height: 48px;
+    min-height: calc(1lh + 24px);
     max-height: 220px;
     padding: 12px 4px 12px 14px;
     border: 0;
@@ -687,18 +733,24 @@ const [latest] = [
     }
   }
 
-  /* Beside the labelled button the longest placeholder ("Ask Copperhead to
-     design an ESP32 sensor node that sleeps at 50 uA") needs two lines below
-     about 800px, and still two from 430px, where the button is the arrow. */
-  @media (max-width: 820px) {
+  /* How many lines the field starts with, so the longest placeholder ("Ask
+     Copperhead to design an ESP32 sensor node that sleeps at 50 uA") is never
+     cut off. Measured at the default text size: one line above 820px, two
+     down to 421px, three down to 351px, four at 320px. The breakpoints are in
+     em so they move with the reader's text size (a media query's em is the
+     browser's default size), and each sits a little above its measurement so
+     a classic scrollbar, which narrows the page but not the query, still
+     fits. */
+  @media (max-width: 52em) {
     textarea {
       min-height: 72px;
+      min-height: calc(2lh + 24px);
     }
   }
 
   /* Phones: the label goes and the button is a 40px round arrow, a thumb
      target that leaves the field its width. The accessible name stays. */
-  @media (max-width: 560px) {
+  @media (max-width: 35em) {
     .send {
       width: 40px;
       padding: 0;
@@ -726,17 +778,17 @@ const [latest] = [
     }
   }
 
-  /* And three lines from 360 to 420px, */
-  @media (max-width: 420px) {
+  @media (max-width: 27.375em) {
     textarea {
       min-height: 96px;
+      min-height: calc(3lh + 24px);
     }
   }
 
-  /* and four at 320px, the narrowest phone still in use. */
-  @media (max-width: 350px) {
+  @media (max-width: 23em) {
     textarea {
       min-height: 120px;
+      min-height: calc(4lh + 24px);
     }
   }
 </style>

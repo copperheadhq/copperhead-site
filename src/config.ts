@@ -27,7 +27,7 @@ export const siteCard = '/og-image.png';
  * http://localhost:3000/ npm run build); unset, as in CI and production, it
  * is app.copperhead.sh. Ends in a slash, so paths join on to it.
  */
-const app = import.meta.env?.PUBLIC_APP_URL || 'https://app.copperhead.sh/';
+const app = (import.meta.env?.PUBLIC_APP_URL || 'https://app.copperhead.sh/').replace(/\/?$/, '/');
 
 export const links = {
   repo,
