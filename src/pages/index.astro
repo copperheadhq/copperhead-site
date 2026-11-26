@@ -2,30 +2,45 @@
 import Base from "../layouts/Base.astro";
 import Navbar from "../components/Navbar.astro";
 import Hero from "../components/Hero.astro";
+import RunDemo from "../components/RunDemo.astro";
 import Proof from "../components/Proof.astro";
 import Demo from "../components/Demo.astro";
 import Features from "../components/Features.astro";
-import CtaEnd from "../components/CtaEnd.astro";
 import Footer from "../components/Footer.astro";
 import PricingTiers from "../components/PricingTiers.astro";
 import Faq from "../components/Faq.astro";
+import { groups, stripTags } from "../faq";
 
 // Sections share the page colour and are told apart by a hairline: each one
 // starts on the same 1px rule the footer's top edge draws. Demo only
-// renders once public/copperhead-demo.mp4 exists — the hero already carries
-// the animated terminal.
+// renders once public/copperhead-demo.mp4 exists; RunDemo, directly under the
+// hero, carries the animated terminal until then and after.
+
+// The FAQ section's questions, as FAQPage data. The same slice Faq.astro
+// shows (the first two of each group), so the node never lists a question
+// that is not on the page.
+const faqJsonLd = {
+  "@type": "FAQPage",
+  mainEntity: groups
+    .flatMap((g) => g.items.slice(0, 2))
+    .map((i) => ({
+      "@type": "Question",
+      name: i.q,
+      acceptedAnswer: { "@type": "Answer", text: stripTags(i.a) },
+    })),
+};
 ---
 
-<Base>
+<Base jsonLd={faqJsonLd}>
   <Navbar />
   <main>
     <Hero />
+    <RunDemo />
     <Proof />
     <Demo />
     <Features />
     <PricingTiers id="pricing" />
     <Faq />
-    <CtaEnd />
   </main>
   <Footer />
 </Base>
