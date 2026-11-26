@@ -1,6 +1,6 @@
 # Copperhead
 
-> Copperhead is an open source (Apache-2.0) AI agent for hardware design, "Cursor for circuit boards." Given a plain-English change request or a product brief, it edits real KiCad files (.kicad_sch, .kicad_pcb) in your own git repository, propagates the change into every document that references it (pinout, BOM, subsystem docs, firmware scaffold) and verifies its own work by running `kicad-cli` ERC and DRC until the checks pass. Every run leaves its artifacts on disk.
+> Copperhead is an open source (Apache-2.0) AI agent for PCB design in KiCad, "Cursor for circuit boards." Given a plain-English change request or a product brief, it edits real KiCad files (.kicad_sch, .kicad_pcb) in your own git repository, propagates the change into every document that references it (pinout, BOM, subsystem docs, firmware scaffold) and verifies its own work by running `kicad-cli` ERC and DRC until the checks pass. Every run leaves its artifacts on disk.
 
 Built by Animesh Chouhan. Proven on Open Telegraph, a shipping 40×40 mm ESP32-S3 Morse key with a 25 µA deep-sleep budget: building that board produced Copperhead, and redesigning the board through Copperhead proved it.
 
@@ -21,6 +21,15 @@ Key facts:
 - Data stays local on the CLI: the agent runs on your machine, stores nothing on a server and only sends design context in the model API call itself. Run transcripts live in .copperhead/runs/ with secrets redacted. Cloud is the opt-in exception: it runs the same agent on hosted infrastructure against the repositories you connect to it.
 - KiCad only; no proprietary EDA formats are supported or planned.
 
+## Topics
+
+- [AI PCB design](https://copperhead.sh/ai-pcb-design/): what AI PCB design is and how a brief becomes a schematic, a layout and Gerbers in eight gated stages
+- [KiCad AI](https://copperhead.sh/kicad-ai/): how the agent edits .kicad_sch and .kicad_pcb files and verifies them with kicad-cli
+- [AI schematic design](https://copperhead.sh/ai-schematic-design/): part selection against datasheets and a schematic that passes ERC
+- [AI PCB layout](https://copperhead.sh/ai-pcb-layout/): placement and routing with DRC in the loop, and where the draft layout stops
+- [Text to PCB](https://copperhead.sh/text-to-pcb/): what a prompt needs to say and the files that come out
+- [Open source AI PCB design](https://copperhead.sh/open-source-ai-pcb-design/): the license, local use and what the paid plans add
+
 ## Docs
 
 - [Documentation](https://docs.copperhead.sh/): full Copperhead documentation (Astro Starlight site)
@@ -35,18 +44,21 @@ Key facts:
 - [Spec-gated in, verification-gated out](https://copperhead.sh/blog/spec-gated-in-verification-gated-out/): engineering: the two invariants and the six-step loop between them
 - [Copperhead: Cursor for circuit boards](https://copperhead.sh/blog/antler-crackathon/): the Antler Crackathon submission: problem, product, competitive field, market and go-to-market
 - [From brief.md to gerbers](https://copperhead.sh/blog/from-brief-to-gerbers/): engineering: eight gated stages from a markdown brief to gerbers, firmware and docs, each one gated on what it has to prove before the next begins
+- [Hardware as fast as software](https://copperhead.sh/blog/hardware-as-fast-as-software/): engineering: two boards for Kyra, glasses and a ring, taken from a two-sentence public roadmap to part selection in a day, with every stage a commit
 - [Improving TTFB with Anycast](https://copperhead.sh/blog/ttfb-anycast/): infrastructure: an anycast edge in front of an unchanged single-region origin took Asia Pacific from 627 ms to 160 ms and Europe from 293 ms to 90 ms, and made South America worse
 - [Reverse engineering a Crompton LED bulb from photographs](https://copperhead.sh/blog/crompton-led-bulb-teardown/): teardown, where Copperhead reverse engineers a dimming and flickering Crompton 9 W bulb from 54 photos, with the full report and summary as PDFs
 
 ## Research
 
 - [copperbench: Can language models edit real hardware designs?](https://copperhead.sh/research/copperbench/): a benchmark for language-model agents on verified hardware edits — real KiCad boards, electrical verification as the oracle and cost reported alongside pass rate
+- [Simulating serpentine length matching on a bent differential pair](https://copperhead.sh/research/diffpair-meanders/): simulation: a bent differential pair and six ways of length-matching it solved in openEMS, where matching the lengths exactly removed only 44 to 75 % of the skew
 
 ## Optional
 
 - [Pitch deck (PDF)](https://copperhead.sh/Copperhead.pdf): the Crackathon pitch deck
 - [Open Telegraph](https://github.com/animesh-chouhan/open-telegraph): the open source proof board (CERN-OHL-S v2.0)
 - [Building open hardware with Claude](https://chouhan.ai/building-with-claude): the longer story of how Open Telegraph and Copperhead came together
+- [RSS feed](https://copperhead.sh/rss.xml): posts and research articles, newest first
 - [Repository stats](https://copperhead.sh/stats/): the long record of traffic to the Copperhead repository, collected daily because GitHub keeps only fourteen days of it
 - [Status](https://copperhead.sh/status/): current status and ninety-day uptime of Copperhead's hosted services
 - [About](https://copperhead.sh/about/): who builds Copperhead, where it came from and how to reach the team

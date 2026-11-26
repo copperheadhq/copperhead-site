@@ -29,6 +29,10 @@ export const groups: FaqGroup[] = [
         a: `An open source AI agent that designs, documents and verifies printed circuit boards. You describe a change or hand it a product brief, and it edits your real KiCad files, updates every document that references them, and runs KiCad's own checks until they pass. <a href="/blog/meet-copperhead/">Longer introduction here</a>.`,
       },
       {
+        q: 'Can AI design a PCB?',
+        a: `Yes, with limits. An agent that edits real design files and runs real checks on them can take a board from a written brief to a schematic that passes ERC, a layout that passes DRC and Gerbers. The layout is a correct draft and not an optimal one. An engineer still reviews it before fabrication. <a href="/ai-pcb-design/">How AI PCB design works</a>.`,
+      },
+      {
         q: 'What problem does it actually solve?',
         a: `Drift. A hardware design spreads one decision across a schematic, a bill of materials, a power budget and several documents, and nothing breaks when they fall out of sync. The inconsistency is found at bring-up, and a respin costs 5,000 to 50,000 dollars and six to eight weeks. <a href="/blog/drift-is-a-build-failure/">The full argument is here</a>.`,
       },
@@ -52,6 +56,10 @@ export const groups: FaqGroup[] = [
       {
         q: 'Does it work on a design that already exists?',
         a: `That is the main case. Point it at a KiCad repository, run <code>copperhead init</code> and start asking for changes. It can also run the full pipeline from a written brief with <code>copperhead create</code>, but iterating on real designs is what it is best at.`,
+      },
+      {
+        q: 'Does KiCad have built-in AI?',
+        a: `No. KiCad ships no AI features of its own. Copperhead works on a KiCad project from the outside, through KiCad's open file format and <code>kicad-cli</code>. <a href="/kicad-ai/">More on the AI agent for KiCad</a>.`,
       },
       {
         q: 'Which EDA tools does it support?',
@@ -92,7 +100,7 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'Is there a hosted version?',
-        a: `Not today. The local CLI with your own key is the product right now. A hosted tier is planned, and teams with export-controlled designs will stay on self-hosted.`,
+        a: `Yes. <a href="${links.app}">Copperhead Cloud</a> runs the same agent on hosted infrastructure against the repositories you connect to it. The CLI stays free and does every core operation locally, and teams with export-controlled designs can self-host. <a href="${links.pricing}">Pricing is here</a>.`,
       },
     ],
   },
