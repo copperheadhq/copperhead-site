@@ -6,29 +6,19 @@ import Backers from "../components/Backers.astro";
 import HnCard from "../components/HnCard.astro";
 import { site, repo, links } from "../config";
 import { launch } from "../hn";
-import { organization } from "../seo";
+import { ORG_ID } from "../seo";
 
-// The page search engines read the company off. Everywhere else the
-// structured data describes the product; this is the one place the
-// Organization behind it is spelled out, with the profiles that tell it apart
-// from the snake, the comic villain and every other copperhead. The @id is
-// the anchor other nodes can point at instead of restating the company.
-const org = {
-  ...organization,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Bengaluru",
-    addressRegion: "Karnataka",
-    addressCountry: "IN",
-  },
-};
-
+// The page search engines read the company off. The Organization itself, with
+// its address and the profiles that tell it apart from the snake, the comic
+// villain and every other copperhead, is in src/seo.ts and in every page's
+// graph (Base.astro); this page names it as its subject by @id rather than
+// carrying a second copy.
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   name: "About Copperhead",
   url: new URL("/about/", site).href,
-  mainEntity: org,
+  mainEntity: { "@id": ORG_ID },
 };
 
 const email = links.contact.replace("mailto:", "");

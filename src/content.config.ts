@@ -12,6 +12,12 @@ const blog = defineCollection({
     seoTitle: z.string().optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
+    /**
+     * The meta description when `description` runs past a results page (160
+     * characters), written to stand alone. Without one, `description` is cut
+     * at a sentence (seo.ts metaDescription), which can keep only the set-up.
+     */
+    seoDescription: z.string().max(160).optional(),
     date: z.coerce.date(),
     /** Short mono label on the index, e.g. 'Product' or 'Engineering'. */
     kind: z.string(),
@@ -64,6 +70,8 @@ const research = defineCollection({
     seoTitle: z.string().optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
+    /** As on the blog: a standalone meta description of at most 160 characters. */
+    seoDescription: z.string().max(160).optional(),
     date: z.coerce.date(),
     /** Short mono label on the index, e.g. 'Method' or 'Results'. */
     kind: z.string(),
