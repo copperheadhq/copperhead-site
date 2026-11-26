@@ -21,6 +21,14 @@ export const site = 'https://copperhead.sh';
  */
 export const siteCard = '/og-image.png';
 
+/**
+ * The hosted platform's address. PUBLIC_APP_URL overrides it for a build that
+ * should point at a local copy of the cloud app (PUBLIC_APP_URL=
+ * http://localhost:3000/ npm run build); unset, as in CI and production, it
+ * is app.copperhead.sh. Ends in a slash, so paths join on to it.
+ */
+const app = import.meta.env?.PUBLIC_APP_URL || 'https://app.copperhead.sh/';
+
 export const links = {
   repo,
   // Primary navbar CTA ("Let's talk") — books a Copperhead demo call.
@@ -36,7 +44,14 @@ export const links = {
   // site links to it and does nothing else with it: cloud SPEC §3.1 scopes
   // copperhead-site to "links only" and forbids auth code, a Supabase client
   // or any secret landing here.
-  app: 'https://app.copperhead.sh/',
+  app,
+  // A new conversation in the app, open to a visitor with no account: the
+  // guest chat (copperhead-cloud, openspec guest-conversations). A prompt goes
+  // along as #prompt=<percent-encoded text>, which the app reads once. For a
+  // visitor with no account it is their first message, sent because they
+  // pressed build on this site. A signed-in visitor is sent on to the
+  // console's start board with the prompt in its box.
+  newChat: `${app}new`,
   demoVideo: '/copperhead-demo.mp4',
   telegraphRepo: 'https://github.com/animesh-chouhan/open-telegraph',
   buildStory: 'https://chouhan.ai/building-with-claude',
@@ -134,7 +149,7 @@ export const quickstart = [
 ];
 
 /**
- * The brief.md the quickstart points at, shown beside it (CtaEnd) and in the
+ * The brief.md the quickstart points at, shown beside it (RunDemo) and in the
  * Antler write-up. A deliberately ordinary board: a Bluetooth speaker, an ESP32
  * doing A2DP into a class-D amp, on a battery and a standby budget. The budget
  * line is the load-bearing one, since it is what the agent refuses to break.
