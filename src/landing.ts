@@ -84,7 +84,7 @@ export const topics: Topic[] = [
       {
         h2: 'How it differs from an autorouter or a chatbot',
         body: `<p>An autorouter starts from a finished schematic and a placed board and draws the copper. A chatbot answers questions about a design it cannot open. An AI PCB design agent sits across the whole job, from the requirement to the manufacturing files. Its output is the design source itself: plain KiCad files, markdown and JSON in your own git repository, with no proprietary format in between.</p>
-<p>We measure it the same way we ask you to trust it. ${copperbench} is our benchmark for language-model agents on real KiCad boards, with electrical verification as the oracle and cost reported beside pass rate.</p>`,
+<p>${copperbench} is the benchmark we built to measure agents like this one on real KiCad boards, with electrical verification as the oracle and cost reported beside pass rate. Its method is published before any results, so it can be argued with first.</p>`,
       },
       {
         h2: 'Try it',
@@ -168,7 +168,7 @@ export const topics: Topic[] = [
       },
       {
         q: 'Does it work with Altium, Eagle or OrCAD files?',
-        a: `No. Copperhead supports KiCad only. No proprietary EDA formats are supported or planned.`,
+        a: `No. Copperhead works on KiCad projects, and the CLI and Cloud read KiCad files only.`,
       },
       {
         q: 'Where does my KiCad design go?',
@@ -303,8 +303,8 @@ export const topics: Topic[] = [
         a: `A sentence starts it. A good brief also states the controller, the power source, the interfaces, the parts that must be on the board and any hard budgets. In Copperhead Cloud the model asks for each one.`,
       },
       {
-        q: 'How long does it take and what does it cost?',
-        a: `A full run from a brief costs five to ten times a single change, which is roughly 0.10 to 1.00 dollars in model tokens, billed by your model provider.`,
+        q: 'What does a full run cost?',
+        a: `A single change is roughly 0.10 to 1.00 dollars in model tokens, and a full run from a brief is five to ten times that. Your model provider bills you directly.`,
       },
     ],
   },
@@ -341,8 +341,8 @@ export const topics: Topic[] = [
     ],
     faq: [
       {
-        q: 'Is Copperhead free?',
-        a: `The CLI is free and open source under Apache-2.0. You pay your model provider for the tokens a run uses. Hosted plans are paid, and Cloud is free for qualifying open hardware projects.`,
+        q: 'Do I pay to use the open source CLI?',
+        a: `No. The CLI is free and open source under Apache-2.0. You pay your model provider for the tokens a run uses. Hosted plans are paid, and Cloud is free for qualifying open hardware projects.`,
       },
       {
         q: 'Can I run it without sending my design to a server?',

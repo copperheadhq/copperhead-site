@@ -451,8 +451,9 @@ const social = [
 
   /* Below this the six columns no longer fit beside the statement without
      wrapping a label, so the statement goes above them and the row gets the
-     full width. */
-  @media (max-width: 1240px) {
+     full width. Side by side they need about 1248px: at 1241 the Connect
+     icons stood 7px past the content edge. */
+  @media (max-width: 1260px) {
     .top {
       flex-direction: column;
       gap: 48px;

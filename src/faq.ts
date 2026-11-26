@@ -29,10 +29,6 @@ export const groups: FaqGroup[] = [
         a: `An open source AI agent that designs, documents and verifies printed circuit boards. You describe a change or hand it a product brief, and it edits your real KiCad files, updates every document that references them, and runs KiCad's own checks until they pass. <a href="/blog/meet-copperhead/">Longer introduction here</a>.`,
       },
       {
-        q: 'Can AI design a PCB?',
-        a: `Yes, with limits. An agent that edits real design files and runs real checks on them can take a board from a written brief to a schematic that passes ERC, a layout that passes DRC and Gerbers. The layout is a correct draft and not an optimal one. An engineer still reviews it before fabrication. <a href="/ai-pcb-design/">How AI PCB design works</a>.`,
-      },
-      {
         q: 'What problem does it actually solve?',
         a: `Drift. A hardware design spreads one decision across a schematic, a bill of materials, a power budget and several documents, and nothing breaks when they fall out of sync. The inconsistency is found at bring-up, and a respin costs 5,000 to 50,000 dollars and six to eight weeks. <a href="/blog/drift-is-a-build-failure/">The full argument is here</a>.`,
       },
@@ -58,10 +54,6 @@ export const groups: FaqGroup[] = [
         a: `That is the main case. Point it at a KiCad repository, run <code>copperhead init</code> and start asking for changes. It can also run the full pipeline from a written brief with <code>copperhead create</code>, but iterating on real designs is what it is best at.`,
       },
       {
-        q: 'Does KiCad have built-in AI?',
-        a: `No. KiCad ships no AI features of its own. Copperhead works on a KiCad project from the outside, through KiCad's open file format and <code>kicad-cli</code>. <a href="/kicad-ai/">More on the AI agent for KiCad</a>.`,
-      },
-      {
         q: 'Which EDA tools does it support?',
         a: `KiCad, the most widely used open PCB tool. Verification runs through <code>kicad-cli</code>, so the checks are the same ones you would run yourself. There is no support for proprietary EDA formats and none is planned.`,
       },
@@ -71,7 +63,7 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'What does a run cost?',
-        a: `A single change request is roughly 0.10 to 1.00 dollars in model tokens. A full <code>create</code> pipeline run is five to ten times that. You are billed by your model provider directly; Copperhead itself is free.`,
+        a: `A single change request is roughly 0.10 to 1.00 dollars in model tokens. A full <code>create</code> pipeline run is five to ten times that. With the CLI you are billed by your model provider directly, and the CLI itself is free. Copperhead Cloud's plans are on the <a href="${links.pricing}">pricing page</a>.`,
       },
     ],
   },
@@ -92,7 +84,7 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'Where does my design data go?',
-        a: `It stays in your own git repository. The agent runs locally, stores nothing on a server and only sends design context as part of the model API call itself. Run transcripts live in <code>.copperhead/runs/</code> with secret patterns redacted, and the agent never reads paths outside your repository.`,
+        a: `With the CLI it stays in your own git repository. The agent runs locally, stores nothing on a server and only sends design context as part of the model API call itself. Run transcripts live in <code>.copperhead/runs/</code> with secret patterns redacted, and the agent never reads paths outside your repository. Copperhead Cloud is the opt-in exception: it runs the same agent on hosted infrastructure against the repositories you connect to it.`,
       },
       {
         q: 'What is the license?',
