@@ -5,6 +5,7 @@ import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import PostCard from '../../components/PostCard.astro';
 import { site, links, siteCard } from '../../config';
+import { pageTitle, metaDescription, ORG_ID } from '../../seo';
 import { Image, getImage } from 'astro:assets';
 import avatar from '../../assets/avatar.jpg';
 import { postPath, formatDate, readingTime, defaultAuthor, coverArt } from '../../blog';
@@ -86,13 +87,13 @@ const jsonLd = {
   url,
   mainEntityOfPage: url,
   author: { '@type': 'Person', name: author },
-  publisher: { '@type': 'Organization', name: 'Copperhead', url: site, sameAs: links.chouhan },
+  publisher: { '@id': ORG_ID },
 };
 ---
 
 <Base
-  title={`Copperhead: ${post.data.title}`}
-  description={post.data.description}
+  title={pageTitle(post.data.seoTitle ?? post.data.title)}
+  description={metaDescription(post.data.description)}
   path={path}
   ogType="article"
   ogImage={ogImage}

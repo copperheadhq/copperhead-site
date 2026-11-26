@@ -8,6 +8,8 @@ const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: ['**/*.{md,mdx}', '!**/_*'] }),
   schema: z.object({
     title: z.string(),
+    /** The <title> when the headline is too long for a results page (60 characters). */
+    seoTitle: z.string().optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
     date: z.coerce.date(),
@@ -58,6 +60,8 @@ const research = defineCollection({
   loader: glob({ base: './src/content/research', pattern: ['**/*.{md,mdx}', '!**/_*'] }),
   schema: z.object({
     title: z.string(),
+    /** The <title> when the headline is too long for a results page (60 characters). */
+    seoTitle: z.string().optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
     date: z.coerce.date(),
