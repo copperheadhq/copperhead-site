@@ -93,7 +93,7 @@ const jsonLd = {
 
 <Base
   title={pageTitle(post.data.seoTitle ?? post.data.title)}
-  description={metaDescription(post.data.description)}
+  description={post.data.seoDescription ?? metaDescription(post.data.description)}
   path={path}
   ogType="article"
   ogImage={ogImage}

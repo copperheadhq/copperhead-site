@@ -82,7 +82,7 @@ const ext = 'M4.5 2.5h5v5M9.5 2.5 3 9';
 
 <Base
   title={pageTitle(article.data.seoTitle ?? article.data.title)}
-  description={metaDescription(article.data.description)}
+  description={article.data.seoDescription ?? metaDescription(article.data.description)}
   path={path}
   ogType="article"
   ogImage={ogImage}

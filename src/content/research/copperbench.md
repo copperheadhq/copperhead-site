@@ -1,6 +1,7 @@
 ---
 title: "copperbench: Can language models edit real hardware designs?"
 description: "copperbench is a benchmark for language-model agents on verified hardware design edits: real KiCad boards, electrical verification as the oracle and cost reported alongside pass rate."
+seoDescription: "A benchmark for language-model agents editing real KiCad boards, with electrical verification as the oracle and cost reported alongside pass rate."
 date: 2026-07-30
 kind: "Method"
 # status: "Method published, no matrix run yet"
