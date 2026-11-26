@@ -5,6 +5,7 @@ import { postPath } from '../blog';
 import { articlePath } from '../research';
 import { openRoles, rolePath } from '../careers';
 import { liveHrefs } from '../signoff';
+import { topics, topicPath } from '../landing';
 
 // Generated rather than kept in public/, so a new post cannot be forgotten here.
 export const GET: APIRoute = async () => {
@@ -14,6 +15,8 @@ export const GET: APIRoute = async () => {
   const urls = [
     { loc: '/', changefreq: 'weekly', priority: '1.0' },
     { loc: '/pricing/', changefreq: 'monthly', priority: '0.9' },
+    // The topic pages, one per search term (src/landing.ts).
+    ...topics.map((t) => ({ loc: topicPath(t.slug), changefreq: 'monthly', priority: '0.9' })),
     { loc: '/blog/', changefreq: 'weekly', priority: '0.8' },
     { loc: '/research/', changefreq: 'monthly', priority: '0.8' },
     { loc: '/blog/faq/', changefreq: 'monthly', priority: '0.7' },

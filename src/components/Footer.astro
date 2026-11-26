@@ -1,6 +1,7 @@
 ---
 import { links } from "../config";
 import { liveHrefs } from "../signoff";
+import { topics, topicPath } from "../landing";
 
 // Pages from the pages collection appear here only once signed off
 // (src/signoff.ts), so a draft never gets a link that would 404.
@@ -36,13 +37,21 @@ const columns = [
       { label: "Open Telegraph", href: links.telegraphRepo },
     ],
   },
+  // The topic pages (src/landing.ts). Linked from every page on the site, so
+  // none of them depends on a reader finding it from the home page.
+  {
+    title: "Learn",
+    items: topics.map((t) => ({ label: t.nav, href: topicPath(t.slug) })),
+  },
   {
     title: "Resources",
     items: [
       { label: "Blog", href: links.blog },
+      { label: "Research", href: links.research },
       { label: "FAQ", href: links.faq },
       { label: "Stats", href: links.stats },
       { label: "Status", href: links.status },
+      { label: "RSS", href: "/rss.xml" },
       { label: "llms.txt", href: "/llms.txt" },
     ],
   },
@@ -268,15 +277,19 @@ const social = [
     padding-inline: 64px;
   }
 
-  /* Their split: the editorial column flex-grows 1.4 against the link
-     container's 2, so the statement takes ~41% of the row. */
+  /* The statement keeps its own width and the link columns take the rest.
+     Theirs flex-grows the two 1.4 against 2, which was fine for four columns
+     and left six of them about 80px each: "AI PCB design" broke onto two lines
+     and read as two links. The statement is capped at 360px anyway, so the
+     width it was holding beyond that was empty. */
   .top {
     display: flex;
     gap: 48px;
   }
 
   .brand {
-    flex: 1.4 1 0;
+    flex: none;
+    width: min(360px, 100%);
   }
 
   /* Their .footer-h2 exactly: 28px on a 34px line, 500, -0.025em, in Space
@@ -302,12 +315,19 @@ const social = [
     color: rgba(235, 235, 230, 0.7);
   }
 
-  /* Five groups: the four link columns plus Connect. */
+  /* Six groups: the five link columns plus Connect. Each is as wide as its
+     longest label and no narrower (see `.col a`), and the row's slack goes
+     between them. */
   .cols {
-    flex: 2 1 0;
+    flex: 1 1 0;
+    min-width: 0;
     display: flex;
     justify-content: space-between;
-    gap: 48px;
+    gap: 32px;
+  }
+
+  .col {
+    flex: none;
   }
 
   /* h3 rather than h2: the statement above is this landmark's heading, and
@@ -339,6 +359,9 @@ const social = [
   .col a {
     color: var(--silk-dim);
     font-size: 0.875rem;
+    /* One label, one line. A wrapped label draws its dashed rule under each
+       line separately, which is indistinguishable from two links. */
+    white-space: nowrap;
     text-decoration: underline;
     text-decoration-style: dashed;
     text-underline-offset: 3px;
@@ -360,6 +383,9 @@ const social = [
     flex-direction: row;
     flex-wrap: wrap;
     gap: 14px;
+    /* Three 22px icons and the two gaps between them. Without a width the
+       column, now sized to its content, would lay all seven out in one row. */
+    width: 94px;
   }
 
   .social a {
@@ -423,6 +449,20 @@ const social = [
     color: var(--trace);
   }
 
+  /* Below this the six columns no longer fit beside the statement without
+     wrapping a label, so the statement goes above them and the row gets the
+     full width. */
+  @media (max-width: 1240px) {
+    .top {
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .cols {
+      flex: none;
+    }
+  }
+
   @media (max-width: 980px) {
     footer .wrap {
       padding-inline: 32px;
@@ -432,11 +472,6 @@ const social = [
     .brand h2 {
       font-size: 24px;
       line-height: 30px;
-    }
-
-    .top {
-      flex-direction: column;
-      gap: 48px;
     }
 
     .cols {
