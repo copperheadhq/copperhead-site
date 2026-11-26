@@ -129,7 +129,9 @@ const { id = 'top', page = false } = Astro.props;
         tiers.map((t) => (
           <li class:list={["card", { featured: t.featured }]}>
             {t.featured && <span class="badge">Most popular</span>}
-            <h2 class="name">{t.name}</h2>
+            {/* One level under the section's heading: h2 under /pricing/'s
+                h1, h3 under the home page section's h2. */}
+            {page ? <h2 class="name">{t.name}</h2> : <h3 class="name">{t.name}</h3>}
 
             <div class="price">
               <span class="amount">{t.price}</span>
@@ -261,9 +263,13 @@ const { id = 'top', page = false } = Astro.props;
     letter-spacing: 0.02em;
   }
 
+  /* line-height and letter-spacing pinned, since an h3 would otherwise take
+     global.css's lighter subhead settings and the cards would differ by page. */
   .name {
     font-size: 1.15rem;
     font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
     margin: 0;
   }
 
