@@ -6,6 +6,7 @@ import Backers from "../components/Backers.astro";
 import HnCard from "../components/HnCard.astro";
 import { site, repo, links } from "../config";
 import { launch } from "../hn";
+import { organization } from "../seo";
 
 // The page search engines read the company off. Everywhere else the
 // structured data describes the product; this is the one place the
@@ -13,31 +14,13 @@ import { launch } from "../hn";
 // from the snake, the comic villain and every other copperhead. The @id is
 // the anchor other nodes can point at instead of restating the company.
 const org = {
-  "@type": "Organization",
-  "@id": `${site}/#organization`,
-  name: "Copperhead",
-  url: site,
-  logo: new URL("/icon-512.png", site).href,
-  description:
-    "Copperhead builds an open source AI agent for circuit board design that edits real KiCad files and runs KiCad's own checks until they pass.",
-  email: links.contact.replace("mailto:", ""),
-  founder: { "@type": "Person", name: "Animesh Chouhan", url: links.animesh },
+  ...organization,
   address: {
     "@type": "PostalAddress",
     addressLocality: "Bengaluru",
     addressRegion: "Karnataka",
     addressCountry: "IN",
   },
-  // The GitHub org rather than the repo: sameAs names the company's own
-  // profiles, and the repo is the product's.
-  sameAs: [
-    repo.split("/").slice(0, 4).join("/"),
-    links.x,
-    links.linkedin,
-    links.youtube,
-    links.reddit,
-    links.instagram,
-  ],
 };
 
 const jsonLd = {
