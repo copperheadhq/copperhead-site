@@ -302,7 +302,7 @@ video {
 /* Copper, not the brand gold: gold reads at 1.9:1 on white, so on the light
    theme the ring would be all but invisible on the very surface it has to
    mark. Copper clears 4.9:1 on white and 7.3:1 on the dark page. */
-:where(a, button, [tabindex]):focus-visible {
+:where(a, button, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--copper);
   outline-offset: 3px;
 }
