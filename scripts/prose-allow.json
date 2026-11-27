@@ -60,6 +60,7 @@
     "It works on your KiCad files, in your repo, and nothing is done until the checks pass.",
     "**Footnote:** The draft layout is correct, not optimal, and says so itself.",
     "Copperhead is Apache-2.0, built on an open stack (KiCad, kicad-cli, OpenSpec), and everything it writes is plain markdown and JSON in your own repository.",
-    "This is a Docker action, so every run builds a Dockerfile from whatever the ref resolves to, and it runs with a token that can read traffic for the product repo and push branches here."
+    "This is a Docker action, so every run builds a Dockerfile from whatever the ref resolves to, and it runs with a token that can read traffic for the product repo and push branches here.",
+    "**A task is data.** A task is a directory holding , and , and nothing else."
   ]
 }

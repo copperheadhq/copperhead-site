@@ -86,7 +86,7 @@ Every change is followed by ERC on the schematic and DRC on the board. Violation
 **Section title:** Proven on real copper.
 
 **Card:** [Open Telegraph board render]
-Open Telegraph is a pocket-size Morse key: an ESP32-S3, one button, one RGB LED and a battery, designed to live inside a 25 microamp sleep budget. It was built with this workflow, and every decision, every trap caught, and every file is public.
+Open Telegraph is a pocket-size Morse key: an ESP32-S3, one button, one RGB LED and a battery, designed to live inside a 25 microamp sleep budget. It was built with this workflow, and every decision, every trap caught and every file is public.
 
 **Links:** [Read the build story] [Browse the repo]
 

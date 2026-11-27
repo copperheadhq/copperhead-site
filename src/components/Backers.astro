@@ -175,7 +175,7 @@ const spoken = `Backed by ${backers.map((b) => b.name).join(', ')}`;
       past the edge as horizontal overflow. Scoped to this element so the check
       stays live everywhere else. */}
   {/* tabindex: the pause below is keyed on hover and focus, and until this was
-      here the focus half could never fire — there is nothing focusable inside,
+      here the focus half could never fire — there is nothing focusable inside
       and `role="img"` prunes the subtree from the accessibility tree anyway. So
       the rule read as though the strip could be stopped from the keyboard when
       only a mouse could stop it, which is the WCAG 2.2.2 mechanism the comment
