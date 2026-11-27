@@ -172,6 +172,11 @@ conflicts with the spec, the visual direction won:
 - **Sticky header.** Spec §4 says none in v1, just a floating GitHub link. There
   is now a fixed bar with section links and a GitHub CTA. It satisfies W-2 more
   directly and is CSS-only, so it still works with JS disabled.
+- **Structured data.** Not a layout change, but a departure all the same. §6
+  names `applicationCategory` `DeveloperApplication`; the site says
+  `DesignApplication`, because Copperhead is a design tool. The JSON-LD is also one
+  `@graph` per page, with the company, the website and the product as nodes that
+  posts and pages point at by `@id` (`src/seo.ts`, `src/layouts/Base.astro`).
 - **Trace dividers.** Spec §3 uses them between every section. They appear once,
   above the footer; section boundaries are negative space instead. The via motif
   still carries identity through the wordmark, the favicon and the OG image.

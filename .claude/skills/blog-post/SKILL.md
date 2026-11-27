@@ -18,7 +18,9 @@ specification for the voice; this file only names what they do.
 
 Schema lives in [src/content.config.ts](src/content.config.ts). `description` is both
 the index card blurb and the meta description, so write it as one or two full
-sentences, not a fragment.
+sentences, not a fragment. Past 160 characters it is cut at a sentence for search
+results; when the point comes after the cut, add a standalone `seoDescription` (160 at
+most). Add a `seoTitle` (60 at most) when the title runs long.
 
 Prose is hard-wrapped at 88 columns. Frontmatter values, tables, component props and
 code blocks are exempt and stay on one line. The name is Copperhead, with a capital C,

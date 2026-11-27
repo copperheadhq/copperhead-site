@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-import { site, repo, links, siteCard } from '../config';
+import { site, repo, siteCard } from '../config';
+import { organization, website, ORG_ID } from '../seo';
 
 interface Props {
   /** Full <title>. Defaults to the home page title. */
@@ -8,8 +9,8 @@ interface Props {
   description?: string;
   /** Site-root-relative path of this page, e.g. '/blog/'. Sets canonical + og:url. */
   path?: string;
-  /** Extra JSON-LD appended after the SoftwareApplication node (blog posts, FAQ). */
-  jsonLd?: Record<string, unknown>;
+  /** Extra JSON-LD nodes for this page (a post, an FAQ, breadcrumbs), one or several. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   /** 'article' for blog posts, so link unfurls read as posts rather than a product page. */
   ogType?: 'website' | 'article';
   /** Site-root-relative path of a page-specific 1200x630 share image. Defaults to the site card. */
@@ -25,13 +26,16 @@ interface Props {
 }
 
 const {
-  title = 'Copperhead. Cursor for circuit boards.',
-  description = 'Copperhead is an open source AI agent that edits your real KiCad files and runs ERC and DRC until they pass.',
+  // The home page's, and it leads with the phrase people search for. The
+  // tagline it replaced, "Cursor for circuit boards", named no search term at
+  // all: nothing in it says PCB, KiCad or AI.
+  title = 'AI for PCB design · Copperhead, open source KiCad agent',
+  description = 'Copperhead is the open source AI for PCB design. Describe a board and it drafts the KiCad schematic, layout and Gerbers, then runs ERC and DRC until they pass.',
   path = '/',
   jsonLd: extraJsonLd,
   ogType = 'website',
   ogImage: ogImagePath = siteCard,
-  ogImageAlt = 'Copperhead: an open source AI agent for circuit board design',
+  ogImageAlt = 'Copperhead: an open source AI agent for PCB design',
   publishedTime,
   noindex = false,
 } = Astro.props;
@@ -42,21 +46,38 @@ const ogImage = new URL(ogImagePath, site).href;
 // The product node stays on every page: it is the thing the whole site is about,
 // and search engines get one consistent description of it wherever they land.
 const appJsonLd = {
-  '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
+  '@id': `${site}/#software`,
   name: 'Copperhead',
+  alternateName: ['Copperhead AI', 'Copperhead AI PCB design agent'],
   description:
-    'An open-source AI agent that designs, documents and validates real PCBs from a prompt.',
+    'An open source AI agent for PCB design. It turns a plain-English brief into a KiCad schematic, layout and Gerbers. It runs ERC and DRC until they pass.',
   url: site,
   codeRepository: repo,
-  applicationCategory: 'DeveloperApplication',
+  applicationCategory: 'DesignApplication',
+  applicationSubCategory: 'Electronic design automation',
+  keywords:
+    'AI for PCB design, AI PCB design, AI PCB designer, KiCad AI, AI schematic design, AI PCB layout',
   operatingSystem: 'macOS, Linux, Windows',
   license: 'https://www.apache.org/licenses/LICENSE-2.0',
+  isAccessibleForFree: true,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  author: { '@type': 'Organization', name: 'Copperhead', url: site, sameAs: links.chouhan },
+  author: { '@id': ORG_ID },
+  publisher: { '@id': ORG_ID },
 };
 
-const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
+// One @graph rather than a list of separate documents, so the nodes can point
+// at each other by @id: the product at the company, the site at the company
+// and a page's own node at either. A page's nodes may arrive with their own
+// @context, which belongs to the graph and is dropped from the node.
+const extra = (Array.isArray(extraJsonLd) ? extraJsonLd : extraJsonLd ? [extraJsonLd] : []).map(
+  ({ '@context': _context, ...node }) => node,
+);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [organization, website, appJsonLd, ...extra],
+};
 ---
 
 <!doctype html>
@@ -176,6 +197,12 @@ const jsonLd = extraJsonLd ? [appJsonLd, extraJsonLd] : appJsonLd;
     <link rel="alternate icon" href="/favicon.ico?v=2" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Copperhead blog and research"
+      href="/rss.xml"
+    />
 
     {/* One face renders the whole page now, so it is the only one preloaded.
         Space Grotesk is a single variable file carrying 300-700, which is why

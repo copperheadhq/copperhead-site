@@ -8,8 +8,16 @@ const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: ['**/*.{md,mdx}', '!**/_*'] }),
   schema: z.object({
     title: z.string(),
+    /** The <title> when the headline is too long for a results page (60 characters). */
+    seoTitle: z.string().max(60).optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
+    /**
+     * The meta description when `description` runs past a results page (160
+     * characters), written to stand alone. Without one, `description` is cut
+     * at a sentence (seo.ts metaDescription), which can keep only the set-up.
+     */
+    seoDescription: z.string().max(160).optional(),
     date: z.coerce.date(),
     /** Short mono label on the index, e.g. 'Product' or 'Engineering'. */
     kind: z.string(),
@@ -58,8 +66,12 @@ const research = defineCollection({
   loader: glob({ base: './src/content/research', pattern: ['**/*.{md,mdx}', '!**/_*'] }),
   schema: z.object({
     title: z.string(),
+    /** The <title> when the headline is too long for a results page (60 characters). */
+    seoTitle: z.string().max(60).optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
+    /** As on the blog: a standalone meta description of at most 160 characters. */
+    seoDescription: z.string().max(160).optional(),
     date: z.coerce.date(),
     /** Short mono label on the index, e.g. 'Method' or 'Results'. */
     kind: z.string(),
