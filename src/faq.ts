@@ -92,10 +92,31 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'Is there a hosted version?',
-        a: `Yes. <a href="${links.app}">Copperhead Cloud</a> runs the same agent on hosted infrastructure against the repositories you connect to it. The CLI stays free and does every core operation locally, and teams with export-controlled designs can self-host. <a href="${links.pricing}">Pricing is here</a>.`,
+        a: `Yes. <a href="${links.newChat}">Copperhead Cloud</a> runs the same agent on hosted infrastructure against the repositories you connect to it. The CLI stays free and does every core operation locally, and teams with export-controlled designs can self-host. Cloud's plans are on the <a href="${links.pricing}">pricing page</a>.`,
       },
     ],
   },
 ];
 
-export const stripTags = (s: string): string => s.replace(/<[^>]+>/g, '');
+// The entities an answer can carry, decoded in the same pass so "&amp;lt;"
+// comes out as "&lt;" and not as "<". JSON-LD text is plain text, so an
+// entity left in it would reach a search result as the literal "&amp;".
+const ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: '\u00a0',
+};
+
+export const stripTags = (s: string): string =>
+  s
+    .replace(/<[^>]+>/g, '')
+    .replace(/&(?:#(\d+)|#x([0-9a-f]+)|([a-z]+));/gi, (m, dec, hex, name) =>
+      dec
+        ? String.fromCodePoint(Number(dec))
+        : hex
+          ? String.fromCodePoint(parseInt(hex, 16))
+          : (ENTITIES[name.toLowerCase()] ?? m),
+    );

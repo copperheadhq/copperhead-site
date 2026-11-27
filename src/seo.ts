@@ -63,6 +63,7 @@ export const metaDescription = (text: string): string => {
  */
 export const ORG_ID = `${site}/#organization`;
 export const WEBSITE_ID = `${site}/#website`;
+export const SOFTWARE_ID = `${site}/#software`;
 
 export const organization = {
   '@type': 'Organization',

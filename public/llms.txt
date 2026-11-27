@@ -20,6 +20,7 @@ Key facts:
 - It does not replace a hardware engineer: draft layouts are correct rather than optimal, and LAYOUT.md states what a specialist should redo before fabrication. It refuses to run on a dirty git tree, refuses edits without a validated proposal, refuses changes that break documented constraints and never invents unjustifiable part numbers.
 - Data stays local on the CLI: the agent runs on your machine, stores nothing on a server and only sends design context in the model API call itself. Run transcripts live in .copperhead/runs/ with secrets redacted. Cloud is the opt-in exception: it runs the same agent on hosted infrastructure against the repositories you connect to it.
 - KiCad only; no proprietary EDA formats are supported or planned.
+- KiCad ships no AI features of its own. Copperhead works on KiCad projects from the outside, through KiCad's open file format and `kicad-cli`.
 
 ## Topics
 

@@ -5,7 +5,7 @@ import Footer from "../components/Footer.astro";
 import { site, links } from "../config";
 import { topics, topicPath, type Topic } from "../landing";
 import { stripTags } from "../faq";
-import { breadcrumbs, ORG_ID } from "../seo";
+import { breadcrumbs, ORG_ID, SOFTWARE_ID, WEBSITE_ID } from "../seo";
 
 // One page per search topic, from src/landing.ts. The route is a single
 // segment, so it sits beside the catch-all in [...path].astro without the two
@@ -24,31 +24,35 @@ const path = topicPath(topic.slug);
 const url = new URL(path, site).href;
 const others = topics.filter((t) => t.slug !== topic.slug);
 
-// The visible FAQ and the FAQPage node are the same list, so the structured
-// data cannot say something the page does not.
+// One node for the page, typed as both a WebPage and its FAQPage, so the
+// questions belong to this URL rather than to an anonymous second node. The
+// visible FAQ and mainEntity are the same list, so the structured data cannot
+// say something the page does not.
+const crumbsId = `${url}#breadcrumb`;
 const jsonLd = [
   {
-    "@type": "WebPage",
+    "@type": ["WebPage", "FAQPage"],
     "@id": url,
     url,
     name: topic.h1,
     description: topic.description,
-    isPartOf: { "@id": `${site}/#website` },
-    about: { "@id": `${site}/#software` },
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": SOFTWARE_ID },
     publisher: { "@id": ORG_ID },
-  },
-  {
-    "@type": "FAQPage",
+    breadcrumb: { "@id": crumbsId },
     mainEntity: topic.faq.map((f) => ({
       "@type": "Question",
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: stripTags(f.a) },
     })),
   },
-  breadcrumbs([
-    ["Home", "/"],
-    [topic.nav, path],
-  ]),
+  {
+    "@id": crumbsId,
+    ...breadcrumbs([
+      ["Home", "/"],
+      [topic.nav, path],
+    ]),
+  },
 ];
 ---
 
@@ -63,7 +67,7 @@ const jsonLd = [
     <article class="topic">
       <div class="wrap">
         <header>
-          <p class="kicker">{topic.kicker}</p>
+          <p class="kicker">{topic.nav}</p>
           <h1>{topic.h1}</h1>
           <p class="lede" set:html={topic.lede} />
           <div class="actions">
@@ -94,7 +98,7 @@ const jsonLd = [
                 ))
               }
             </div>
-            <p class="more"><a href="/blog/faq/">The full FAQ</a></p>
+            <p class="more"><a href={links.faq}>The full FAQ</a></p>
           </section>
 
           <nav class="related" aria-label="Related topics">

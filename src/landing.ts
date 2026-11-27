@@ -16,33 +16,35 @@
  * carry links and inline code.
  */
 import { links, pkg } from './config';
+import { postPath } from './blog';
+import { articlePath } from './research';
 
 export interface Topic {
   /** The URL segment: /<slug>/. */
   slug: string;
-  /** <title>, 60 characters at most. */
+  /** <title>, 60 characters at most (checked below). */
   title: string;
-  /** Meta description, 160 characters at most. */
+  /** Meta description, 160 characters at most (checked below). */
   description: string;
-  /** Mono label over the headline. */
-  kicker: string;
   h1: string;
   /** The standfirst: the answer to the search, in two or three sentences. */
   lede: string;
   sections: { h2: string; body: string }[];
   faq: { q: string; a: string }[];
-  /** Short label for the footer and the related list. */
+  /** Short label for the footer, the breadcrumb and the mono label over the headline. */
   nav: string;
 }
+
+// Declared before the list because the bodies below link to each other.
+export const topicPath = (slug: string) => `/${slug}/`;
 
 // The app's new-conversation page: a visitor with no account describes the
 // board there, the model asks for the rest and an account comes up only at
 // the build.
 const cloud = `<a href="${links.newChat}">Copperhead Cloud</a>`;
-const stages = '<a href="/blog/from-brief-to-gerbers/">eight gated stages</a>';
-const invariants =
-  '<a href="/blog/spec-gated-in-verification-gated-out/">spec-gated in and verification-gated out</a>';
-const copperbench = '<a href="/research/copperbench/">copperbench</a>';
+const stages = `<a href="${postPath('from-brief-to-gerbers')}">eight gated stages</a>`;
+const invariants = `<a href="${postPath('spec-gated-in-verification-gated-out')}">spec-gated in and verification-gated out</a>`;
+const copperbench = `<a href="${articlePath('copperbench')}">copperbench</a>`;
 const install = `<code>npm i -g ${pkg}</code>`;
 
 export const topics: Topic[] = [
@@ -52,13 +54,12 @@ export const topics: Topic[] = [
     title: 'AI PCB Design: Brief to Gerbers in KiCad · Copperhead',
     description:
       'How AI PCB design works in practice: an open source agent that takes a brief to a schematic, a layout and Gerbers in KiCad, checked by ERC and DRC.',
-    kicker: 'AI PCB design',
     h1: 'AI PCB design that works on real KiCad files',
     lede: `AI PCB design means handing an AI agent a description of a board and getting back design files you can open, check and send to a fab. Copperhead is an open source agent that does this in KiCad: it writes the schematic, lays out the board and exports Gerbers. It runs KiCad's own ERC and DRC until they pass before it calls anything done.`,
     sections: [
       {
         h2: 'What AI PCB design is',
-        body: `<p>A language model on its own can talk about circuits. It cannot be trusted to design one, because nothing checks what it says. AI PCB design becomes useful when the model is put inside a loop with real tools: it edits the actual design files, an electrical rule check and a design rule check run on the result. The errors go back to the model until there are none.</p>
+        body: `<p>A language model on its own can talk about circuits. It cannot be trusted to design one, because nothing checks what it says. AI PCB design becomes useful when the model is put inside a loop with real tools. It edits the actual design files. An electrical rule check and a design rule check run on the result, and the errors go back to the model until there are none.</p>
 <p>That loop is the whole product. Copperhead is ${invariants}: no edit happens before a written change proposal exists, and no run reports success before KiCad's checks agree.</p>`,
       },
       {
@@ -84,7 +85,7 @@ export const topics: Topic[] = [
       {
         h2: 'How it differs from an autorouter or a chatbot',
         body: `<p>An autorouter starts from a finished schematic and a placed board and draws the copper. A chatbot answers questions about a design it cannot open. An AI PCB design agent sits across the whole job, from the requirement to the manufacturing files. Its output is the design source itself: plain KiCad files, markdown and JSON in your own git repository, with no proprietary format in between.</p>
-<p>${copperbench} is the benchmark we built to measure agents like this one on real KiCad boards, with electrical verification as the oracle and cost reported beside pass rate. Its method is published before any results, so it can be argued with first.</p>`,
+<p>${copperbench} is the measurement standard we published for agents like this one: real KiCad boards, electrical verification as the oracle and cost reported beside pass rate. Its method is out before any results, so it can be argued with first.</p>`,
       },
       {
         h2: 'Try it',
@@ -120,7 +121,6 @@ export const topics: Topic[] = [
     title: 'KiCad AI: Open Source AI Agent for KiCad · Copperhead',
     description:
       'Copperhead is an open source AI agent for KiCad. It edits your .kicad_sch and .kicad_pcb files from a plain-English request and runs ERC and DRC until clean.',
-    kicker: 'KiCad AI',
     h1: 'The AI agent for KiCad',
     lede: `KiCad has no built-in AI. Copperhead adds one from the outside: an open source agent that reads and edits your KiCad project the way an engineer would, from the command line, in your own git repository. You ask for a change in plain English and it edits the schematic and the board, updates the documents that reference them and runs <code>kicad-cli</code> ERC and DRC until they pass.`,
     sections: [
@@ -137,12 +137,12 @@ export const topics: Topic[] = [
 <li>It propagates the change into the pinout, the bill of materials, the subsystem docs and the firmware scaffold.</li>
 <li>It runs ERC and DRC through <code>kicad-cli</code> inside a git snapshot. A run that fails verification is rolled back.</li>
 </ol>
-<p>The reasoning behind that loop is in <a href="/blog/spec-gated-in-verification-gated-out/">Spec-gated in, verification-gated out</a>.</p>`,
+<p>The reasoning behind that loop is in <a href="${postPath('spec-gated-in-verification-gated-out')}">Spec-gated in, verification-gated out</a>.</p>`,
       },
       {
         h2: 'Working on a design that already exists',
         body: `<p>Iterating on a real KiCad design is the main case and what the agent is best at. It refuses to run on a dirty git tree, so every run starts from a known state and ends as a commit you can review or revert. It also refuses a change that would break a budget you have documented, and cites the line it would violate.</p>
-<p>Starting from nothing works too. <code>copperhead create --brief brief.md</code> takes a written brief through ${stages}. In ${cloud} one sentence is enough to start.</p>`,
+<p>Starting from nothing works too. <code>copperhead create</code> takes a one-sentence description or a written brief through ${stages}. In ${cloud} one sentence is enough to start as well.</p>`,
       },
       {
         h2: 'An agent, not an MCP server',
@@ -160,19 +160,15 @@ export const topics: Topic[] = [
       },
       {
         q: 'Can Claude design a PCB in KiCad?',
-        a: `A model on its own writes text. Inside an agent that edits KiCad files and runs ERC and DRC on the result, it can take a board from a brief to checked design files. Copperhead runs Claude or GPT-5 in that loop with your own API key.`,
-      },
-      {
-        q: 'Does it rewrite my whole schematic?',
-        a: `No. Edits are surgical changes to the KiCad s-expression source, so diffs stay small and reviewable and untouched parts of the file stay byte-identical.`,
+        a: `A model on its own writes text. Inside an agent that edits KiCad files and runs ERC and DRC on the result, it can take a board from a brief to checked design files. Copperhead runs Claude or GPT-5 in that loop. With the CLI you bring your own API key.`,
       },
       {
         q: 'Does it work with Altium, Eagle or OrCAD files?',
-        a: `No. Copperhead works on KiCad projects, and the CLI and Cloud read KiCad files only.`,
+        a: `Copperhead works on KiCad projects; the CLI and Cloud read KiCad files only.`,
       },
       {
         q: 'Where does my KiCad design go?',
-        a: `With the CLI it stays in your own git repository. The agent runs on your machine and only sends design context as part of the model API call itself.`,
+        a: `With the CLI it stays in your own git repository. The agent runs on your machine and only sends design context as part of the model API call itself. Copperhead Cloud is the opt-in exception: it runs the same agent on hosted infrastructure against the repositories you connect to it.`,
       },
     ],
   },
@@ -182,7 +178,6 @@ export const topics: Topic[] = [
     title: 'AI Schematic Design for KiCad · Copperhead',
     description:
       'AI schematic design from a written brief: Copperhead selects parts against datasheets, draws the KiCad schematic and runs ERC until it passes.',
-    kicker: 'AI schematic design',
     h1: 'AI schematic design from a written brief',
     lede: `Copperhead generates a KiCad schematic from a brief. It decides the architecture, chooses parts against their datasheets, places and wires the symbols in a <code>.kicad_sch</code> file and runs KiCad's electrical rule check until it is clean. The schematic is a real file you open in KiCad, not a picture of one.`,
     sections: [
@@ -200,11 +195,11 @@ export const topics: Topic[] = [
       },
       {
         h2: 'Changing a schematic you already have',
-        body: `<p>Most schematic work is editing, not generating. <code>copperhead do "swap the LDO for a buck converter"</code> edits the existing <code>.kicad_sch</code> in place, updates the bill of materials and the power budget to match and re-runs ERC. See <a href="/kicad-ai/">the AI agent for KiCad</a> for how a change request runs.</p>`,
+        body: `<p>Most schematic work is editing, not generating. <code>copperhead do "swap the LDO for a buck converter"</code> edits the existing <code>.kicad_sch</code> in place, updates the bill of materials and the power budget to match and re-runs ERC. See <a href="${topicPath('kicad-ai')}">the AI agent for KiCad</a> for how a change request runs.</p>`,
       },
       {
         h2: 'Start with a brief',
-        body: `<p>Describe the board in ${cloud} in one sentence. The model asks for what the schematic depends on and finalizes the brief with you, with no account until you build. Or write the brief yourself and run it with the free CLI.</p>`,
+        body: `<p>Describe the board in ${cloud} in one sentence. The model asks for what the schematic depends on and finalizes the brief with you, with no account until you build. Or give the free CLI a sentence or a brief you wrote yourself.</p>`,
       },
     ],
     faq: [
@@ -228,7 +223,6 @@ export const topics: Topic[] = [
     title: 'AI PCB Layout and Routing in KiCad · Copperhead',
     description:
       'AI PCB layout in KiCad: Copperhead places footprints and routes a draft board, runs DRC until it passes and tells you what a specialist should redo.',
-    kicker: 'AI PCB layout',
     h1: 'AI PCB layout and routing, with DRC in the loop',
     lede: `Copperhead lays out a board in KiCad from the schematic it wrote or the one you already have. It places footprints, routes the copper in a <code>.kicad_pcb</code> file and runs KiCad's design rule check until it passes. What you get is a correct draft and an honest note on its limits.`,
     sections: [
@@ -238,22 +232,22 @@ export const topics: Topic[] = [
       },
       {
         h2: 'Correct, not optimal',
-        body: `<p>A DRC-clean board is producible. It is not necessarily the board an experienced layout engineer would draw. Copperhead says so in writing: each run produces a <code>LAYOUT.md</code> that lists what is solid and what a specialist should redo before fabrication. Dense, high-speed and RF layouts are where that list is longest.</p>
+        body: `<p>A DRC-clean board is producible. It is not necessarily the board an experienced layout engineer would draw. Copperhead says so in writing: each run produces a <code>LAYOUT.md</code> that lists what is solid and what a specialist should redo before fabrication.</p>
 <p>We think that honesty is the feature. A tool that claims a finished layout and is wrong costs you a respin.</p>`,
       },
       {
         h2: 'Layout as evidence',
-        body: `<p>When a layout question needs a number, the agent can produce one. In <a href="/research/diffpair-meanders/">our differential pair study</a>, Copperhead built a bent pair and six ways of length-matching it. It solved every one in a field solver to see how much skew each fix removed.</p>`,
+        body: `<p>When a layout question needs a number, the agent can produce one. In <a href="${articlePath('diffpair-meanders')}">our differential pair study</a>, Copperhead built a bent pair and six ways of length-matching it. It solved every one in a field solver to see how much skew each fix removed.</p>`,
       },
       {
         h2: 'From layout to manufacturing files',
-        body: `<p>Once the board passes DRC, the next stage writes Gerbers, drill files and a STEP model to disk, beside an orderable bill of materials. The whole path from a brief is described in <a href="/ai-pcb-design/">AI PCB design</a>.</p>`,
+        body: `<p>Once the board passes DRC, the next stage writes Gerbers, drill files and a STEP model to disk, beside an orderable bill of materials. The whole path from a brief is described in <a href="${topicPath('ai-pcb-design')}">AI PCB design</a>.</p>`,
       },
     ],
     faq: [
       {
         q: 'Can AI route a production-quality PCB?',
-        a: `It can route a board that passes DRC and can be manufactured. For simple boards that is often enough. For dense, high-speed or RF designs, treat the result as a draft: Copperhead lists what a layout specialist should redo in <code>LAYOUT.md</code>.`,
+        a: `It can route a board that passes DRC and can be manufactured. The layout is correct rather than optimal, so treat it as a draft: Copperhead lists what a layout specialist should redo in <code>LAYOUT.md</code>.`,
       },
       {
         q: 'Is Copperhead an autorouter?',
@@ -271,7 +265,6 @@ export const topics: Topic[] = [
     title: 'Text to PCB: From a Prompt to Gerbers · Copperhead',
     description:
       'Text to PCB with an open source AI agent: write what the board should do and get a KiCad schematic, a DRC-clean layout and Gerbers.',
-    kicker: 'Text to PCB',
     h1: 'Text to PCB: from a prompt to Gerbers',
     lede: `Text to PCB means writing what a board should do and getting manufacturing files back. Copperhead does it in two steps you can see: the text becomes a brief, and the brief becomes a KiCad project with a schematic, a layout and Gerbers, each stage gated on a check it has to pass.`,
     sections: [
@@ -282,7 +275,7 @@ export const topics: Topic[] = [
       },
       {
         h2: 'What comes out',
-        body: `<p>A git repository with plain files in it: a specification, a subsystem breakdown, a bill of materials, <code>design.kicad_sch</code>, <code>design.kicad_pcb</code>, Gerbers and drill files, a STEP model, a firmware scaffold and a bring-up plan. The schematic passes ERC and the layout passes DRC. The <a href="/blog/from-brief-to-gerbers/">stage-by-stage walkthrough</a> shows a real run.</p>`,
+        body: `<p>A git repository with plain files in it: a specification, a subsystem breakdown, a bill of materials, <code>design.kicad_sch</code>, <code>design.kicad_pcb</code>, Gerbers and drill files, a STEP model, a firmware scaffold and a bring-up plan. The schematic passes ERC and the layout passes DRC. The <a href="${postPath('from-brief-to-gerbers')}">stage-by-stage walkthrough</a> shows a real run of stages 1 to 6.</p>`,
       },
       {
         h2: 'Why a chatbot cannot do this alone',
@@ -290,7 +283,7 @@ export const topics: Topic[] = [
       },
       {
         h2: 'A worked example',
-        body: `<p>In <a href="/blog/hardware-as-fast-as-software/">Hardware as fast as software</a> we took two boards from a two-sentence public roadmap to part selection in a day, with every stage a commit. The proof board behind the project, Open Telegraph, is public with its KiCad files and decision log.</p>`,
+        body: `<p>In <a href="${postPath('hardware-as-fast-as-software')}">Hardware as fast as software</a> we took two boards from a two-sentence public roadmap to part selection in a day, with every stage a commit. The proof board behind the project, Open Telegraph, is public with its KiCad files and decision log.</p>`,
       },
     ],
     faq: [
@@ -302,25 +295,21 @@ export const topics: Topic[] = [
         q: 'How detailed does the prompt need to be?',
         a: `A sentence starts it. A good brief also states the controller, the power source, the interfaces, the parts that must be on the board and any hard budgets. In Copperhead Cloud the model asks for each one.`,
       },
-      {
-        q: 'What does a full run cost?',
-        a: `A single change is roughly 0.10 to 1.00 dollars in model tokens, and a full run from a brief is five to ten times that. Your model provider bills you directly.`,
-      },
     ],
   },
   {
     slug: 'open-source-ai-pcb-design',
-    nav: 'Open source',
+    // Not plain "Open source": in a footer column that reads as a link to the repo.
+    nav: 'Open source AI',
     title: 'Open Source AI PCB Design Tool · Copperhead',
     description:
       'Copperhead is an open source AI PCB design tool under Apache-2.0. It runs locally on your KiCad files with your own model key, and the CLI is free.',
-    kicker: 'Open source',
     h1: 'Open source AI for PCB design',
     lede: `Copperhead is an open source AI PCB design agent, licensed under Apache-2.0. The CLI is free, runs on your own machine against your own KiCad files and does every core operation without a paid plan. You bring a model API key and you keep your design.`,
     sections: [
       {
         h2: 'What open source means here',
-        body: `<p>The agent's source is on <a href="${links.repo}">GitHub</a> under <a href="${links.license}">Apache-2.0</a>. Everything it writes is plain markdown, JSON and KiCad source in your repository, so there is no proprietary format and no editor to move into. If you stop using Copperhead tomorrow, your project is an ordinary KiCad project.</p>`,
+        body: `<p>The agent's source is on <a href="${links.repo}">GitHub</a> under <a href="${links.license}">Apache-2.0</a>. Everything it writes is plain markdown, JSON and KiCad source in your repository, so there is no proprietary format and no editor to move into. If you stop using Copperhead tomorrow, your project is an ordinary KiCad project. The model is your choice too: Claude and GPT-5 are both tested against the same integration suite, and you bring your own key.</p>`,
       },
       {
         h2: 'Your design stays yours',
@@ -328,32 +317,37 @@ export const topics: Topic[] = [
       },
       {
         h2: 'Free CLI, paid hosting',
-        body: `<p>Copperhead is open core. The CLI is free forever. The paid plans add what is painful to run yourself: hosted runs on private repositories, team governance and a self-hosted enterprise license. Copperhead Cloud is free for public repositories released under CERN-OHL-S or an OSHWA-certified license, within fair-use limits. The split is on the <a href="/pricing/">pricing page</a>.</p>`,
+        body: `<p>Copperhead is open core. The CLI is free forever, and with it you pay only your model provider for the tokens a run uses. The paid plans add what is painful to run yourself: hosted runs on private repositories, team governance and a self-hosted enterprise license. Copperhead Cloud is free for public repositories released under CERN-OHL-S or an OSHWA-certified license, within fair-use limits. The split is on the <a href="${links.pricing}">pricing page</a>.</p>`,
       },
       {
         h2: 'Built in the open',
-        body: `<p>Our reference hardware is CERN-OHL-S, our benchmark ${copperbench} is public and the <a href="/stats/">repository's traffic</a> is published daily. The <a href="/blog/antler-crackathon/">Antler Crackathon write-up</a> covers where the project came from, and we are <a href="/careers/">hiring</a> people who want to build it.</p>`,
+        body: `<p>Our reference hardware is CERN-OHL-S, our benchmark ${copperbench} is public and the <a href="${links.stats}">repository's traffic</a> is published daily. The <a href="${postPath('antler-crackathon')}">Antler Crackathon write-up</a> covers where the project came from, and we are <a href="${links.careers}">hiring</a> people who want to build it.</p>`,
       },
       {
         h2: 'Get started',
-        body: `<p>${install}, then <code>copperhead create --brief brief.md</code> or <code>copperhead init</code> in an existing KiCad repository. No brief yet? Describe the board in ${cloud} and start from a sentence.</p>`,
+        body: `<p>${install}. For a new board, give <code>copperhead create</code> a one-sentence description and it writes <code>brief.md</code> for you. If you wrote the brief yourself, pass <code>--brief brief.md</code> instead. For an existing KiCad repository, run <code>copperhead init</code> in it. Or describe the board in ${cloud} and the model asks for the rest.</p>`,
       },
     ],
     faq: [
       {
-        q: 'Do I pay to use the open source CLI?',
-        a: `No. The CLI is free and open source under Apache-2.0. You pay your model provider for the tokens a run uses. Hosted plans are paid, and Cloud is free for qualifying open hardware projects.`,
-      },
-      {
         q: 'Can I run it without sending my design to a server?',
         a: `Yes. The CLI runs locally. The only design data that leaves your machine is the context sent in the model API call to the provider you chose.`,
-      },
-      {
-        q: 'Which models does it work with?',
-        a: `It is model-agnostic. Claude and GPT-5 are both tested against the same integration suite, and you bring your own key.`,
       },
     ],
   },
 ];
 
-export const topicPath = (slug: string) => `/${slug}/`;
+// Past these a search result cuts the text off (the same limits as src/seo.ts).
+// A topic that outgrows one fails the build here rather than shipping cut.
+const TITLE_MAX = 60;
+const DESCRIPTION_MAX = 160;
+for (const t of topics) {
+  if (t.title.length > TITLE_MAX) {
+    throw new Error(`src/landing.ts: the ${t.slug} title is ${t.title.length} characters, over ${TITLE_MAX}`);
+  }
+  if (t.description.length > DESCRIPTION_MAX) {
+    throw new Error(
+      `src/landing.ts: the ${t.slug} description is ${t.description.length} characters, over ${DESCRIPTION_MAX}`,
+    );
+  }
+}
