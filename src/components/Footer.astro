@@ -451,9 +451,12 @@ const social = [
 
   /* Below this the six columns no longer fit beside the statement without
      wrapping a label, so the statement goes above them and the row gets the
-     full width. Side by side they need about 1248px: at 1241 the Connect
-     icons stood 7px past the content edge. */
-  @media (max-width: 1260px) {
+     full width. Side by side they need about 1248px of page. The query
+     measures the window, scrollbar included, so a classic 17px scrollbar takes
+     its width out of the margin. At 1260 the Connect icons stood up to 3.8px
+     past the content edge from 1261 to 1264; at 1280 the tightest case, 1281
+     with a scrollbar, has 16px to spare. */
+  @media (max-width: 1280px) {
     .top {
       flex-direction: column;
       gap: 48px;
@@ -492,9 +495,13 @@ const social = [
       padding-inline: 24px;
     }
 
+    /* Two columns, each at least as wide as its longest label. Those two
+       labels and a 32px gutter came to 272.6px, 0.6px past a 320px phone's
+       272px measure, so the gutter is 24. Equal minmax(0, 1fr) columns are no
+       fix: "AI schematic design" then runs 15px out of its half. */
     .cols {
       grid-template-columns: 1fr 1fr;
-      gap: 28px 32px;
+      gap: 28px 24px;
     }
 
     .legal {
