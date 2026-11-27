@@ -142,7 +142,7 @@ export const topics: Topic[] = [
       {
         h2: 'Working on a design that already exists',
         body: `<p>Iterating on a real KiCad design is the main case and what the agent is best at. It refuses to run on a dirty git tree, so every run starts from a known state and ends as a commit you can review or revert. It also refuses a change that would break a budget you have documented, and cites the line it would violate.</p>
-<p>Starting from nothing works too. <code>copperhead create</code> takes a one-sentence description or a written brief through ${stages}. In ${cloud} one sentence is enough to start as well.</p>`,
+<p>Starting from nothing works too. <code>copperhead create --brief brief.md</code> takes a written brief through ${stages}. In ${cloud} one sentence is enough to start.</p>`,
       },
       {
         h2: 'An agent, not an MCP server',
@@ -165,10 +165,6 @@ export const topics: Topic[] = [
       {
         q: 'Does it work with Altium, Eagle or OrCAD files?',
         a: `Copperhead works on KiCad projects; the CLI and Cloud read KiCad files only.`,
-      },
-      {
-        q: 'Where does my KiCad design go?',
-        a: `With the CLI it stays in your own git repository. The agent runs on your machine and only sends design context as part of the model API call itself. Copperhead Cloud is the opt-in exception: it runs the same agent on hosted infrastructure against the repositories you connect to it.`,
       },
     ],
   },
@@ -199,7 +195,7 @@ export const topics: Topic[] = [
       },
       {
         h2: 'Start with a brief',
-        body: `<p>Describe the board in ${cloud} in one sentence. The model asks for what the schematic depends on and finalizes the brief with you, with no account until you build. Or give the free CLI a sentence or a brief you wrote yourself.</p>`,
+        body: `<p>Describe the board in ${cloud} in one sentence. The model asks for what the schematic depends on and finalizes the brief with you, with no account until you build. Or write the brief yourself and run it with the free CLI.</p>`,
       },
     ],
     faq: [
@@ -325,7 +321,7 @@ export const topics: Topic[] = [
       },
       {
         h2: 'Get started',
-        body: `<p>${install}. For a new board, give <code>copperhead create</code> a one-sentence description and it writes <code>brief.md</code> for you. If you wrote the brief yourself, pass <code>--brief brief.md</code> instead. For an existing KiCad repository, run <code>copperhead init</code> in it. Or describe the board in ${cloud} and the model asks for the rest.</p>`,
+        body: `<p>${install}, then <code>copperhead create --brief brief.md</code> or <code>copperhead init</code> in an existing KiCad repository. No brief yet? Describe the board in ${cloud} and start from a sentence.</p>`,
       },
     ],
     faq: [
