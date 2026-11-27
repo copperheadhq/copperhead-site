@@ -7,6 +7,12 @@ import { links } from "../config";
 // dark fill); here it takes a copper frame instead, the site's one accent.
 // Copy is anchored to the pricing model doc; nothing paid is ever required to
 // use Copperhead fully. The free CLI does every core operation.
+//
+// Each card is a summary: a one-line blurb and four features short enough to
+// hold one line each wherever the four cards share a row (from 1200px; below
+// that they go two by two). The longer account of each plan is the comparison
+// table in PricingDetails.astro on /pricing/. A feature that needs a clause to
+// explain it belongs there.
 interface Tier {
   name: string;
   price: string;
@@ -25,34 +31,30 @@ const tiers: Tier[] = [
     name: "CLI",
     price: "Free",
     note: "Apache-2.0, forever",
-    blurb: "Design on your own, on your own machine.",
+    blurb: "Design on your own machine.",
     cta: { label: "Get started", href: "/#quickstart" },
     headline: "Includes:",
     features: [
-      "The full agent: do, create, init, check, watch",
-      "Bring your own Claude or GPT-5 key",
-      "Runs on your KiCad files, in your own git repo",
-      "Plain markdown, JSON and KiCad output. No lock-in.",
-      "Runs locally, never metered",
-      "Community support",
+      "The full agent, run locally",
+      "Bring your own model key",
+      "Your KiCad files, your repo",
+      "Never metered",
     ],
   },
   {
     name: "Cloud",
     price: "$49",
     unit: "per user / month",
-    blurb: "Hosted runs on private repos, with a web viewer.",
+    blurb: "Hosted runs on private repos.",
     cta: { label: "Let's talk", href: links.getStarted },
     note: "Free for open hardware repos",
     featured: true,
     headline: "Everything in CLI, plus:",
     features: [
-      "Hosted runs, no local setup, from anywhere",
+      "Hosted runs, no setup",
       "Private repositories",
-      "Web viewer: chat, live schematic and board render, ERC/DRC status",
-      "Run history and shareable check reports",
-      "One-click gerber, DXF/STEP, render and BOM export",
-      "BYO key, or managed inference with 200 credits a seat",
+      "Web viewer, live renders",
+      "One-click exports",
     ],
   },
   {
@@ -60,30 +62,30 @@ const tiers: Tier[] = [
     price: "$49",
     unit: "per user / month",
     addon: "+ $199 / mo platform",
-    blurb: "Cloud, with governance and CI for a whole team.",
+    blurb: "Governance and CI for a team.",
     cta: { label: "Let's talk", href: links.getStarted },
     headline: "Everything in Cloud, plus:",
     features: [
-      "CI bot: run check as a required PR status check",
-      "Shared, versioned constraint libraries across the org",
-      "SSO / SAML, role management, central billing",
-      "Managed credits pooled across the team",
-      "Shared run history",
+      "CI bot on pull requests",
+      "Shared constraint libraries",
+      "SSO / SAML",
+      "Pooled credits",
     ],
   },
   {
     name: "Enterprise",
     price: "Custom",
     unit: "annual",
-    blurb: "Self-hosted, one flat price a year.",
-    cta: { label: "Talk to sales", href: links.contact },
+    blurb: "Self-hosted, flat annual price.",
+    // The booking page, like the other paid tiers. It was a mailto: link, which
+    // does nothing on a machine with no mail app set up.
+    cta: { label: "Talk to sales", href: links.getStarted },
     headline: "Everything in Team, plus:",
     features: [
-      "Self-hosted or VPC, so design data never leaves your network",
-      "Altium support beyond KiCad",
-      "RBAC, security review, dedicated support and an SLA",
-      "An audit trail your compliance team can hand over",
-      "Flat annual license, no per-run metering",
+      "Self-hosted or VPC",
+      "RBAC and security review",
+      "SLA and dedicated support",
+      "Compliance audit trail",
     ],
   },
 ];
@@ -108,7 +110,7 @@ const { id = 'top', page = false } = Astro.props;
             <h1 class="section-title">Pricing</h1>
           ) : (
             <>
-              <h1 class="section-title">What the paid plans add.</h1>
+              <h2 class="section-title">What the paid plans add.</h2>
               <p class="section-intro">
                 Copperhead is open core. The CLI is free and does the design
                 work on its own. The paid plans add hosting, team features and
@@ -129,7 +131,9 @@ const { id = 'top', page = false } = Astro.props;
         tiers.map((t) => (
           <li class:list={["card", { featured: t.featured }]}>
             {t.featured && <span class="badge">Most popular</span>}
-            <h2 class="name">{t.name}</h2>
+            {/* One level under the section's heading: h2 under /pricing/'s
+                h1, h3 under the home page section's h2. */}
+            {page ? <h2 class="name">{t.name}</h2> : <h3 class="name">{t.name}</h3>}
 
             <div class="price">
               <span class="amount">{t.price}</span>
@@ -238,7 +242,7 @@ const { id = 'top', page = false } = Astro.props;
     grid-row: span 7;
     background: var(--panel);
     border: 2px solid var(--line);
-    padding: 28px 26px 30px;
+    padding: 24px 24px 26px;
   }
 
   /* The wash is mixed into the page rather than into a fixed white, so on the
@@ -252,7 +256,7 @@ const { id = 'top', page = false } = Astro.props;
   .badge {
     position: absolute;
     top: -11px;
-    left: 26px;
+    left: 24px;
     padding: 3px 10px;
     background: var(--copper);
     color: var(--on-copper);
@@ -261,9 +265,13 @@ const { id = 'top', page = false } = Astro.props;
     letter-spacing: 0.02em;
   }
 
+  /* line-height and letter-spacing pinned, since an h3 would otherwise take
+     global.css's lighter subhead settings and the cards would differ by page. */
   .name {
     font-size: 1.15rem;
     font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
     margin: 0;
   }
 
@@ -305,7 +313,7 @@ const { id = 'top', page = false } = Astro.props;
     color: var(--text-dim);
     font-size: 0.95rem;
     line-height: 1.5;
-    margin: 1rem 0 1.5rem;
+    margin: 0.85rem 0 1.25rem;
   }
 
   .card .btn {
@@ -313,7 +321,7 @@ const { id = 'top', page = false } = Astro.props;
   }
 
   .feat-head {
-    margin: 1.75rem 0 1rem;
+    margin: 1.4rem 0 0.85rem;
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--text);
@@ -342,7 +350,9 @@ const { id = 'top', page = false } = Astro.props;
     color: var(--copper);
   }
 
-  @media (max-width: 1080px) {
+  /* Two by two below 1200px: from 1081 to 1199px four columns are too narrow
+     for the features to hold one line each. */
+  @media (max-width: 1199px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }
