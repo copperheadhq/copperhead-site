@@ -5,11 +5,11 @@ import { has } from '../assets';
 // so there is no empty player box before the demo is recorded. Drop
 // public/copperhead-demo.mp4 (plus optional poster/captions) and it appears.
 //
-// The animated TerminalDemo briefly stood in here. It now lives in the hero,
-// which is a better slot for it and the only one it should occupy — two copies
-// of the same replay on one page read as a bug. So this section is back to
-// being the video's, and index.astro withholds it (and its divider) until the
-// recording lands.
+// The animated TerminalDemo briefly stood in here. It now lives in RunDemo,
+// the section under the hero, which is a better slot for it and the only one
+// it should occupy: two copies of the same replay on one page read as a bug.
+// So this section is back to being the video's, and index.astro withholds it
+// (and its divider) until the recording lands.
 const video = 'copperhead-demo.mp4';
 const { video: hasVideo, poster: hasPoster, captions: hasCaptions } = has;
 ---

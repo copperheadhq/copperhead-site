@@ -15,7 +15,7 @@ Final copy, section by section, matching the layout in brand-and-business.md §2
 
 ## 1. Hero
 
-**H1:** Cursor for circuit boards.
+**H1:** AI for PCB design.
 
 **Sub:** Copperhead is an open source AI agent that designs, documents and verifies real PCBs from a prompt. On your files, in your repo, with KiCad's own checks as the gate.
 

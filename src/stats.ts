@@ -13,7 +13,7 @@
  * are public — the numbers appear on the first build after that.
  *
  * ES modules are singletons, so the two fetches run once for the whole build
- * even though the hero, proof and navbar all import `stats`.
+ * even though RunDemo, the navbar and TrendChart all import from it.
  */
 import { pkg, repo } from './config';
 

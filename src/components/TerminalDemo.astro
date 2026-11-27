@@ -4,9 +4,9 @@
 // thing costs ~6 KB with no runtime library.
 //
 // The window is a shell: the transcript, the pinned dock and the elapsed
-// counter all come in as props, defaulting to the hero's take. The create
+// counter all come in as props, defaulting to the home page's take. The create
 // pipeline post plays a different session through the same object. Anything
-// below that reads like a constant of the hero's run is a default, not an
+// below that reads like a constant of the home page's run is a default, not an
 // assumption — see the Props interface.
 //
 // The run shown is adding a USB-C power input, not the net rename that
@@ -35,9 +35,9 @@
 //     than ~19s. The proportions between beats are unchanged.
 
 // The transcript is a prop, so a second page can play a different session
-// through the same window. Defaults are the hero's take; the create-pipeline
+// through the same window. Defaults are the home page's take; the create-pipeline
 // post passes its own feed. Everything below is written against the props, not
-// against the hero's numbers.
+// against the home page's numbers.
 //
 // Absolute seconds from the start of the take. The typed command occupies
 // 0–1.6s; the run starts on Enter at RUN_START. Adjust `at` to retime a beat.
@@ -80,7 +80,7 @@ interface Props {
   /**
    * Leading for the transcript, which is the only lever on the window's
    * proportion once its width is pinned: height is rows × leading, and a
-   * transcript with half again as many rows as the hero's needs to close up to
+   * transcript with half again as many rows as the default's needs to close up to
    * stay landscape. Emitted as an inline custom property, so it also governs at
    * the narrow and phone steps below — pass it only when the row count makes the
    * default 1.6 read as a column rather than a window.
@@ -90,9 +90,11 @@ interface Props {
   cwd?: string;
   label?: string;
   /**
-   * Scale the window down on short desktops so it seats under a headline. True
-   * for the hero, where it competes with the fold; false in an article, where
-   * the reader has already scrolled and the transcript should stay legible.
+   * Scale the window down on short desktops and short phones so it seats
+   * under a headline: for a window that competes with a fold, as the hero's
+   * did before it moved to RunDemo. Off by default, since no window is on a
+   * fold now. In an article or a section under the fold the reader has
+   * already scrolled, and the transcript should stay legible.
    */
   fitViewport?: boolean;
 }
@@ -158,11 +160,11 @@ const {
   leading,
   cwd = '~/hardware/open-key',
   label = 'A Copperhead terminal session: adding a USB-C power input, with the agent proposing, editing, verifying and logging the change.',
-  fitViewport = true,
+  fitViewport = false,
 } = Astro.props;
 
 // The default transcript's last turn holds the dock until finish(), so its end
-// follows endAt rather than repeating the hero's 10.4. Supplied turns are the
+// follows endAt rather than repeating the default 10.4. Supplied turns are the
 // caller's own timeline and pass through untouched.
 const turns =
   turnsProp ??
@@ -415,8 +417,8 @@ const vars = [
        518px of glyphs inside 691px of content box. */
     max-width: 61.067em; /* 733px */
     margin: 0 auto;
-    /* asserted, not inherited: this drops into centred layouts (the hero) where
-       a centred transcript would be nonsense */
+    /* asserted, not inherited: this can drop into a centred layout, where a
+       centred transcript would be nonsense */
     text-align: left;
     background: var(--t-chrome);
     border: 1px solid var(--t-edge);
@@ -837,10 +839,9 @@ const vars = [
      legibility for a fold it was never going to win. Those viewports scroll
      instead, which they already did. ── */
   @media (min-width: 901px) and (max-height: 1000px) {
-    /* Only `.fold` — the window in the hero, which is the one racing a fold.
-       The same rule inside an article would shrink a transcript the reader has
-       already scrolled to, paying legibility for a fold that was never at
-       stake. */
+    /* Only `.fold`, a window racing a fold (the fitViewport prop). The same
+       rule inside an article would shrink a transcript the reader has already
+       scrolled to, paying legibility for a fold that was never at stake. */
     .term.fold {
       font-size: 10px; /* 733 → 611 wide, 458 → 382 tall */
     }
@@ -868,22 +869,28 @@ const vars = [
        7 was tried and gives up legibility for less: 228 tall, and by then the
        tool names stop being readable at arm's length. */
     .term {
-      /* 8px is the size this window wants and gets on any phone tall enough to
-         seat it: 0.955svh reaches 8 at 838svh, which is the largest phone in
-         the audit. Below that it scales down rather than holding 8 and pushing
-         the backer strip out of the fold — the strip is the foot of the fold
-         and was never being seen, so the transcript gives up the pixels.
-
-         The floor is 7px, and the note above is the reason it is a floor and
-         not lower: 7 was measured and rejected once, on the grounds that the
-         tool names stop being readable at arm's length. That judgement stands.
-         What changed is what 8px costs — holding it puts the strip 77px under
-         the fold on an iPhone 14 — so 7 is now the price of the fold rather
-         than a saving for its own sake, and nothing goes below it. Phones
-         shorter than ~700svh cannot seat the stack at any legible size and are
-         left to scroll (see the fit note in Hero.astro). */
-      font-size: clamp(7px, 0.955svh, 8px);
+      font-size: 8px;
       --lead: 1.25;
+    }
+
+    /* A window racing a fold (the fitViewport prop) gets 8px on any phone
+       tall enough to seat it: 0.955svh reaches 8 at 838svh, which is the
+       largest phone in the audit. Below that it scales down rather than
+       holding 8 and pushing the backer strip out of the fold. The strip is
+       the foot of the fold and was never being seen, so the transcript gives
+       up the pixels.
+
+       The floor is 7px, and the note above is the reason it is a floor and
+       not lower: 7 was measured and rejected once, on the grounds that the
+       tool names stop being readable at arm's length. That judgement stands.
+       What changed is what 8px cost the hero's fold: holding it put the strip
+       77px under the fold on an iPhone 14. So 7 is the price of a fold rather
+       than a saving for its own sake, and nothing goes below it. Phones
+       shorter than ~700svh cannot seat such a stack at any legible size and
+       are left to scroll. A window under the fold pays none of this and
+       stays at 8. */
+    .term.fold {
+      font-size: clamp(7px, 0.955svh, 8px);
     }
 
     .screen {

@@ -12,10 +12,10 @@ import { stats, compact } from "../stats";
 //
 // The left column is the closing CTA that used to end the page (CtaEnd.astro,
 // now gone), moved up here beside the transcript. It is still the page's
-// #quickstart target, which the footer's "Quickstart", the CLI tier's "Get
-// started" and the topic pages' "Install the CLI" all land on. W-3 lives on this
-// block: it is the exact quickstart from config.ts, and the brief under it is
-// the shared speakerBrief from the same file.
+// #quickstart target, which the footer's "Quickstart" and the CLI tier's "Get
+// started" both land on. W-3 lives on this block: it is the exact quickstart
+// from config.ts, and the brief under it is the shared speakerBrief from the
+// same file.
 //
 // `fitViewport` is off on the terminal: that step shrinks the window to race
 // a fold, and this one is not on a fold.
@@ -25,7 +25,7 @@ const showStats = stats.stars !== null || stats.downloads !== null;
 <section id="quickstart" class="run">
   <div class="wrap">
     <div class="head">
-      <h2 class="section-title">Open source. Free to run.</h2>
+      <h2 class="section-title">Open source. Free to use.</h2>
 
       <p class="section-intro">
         Three commands and a few lines about your board. It runs on your
@@ -217,18 +217,25 @@ const showStats = stats.stars !== null || stats.downloads !== null;
      433. That difference is what the two bands share, 44px each, and the
      lower one has to seat a 20px stats line with air on both sides of it.
      Measured, not reasoned: at 10px the bands were 25px and the stats sat
-     3px under the window. 9px is the size TerminalDemo's own notes call small
-     for reading, and it is accepted here because this window is an
-     illustration beside the commands, not the page's lead as it was in the
-     hero. */
-  @media (min-width: 1081px) {
+     3px under the window. 9px is small for reading, a step above the 8px
+     that TerminalDemo's phone notes call small. It is accepted here because
+     this window is an illustration beside the commands, not the page's lead
+     as it was in the hero.
+
+     The split starts at 1181px. At 9px the window is 550px wide, and the
+     right track only reaches that at about 1160px; below it the window was
+     pinned to the narrower track at its full height, 510x344 at 1081px,
+     which is 1.48:1 against the 1.6:1 it holds everywhere else. The 20px
+     over the measurement is room for a classic scrollbar, which narrows the
+     page but not the query. */
+  @media (min-width: 1181px) {
     .stage :global(.term) {
       font-size: 9px;
     }
   }
 
-  @media (max-width: 1080px) {
-    /* Stacked: one column, everything in document order, and the stats get
+  @media (max-width: 1180px) {
+    /* Stacked: one column with everything in document order. The stats get
        their gap back as a margin. */
     .split {
       grid-template-rows: none;

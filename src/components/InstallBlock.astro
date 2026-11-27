@@ -1,25 +1,16 @@
 ---
-// Shared terminal block. Used twice on the page (hero, closing CTA), which is
-// the autoloops pattern: the install is never more than one screen away.
-// W-3: the copy button copies the exact source lines, so the text lives in a
-// data attribute rather than being scraped from the DOM (which carries the
-// `$ ` prompt markers).
+// Shared terminal block: the quickstart in RunDemo on the home page, and the
+// Antler post's copy of it. W-3: the copy button copies the exact source
+// lines, so the text lives in a data attribute rather than being scraped from
+// the DOM (which carries the `$ ` prompt markers).
 interface Props {
   lines: string[];
-  /** Tighter padding for the hero, where the block sits under the subhead. */
-  compact?: boolean;
-  /**
-   * Single-line 36px bar, the supermemory hero shape: the command sits inline
-   * under the button pair and takes its width, with the copy control inside the
-   * bar rather than floated over it. Only sensible for one line.
-   */
-  bar?: boolean;
 }
-const { lines, compact = false, bar = false } = Astro.props;
+const { lines } = Astro.props;
 const block = lines.join('\n');
 ---
 
-<div class:list={['terminal', { compact, bar }]}>
+<div class="terminal">
   <!-- hidden until JS wires it up, so it is never a dead control (W-1) -->
   <button class="copy" type="button" data-clip={block} aria-label="Copy to clipboard" hidden>
     <svg class="ic-copy" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
@@ -35,9 +26,8 @@ const block = lines.join('\n');
     </svg>
   </button>
   <pre><code>{
-    lines.map((line, i) => (
-      // the bar is one line tall, so the trailing newline would double its height
-      <span class="line"><span class="prompt" aria-hidden="true">$ </span>{bar && i === lines.length - 1 ? line : line + '\n'}</span>
+    lines.map((line) => (
+      <span class="line"><span class="prompt" aria-hidden="true">$ </span>{line + '\n'}</span>
     ))
   }</code></pre>
 </div>
@@ -77,8 +67,8 @@ const block = lines.join('\n');
 </script>
 
 <style>
-  /* Inset code surface: the deepest of the three greys, recessed whether it
-     sits on the page white (hero) or on a panel (closing CTA).
+  /* Inset code surface: the deepest of the three greys, so it reads as
+     recessed on the page white or on a panel.
 
      Dashed frame, as supermemory sets its own install pill:
      as supermemory sets its own install pill —
@@ -90,76 +80,6 @@ const block = lines.join('\n');
     background: var(--surface);
     border: 1px dashed color-mix(in srgb, var(--text) 20%, transparent);
     padding: 20px 22px;
-  }
-
-  .terminal.compact {
-    padding: 16px 18px;
-  }
-
-  /* Bar variant, on supermemory's metrics: 36px tall, 14px of side padding,
-     12.5px mono, with the copy control an inline 22px button at the right end
-     rather than a floating 32px one. */
-  .terminal.bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 36px;
-    padding: 0 14px;
-    background: var(--panel);
-    transition: border-color 0.18s ease;
-  }
-
-  .terminal.bar:hover {
-    border-color: color-mix(in srgb, var(--text) 40%, transparent);
-  }
-
-  /* The three declarations below re-assert what the phone breakpoints at the
-     foot of this sheet turn on for the block variant (wrapping, a hanging
-     indent, a 38px button). A one-line bar must not do any of that. */
-  .terminal.bar pre {
-    flex: 1;
-    min-width: 0;
-    padding-right: 0;
-    overflow-x: auto;
-  }
-
-  /* Dimmer than the block variant's: in this layout the command is a reference,
-     not the call to action, and their bar sets it at 60% of the ink too.
-
-     line-height must clear the font's own line box (JetBrains Mono is 1.32em
-     ascent-to-descent). At the measured 1 the glyphs overflowed the line box,
-     and because `overflow-x: auto` forces the other axis from `visible` to
-     `auto`, that overflow raised a scrollbar inside a box holding one short
-     command. 1.5 contains the glyphs — and any taller fallback face — so
-     neither axis ever overflows. The bar centres its content, so the extra
-     leading changes nothing about where the line sits. */
-  .terminal.bar code {
-    font-size: 0.78125rem; /* 12.5px */
-    line-height: 1.5;
-    white-space: pre;
-    color: var(--text-dim);
-  }
-
-  .terminal.bar .line {
-    display: inline;
-    padding-left: 0;
-    text-indent: 0;
-  }
-
-  .terminal.bar .copy {
-    position: static;
-    /* the button precedes the <pre> in the DOM, where it has to stay for the
-       absolutely-positioned default; flex order puts it back on the right */
-    order: 2;
-    flex: none;
-    width: 22px;
-    height: 22px;
-    border: 0;
-    background: transparent;
-  }
-
-  .terminal.bar .copy:hover {
-    background: transparent;
   }
 
   pre {
