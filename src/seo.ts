@@ -10,6 +10,8 @@ import { links, repo, site } from './config';
 const TITLE_MAX = 60;
 /** Past this a description is. */
 const DESCRIPTION_MAX = 160;
+/** Kept whole sentences shorter than this read as a fragment in a result. */
+const SENTENCE_MIN = 60;
 
 const BRAND = 'Copperhead';
 
@@ -49,7 +51,10 @@ export const metaDescription = (text: string): string => {
     if (next.length > DESCRIPTION_MAX) break;
     out = next;
   }
-  if (out) return out;
+  // Too short to be a real sentence: most likely the split met an abbreviation
+  // the lookbehind doesn't know ("Built for the U.S. Army..."), so the word cut
+  // below is the honest result.
+  if (out.length >= SENTENCE_MIN) return out;
 
   const cut = clean.slice(0, DESCRIPTION_MAX - 1);
   return `${cut.slice(0, cut.lastIndexOf(' ')).replace(/[\s,;:.]+$/, '')}…`;
@@ -81,9 +86,11 @@ export const organization = {
     addressCountry: 'IN',
   },
   // The GitHub org rather than the repo: sameAs names the company's own
-  // profiles, and the repo is the product's.
+  // profiles, and the repo is the product's. chouhan.ai is the same company
+  // (careers.ts says so too).
   sameAs: [
     repo.split('/').slice(0, 4).join('/'),
+    links.chouhan,
     links.x,
     links.linkedin,
     links.youtube,

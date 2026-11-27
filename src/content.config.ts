@@ -9,7 +9,7 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     /** The <title> when the headline is too long for a results page (60 characters). */
-    seoTitle: z.string().optional(),
+    seoTitle: z.string().max(60).optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
     /**
@@ -67,7 +67,7 @@ const research = defineCollection({
   schema: z.object({
     title: z.string(),
     /** The <title> when the headline is too long for a results page (60 characters). */
-    seoTitle: z.string().optional(),
+    seoTitle: z.string().max(60).optional(),
     /** Shown on the index card and used as the meta description, so keep it a full sentence. */
     description: z.string(),
     /** As on the blog: a standalone meta description of at most 160 characters. */
