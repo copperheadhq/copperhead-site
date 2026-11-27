@@ -31,34 +31,37 @@ missing. Drop the file into `public/` and it appears on the next build.
 
 ## The fold
 
-The hero is built to be exactly one viewport tall, and the rules that keep it
-that way are spread across two components, so they are worth stating in one
-place before anyone edits either.
+The hero is built to be one viewport tall: the chip, the headline, the subhead
+and the prompt box, with the backer strip across its foot. The rules that keep
+it that way all live in `Hero.astro`, and they are worth stating in one place
+before anyone edits it.
 
-`.hero` is `min-height: 100svh` — a floor, not a fixed height. On any screen
+`.hero` is `min-height: 100svh`, a floor and not a fixed height. On any screen
 with the room it is exactly the fold; on one without, it grows and the page
-scrolls. It is deliberately not `height`, because a fixed height plus
+scrolls. It is deliberately not `height`: a fixed height plus
 `overflow: hidden` silently shears off whatever sits at the bottom, and what
-sits at the bottom is the live-stats row.
+sits at the bottom is the backer strip.
 
-**Order of sacrifice, when the stack does not fit: the terminal keeps its full
-height and the stats row goes below the fold.** The transcript is the product
-and has to be legible; the stats read just as well one scroll down. Nothing in
-the hero column shrinks — `.hero .wrap > * { flex: none }` — so this happens by
-the column simply running long.
+**Order of sacrifice, when the stack does not fit: nothing shrinks, and the
+backer strip goes below the fold.** The copy column and the strip are both
+`flex: none`, so this happens by the column simply running long. The prompt box
+is the page's one call to action and keeps its full height.
 
-Three things conspire to make it fit anyway on most screens:
+Three things make it fit anyway on most screens:
 
-- **Every vertical gap carries an `svh` term** (`clamp(18px, 3.4svh, 28px)` and
-  friends), so the rhythm compresses on a short window instead of overflowing.
-- **The headline is `clamp(2.25rem, min(5.6vw, 7svh), 4.5rem)`.** The `min()` is
-  the height term: 72px from ~1030px of viewport up, easing to ~50px at 720. It
-  is the single largest saving in the stack and costs nothing on screens that
-  have the room.
-- **Top padding is `calc(69px + clamp(...))`** — clear the fixed navbar, *then*
-  leave a gap. The bar's 69px is a constant the hero cannot otherwise see, and a
-  padding expressed as a bare `svh` fraction shrinks toward it on a short
-  viewport until the announcement chip is resting on the rule.
+- **Every vertical gap carries an `svh` term** (`clamp(22px, 4.4svh, 40px)`
+  above the prompt box, and the same shape for the rest), so the rhythm
+  compresses on a short window instead of overflowing.
+- **The headline is `clamp(2.5rem, min(6.4vw, 10svh), 5.5rem)`.** The `min()`
+  is the height term: the headline is the one item that can eat the prompt
+  box's room on a short window. "AI for PCB design." is 18 characters and holds
+  one line at every desktop width. Phones step down to
+  `clamp(2.25rem, 10.4vw, 3rem)`.
+- **Top padding is `calc(var(--nav-h) + clamp(...))`**: clear the fixed navbar,
+  *then* leave a gap. The bar is fixed and the hero cannot see it. A padding
+  expressed as a bare `svh` fraction shrinks toward it on a short viewport
+  until the announcement chip is resting on the rule. `--nav-h` lives
+  in `global.css` so the bar and this padding cannot drift apart.
 
 `justify-content: safe center` on the column centres the stack when there is
 slack, so a 4K screen distributes it above and below rather than leaving a hole
@@ -66,30 +69,56 @@ underneath. `safe` is load-bearing: it falls back to top-anchored when the
 content overflows, which keeps the headline on screen instead of pushing it off
 the top.
 
+### The prompt box
+
+The box is a form whose action is the cloud app's guest chat (`links.newChat`
+in `src/config.ts`). Start building, or Enter, sends the visitor there with
+what they typed in the URL fragment (`#prompt=<text>`), which reaches no
+server, log or referrer. Only the script puts it there. The textarea has no
+`name`, so with JavaScript off the button still opens the app but the text
+stays behind. A `<noscript>` line under the box says so.
+
+The placeholder types itself out: a fixed opening, then six example boards,
+each typed, held and erased. The opening and the examples are data attributes
+on the field, set in the component's frontmatter. With reduced motion (or no
+script) the field shows one static sentence instead.
+
+The field starts as many lines tall as the longest example needs at that
+width, so no example is ever cut off. The breakpoints are in `em`, so they move
+with the reader's text size; `Hero.astro` lists the measured line counts they
+hold. Typing grows the field up to its CSS `max-height`.
+
 ### Scaling the terminal
 
-`TerminalDemo.astro` has **one scale knob**: `font-size` on `.term`. Width,
-chrome height, padding and radius are all stated in `em` against it, so changing
-that number resizes the whole window **at a fixed 1.75:1 aspect ratio** — 800×458
-at the 12px base, 733×420 at 11px, 667×382 at 10px. Do not add `px` dimensions
-to that component; they break the ratio and turn a scaled window into a
-letterbox.
+The terminal is one section down, in `RunDemo.astro` (`#quickstart`), beside
+the install lines and the brief they point at. `TerminalDemo.astro` has **one
+scale knob**: `font-size` on `.term`. Width, chrome height, padding and radius
+are all stated in `em` against it, so changing that number resizes the whole
+window **at a fixed 1.6:1 aspect ratio**: 733x458 at the 12px base, 550x344 at
+9px. Do not add `px` dimensions to that component; they break the ratio and
+turn a scaled window into a letterbox.
 
 This matters more here than in most components. The transcript is
 `white-space: pre`, so its width in characters and its height in rows are both
 set by the type size; scaling the two by the same factor is the only way the
 window keeps its proportion *and* keeps the same 72-character lines unwrapped.
 
-The short-desktop steps (`min-width: 901px` with `max-height: 1000px` / `760px`)
-therefore do nothing but restate the base. Two exceptions, both deliberate and
-commented in the file: below 900px wide the window is pinned to the column and
-cannot hold ratio, so its leading tightens instead; and on phones the bar chrome
-opts out of the scale, because at a 9px base the proportional traffic lights
-would be 8px and useless to a thumb.
+RunDemo sets the knob to 9px where the section runs in two columns, from
+1181px. That is the narrowest width whose right track still holds the 550px
+window, with room for a classic scrollbar (see the note there). Stacked, below
+that, the window keeps the 12px base. Two exceptions inside the component, both
+deliberate and commented: at 900px and under the window is pinned to the column
+and cannot hold ratio, so its leading tightens instead. On phones it drops to
+8px and wraps, and the bar chrome opts out of the scale, because proportional
+traffic lights would be useless to a thumb.
+
+The `fitViewport` prop adds a `.fold` class that scales the window down further
+on short desktops and short phones, for a window that races a fold. The hero's
+terminal had it. No page sets it now.
 
 ### Checking it
 
-`npm run shots` drives the running dev server through fourteen viewports and
+`npm run shots` drives the running dev server through sixteen viewports and
 both themes. It waits for every finite animation to finish before shooting, so
 the terminal shows its completed `done · verified erc …` readout rather than an
 empty window.
@@ -99,12 +128,15 @@ npm run shots                      # everything -> shots/ (gitignored)
 npm run shots -- --audit           # no images, just the table
 npm run shots -- --only fhd,2k,4k
 npm run shots -- --path /,/pricing
+npm run check:layout               # the CI gate: every page, seven widths
 ```
 
-The audit table answers the two questions the layout is built around — does the
-fold seat the stack, and does the terminal hold 1.75:1 — and flags horizontal
-overflow and console errors. It covers 1280×720 and 1512×945, the laptop sizes
-that are easy to forget and exactly where the fold runs out of room.
+The audit table answers the questions the home page is built around. Does the
+hero seat in the fold? Does every placeholder example fit the prompt box it
+starts in? Does the quickstart's terminal hold 1.6:1? It also flags horizontal
+overflow and console errors. A clipped example fails the run just as those do.
+It covers 1280×720 and 1512×945, the laptop sizes that are easy to forget and
+exactly where the fold runs out of room.
 
 Needs a Chromium: it finds one from the Playwright cache or a system Chrome, or
 set `CHROME_PATH`. `playwright-core` is the only devDependency.
@@ -181,19 +213,28 @@ conflicts with the spec, the visual direction won:
   is plain rather than gold. Copper is reserved for CTAs, links, the eyebrow
   labels and the terminal prompt. This also sidesteps the AA large-text-only
   caveat on copper noted in spec §8.
-- **Hero visual.** Added a terminal showing an agent run — the prompt "add a
-  USB-C power input to the key" and the tool calls it makes. It is DOM and CSS
-  keyframes, not a recorded GIF, so the text stays selectable and crisp at any
-  zoom for ~6 KB. It stays inside the W-5 rule by taking its *format* from the
-  Copperhead source rather than from a screenshot; every tool name is real, out
-  of the agent's registry. `TerminalDemo.astro` lists the file each part of the
-  layout came from — keep that map current if the CLI's output changes.
-- **Hero layout.** Centred single-column, in the supermemory.ai shape: chip,
-  headline, subhead, a button pair, the install command as a bar the exact width
-  of that pair, the terminal, then the live-stats row. The product render moved
-  out to `Proof.astro` — this layout has no room for it above the fold. See
-  [The fold](#the-fold) for the rules that keep the whole stack inside one
-  viewport.
+- **Hero visual.** A terminal showing an agent run, the prompt "add a USB-C
+  power input to the key" and the tool calls it makes, was the hero's visual.
+  It now sits one section down, in `RunDemo.astro`, beside the quickstart. It
+  is DOM and CSS keyframes, not a recorded GIF, so the text stays selectable and
+  crisp at any zoom for ~6 KB. It stays inside the W-5 rule by taking its
+  *format* from the Copperhead source rather than from a screenshot; every tool
+  name is real, out of the agent's registry. `TerminalDemo.astro` lists the
+  file each part of the layout came from. Keep that map current if the CLI's
+  output changes.
+- **Hero layout.** Centred single column: chip, headline, subhead and a prompt
+  box drawn after the cloud app's own, with the backer strip across the foot of
+  the fold. The product render is in `Proof.astro`. See
+  [The fold](#the-fold) for the rules that keep the hero inside one viewport.
+- **One hero button.** W-2 asks that both hero buttons work. The hero has one,
+  Start building, which opens the cloud app's guest chat with what was typed.
+  The GitHub link W-2 also asks for is in the fixed navbar, one interaction
+  away from any scroll position.
+- **A moving placeholder.** Spec §5 allows one flourish (a hero trace that
+  draws itself once) and says nothing else animates. The prompt box's
+  placeholder types out example boards from script. It stops while the hero is
+  off screen or the box has focus. With reduced motion it is one static
+  sentence, so W-9 holds.
 
 ## Before launch
 

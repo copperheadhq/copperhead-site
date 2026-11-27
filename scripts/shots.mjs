@@ -6,18 +6,19 @@
 //   npm run shots -- --all            every path in the server's sitemap, plus
 //                                     a route that does not exist (the 404 page)
 //
-// Exits non-zero when any page overflows sideways, bleeds past the viewport or
-// logs a console error, so `--audit --all` doubles as the CI layout gate. In
-// audit mode pages load with reduced motion and skip the animation wait — the
-// finished layout is the same one, it just arrives without the 13-second
-// terminal replay.
+// Exits non-zero when any page overflows sideways, bleeds past the viewport,
+// logs a console error or clips one of the hero's placeholder examples, so
+// `--audit --all` doubles as the CI layout gate. In audit mode pages load with
+// reduced motion and skip the animation wait: the finished layout is the same
+// one, it just arrives without the 13-second terminal replay.
 //
 // The point of this over eyeballing a browser window is the audit table: it
-// answers the two questions the hero's layout is actually built around — does
-// the fold seat the whole stack, and does the terminal hold its aspect ratio —
-// at fourteen viewports and two themes in one run, including the 1280x720 and
-// 1512x945 laptop sizes that are easy to forget and are exactly where the fold
-// runs out of room.
+// answers the questions the home page's layout is actually built around. Does
+// the fold seat the hero? Does every example the prompt box types out fit the
+// field it starts in? Does the quickstart's terminal (RunDemo) hold its aspect
+// ratio? It asks them at sixteen viewports and two themes in one run, including
+// the 1280x720 and 1512x945 laptop sizes that are easy to forget and are
+// exactly where the fold runs out of room.
 //
 // Needs a Chromium. It finds one from PUPPETEER/PLAYWRIGHT caches, a system
 // Chrome or $CHROME_PATH. Start the dev server first (astro dev --background).
@@ -181,7 +182,7 @@ for (const theme of THEMES) {
       }
       await page.evaluate(() => document.fonts.ready);
 
-      // The hero transcript is a ~10.4s timed run. Let every finite animation
+      // The quickstart's transcript is a ~10.4s timed run. Let every finite animation
       // finish so a shot shows the completed readout — the `done · verified
       // erc …` line — rather than an empty window. The spinner never ends, so
       // it is filtered out by its iteration count. Unconditional on purpose:
@@ -230,7 +231,24 @@ for (const theme of THEMES) {
             .map(el => el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className
               ? '.' + el.className.trim().split(/\s+/).join('.') : ''));
 
-          const term = q('.hero .term');
+          // The prompt box starts tall enough for the longest example its
+          // placeholder types out (Hero.astro counts the lines per width), so
+          // none is ever cut off. Each example is put in the field as its
+          // value (which wraps exactly as the placeholder does) and the field
+          // must not need to scroll for it. No input event fires, so the
+          // field keeps its starting height. The value is cleared after.
+          const field = q('.hero textarea[data-ideas]');
+          let clipped = null;
+          if (field) {
+            const lead = field.dataset.lead ?? '';
+            clipped = JSON.parse(field.dataset.ideas ?? '[]').filter(idea => {
+              field.value = lead + idea;
+              return field.scrollHeight > field.clientHeight;
+            });
+            field.value = '';
+          }
+
+          const term = q('#quickstart .term');
           return {
             innerH: window.innerHeight,
             hScroll: document.documentElement.scrollWidth - vw,
@@ -239,7 +257,7 @@ for (const theme of THEMES) {
             chipTop: box(q('.hero .chip'))?.top ?? null,
             term: box(term),
             termBase: term ? getComputedStyle(term).fontSize : null,
-            statsBottom: box(q('.hero .proof'))?.bottom ?? null,
+            clipped,
           };
         });
 
@@ -263,30 +281,34 @@ await browser.close();
 
 const pad = (s, w) => String(s).padEnd(w);
 const yes = b => (b ? 'yes' : 'NO');
-console.log(`\n${pad('viewport', 16)}${pad('theme', 7)}${pad('size', 11)}${pad('base', 6)}${pad('terminal', 13)}${pad('aspect', 9)}${pad('term in fold', 14)}${pad('stats in fold', 14)}hScroll`);
+// base, terminal and aspect are the quickstart's window (RunDemo). hero in fold
+// is whether the hero seats in one viewport; examples is whether every
+// placeholder example fits the prompt box. Both are '-' off the home page.
+console.log(`\n${pad('viewport', 16)}${pad('theme', 7)}${pad('size', 11)}${pad('base', 6)}${pad('terminal', 13)}${pad('aspect', 9)}${pad('hero in fold', 14)}${pad('examples', 10)}hScroll`);
 for (const r of rows) {
   const t = r.term;
   console.log(
     pad(r.viewport, 16) + pad(r.theme, 7) + pad(r.size, 11) + pad(r.termBase ?? '-', 6) +
     pad(t ? `${t.width.toFixed(0)}x${t.height.toFixed(0)}` : '-', 13) +
     pad(t ? `${(t.width / t.height).toFixed(2)}:1` : '-', 9) +
-    pad(t ? yes(t.bottom <= r.innerH + 1) : '-', 14) +
-    pad(r.statsBottom == null ? '-' : yes(r.statsBottom <= r.innerH + 1), 14) +
+    pad(r.hero ? yes(r.hero.height <= r.innerH + 1) : '-', 14) +
+    pad(r.clipped ? (r.clipped.length ? `NO (${r.clipped.length})` : 'fit') : '-', 10) +
     (r.hScroll > 0 ? `+${r.hScroll}px !!` : 'none'));
 }
 
-const problems = rows.filter(r => r.hScroll > 0 || r.bleed.length || r.errors.length);
+const problems = rows.filter(r => r.hScroll > 0 || r.bleed.length || r.errors.length || r.clipped?.length);
 if (problems.length) {
   console.log('\nProblems:');
   for (const r of problems) {
     if (r.hScroll > 0) console.log(`  ${r.viewport} ${r.path} scrolls horizontally by ${r.hScroll}px`);
     if (r.bleed.length) console.log(`  ${r.viewport} ${r.path} overflows: ${r.bleed.join(', ')}`);
     for (const e of r.errors) console.log(`  ${r.viewport} ${r.path} console: ${e}`);
+    for (const c of r.clipped ?? []) console.log(`  ${r.viewport} ${r.path} clips the example "${c}"`);
   }
   // A problem is a failure, not a table entry: this is what lets CI run the
   // audit as a gate rather than as a report someone has to remember to read.
   process.exitCode = 1;
 } else {
-  console.log('\nNo horizontal overflow or console errors.');
+  console.log('\nNo horizontal overflow, console errors or clipped examples.');
 }
 if (!AUDIT_ONLY) console.log(`\n${rows.length} screenshots in ${OUT}/`);
