@@ -34,12 +34,14 @@ jobs:
             echo "em-dash found in rendered HTML (W-6)"; exit 1
           fi
 
-      # spec §9: no dead links to the repo or blog
+      # spec §9: no dead links to the repo or blog. A form's action counts as a
+      # link: the hero's Start building button is a form that GETs the app's
+      # /new, so a rename there would break the page's main button.
       - name: link check
         run: |
           fail=0
-          for url in $(grep -o 'href="https\?://[^"]*"' dist/index.html \
-                       | sed 's/href="//;s/"$//' | sort -u); do
+          for url in $(grep -o '\(href\|action\)="https\?://[^"]*"' dist/index.html \
+                       | sed 's/^\(href\|action\)="//;s/"$//' | sort -u); do
             code=$(curl -sL -o /dev/null -w "%{http_code}" --max-time 20 \
                    -A "Mozilla/5.0 (compatible; copperhead-linkcheck)" "$url")
             printf '%-64s %s\n' "$url" "$code"

@@ -2,30 +2,34 @@
 import Base from "../layouts/Base.astro";
 import Navbar from "../components/Navbar.astro";
 import Hero from "../components/Hero.astro";
+import RunDemo from "../components/RunDemo.astro";
 import Proof from "../components/Proof.astro";
 import Demo from "../components/Demo.astro";
 import Features from "../components/Features.astro";
-import CtaEnd from "../components/CtaEnd.astro";
 import Footer from "../components/Footer.astro";
 import PricingTiers from "../components/PricingTiers.astro";
 import Faq from "../components/Faq.astro";
 
 // Sections share the page colour and are told apart by a hairline: each one
 // starts on the same 1px rule the footer's top edge draws. Demo only
-// renders once public/copperhead-demo.mp4 exists — the hero already carries
-// the animated terminal.
+// renders once public/copperhead-demo.mp4 exists; RunDemo, directly under the
+// hero, carries the animated terminal until then and after.
+//
+// No FAQPage here, though the FAQ section shows questions. They are a slice of
+// /blog/faq/, which carries them as FAQPage. A question is marked up on one
+// page only.
 ---
 
 <Base>
   <Navbar />
   <main>
     <Hero />
+    <RunDemo />
     <Proof />
     <Demo />
     <Features />
     <PricingTiers id="pricing" />
     <Faq />
-    <CtaEnd />
   </main>
   <Footer />
 </Base>

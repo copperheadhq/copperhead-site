@@ -40,7 +40,7 @@ _(Companion to SPEC.md and pitch-script.md. Website copy follows Chouhan voice: 
 
 Stack suggestion: one static HTML page, same infra as chouhan.ai. Section order:
 
-1. **Hero** - wordmark + tagline. H1: "Cursor for circuit boards." Sub: "An open source AI agent that designs, documents and verifies real PCBs from a prompt. On your files, in your repo." Two buttons: `GitHub` (primary), `Watch the demo` (video). Background: faint animated ratsnest resolving into routed traces.
+1. **Hero** - wordmark + tagline. H1: "AI for PCB design." Sub: "An open source AI agent that designs, documents and verifies real PCBs from a prompt. On your files, in your repo." Two buttons: `GitHub` (primary), `Watch the demo` (video). Background: faint animated ratsnest resolving into routed traces.
 2. **The demo** - the 60-second video, autoplay muted. Caption: "A real board, redesigned in one prompt, checks passing."
 3. **How it works** - the six-step loop from the blog (§4.0 of SPEC.md), as a horizontal stepper: Docs → Propose → Edit → Propagate → Verify → Rationale. One line each.
 4. **Spec-gated in, verification-gated out** - the two invariants as a diptych. Left: "Nothing starts without a spec." Right: "Nothing is done until the tools agree." This is the trust section.
