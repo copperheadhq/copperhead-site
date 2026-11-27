@@ -17,11 +17,11 @@ Final copy, section by section, matching the layout in brand-and-business.md §2
 
 **H1:** AI for PCB design.
 
-**Sub:** Copperhead is an open source AI agent that designs, documents and verifies real PCBs from a prompt. On your files, in your repo, with KiCad's own checks as the gate.
+**Sub:** Cursor for circuit boards. Describe the board and Copperhead, an open source AI agent, drafts the KiCad schematic, layout and Gerbers.
 
-**Buttons:** [View on GitHub] [Watch the demo]
+**Prompt box:** placeholder "Describe the board you want to build", typing out example boards after "Ask Copperhead to design ". One button, [Start building], to the cloud app's guest chat with the text carried over.
 
-**Under buttons (small, mono):** `npm i -g copperhead` · Apache-2.0 · works with KiCad
+**Under the box:** the backer strip. The install line and the terminal are one section down, in the quickstart.
 
 ---
 
