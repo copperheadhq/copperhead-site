@@ -22,7 +22,11 @@ import { STATUS_PAGE_URL } from "../status";
     <article class="status-page">
       <div class="wrap">
         <header>
-          <h1 id="headline" data-state="loading">Checking</h1>
+          {/* The page's name is the h1 and never changes. The live state used to
+              be the h1 itself, so a crawler that does not run the script read
+              the page as being about the word "Checking". */}
+          <h1 class="page-name">Copperhead status</h1>
+          <p id="headline" class="overall" data-state="loading">Checking</p>
           <p class="sub" id="sub">Reading the monitors.</p>
         </header>
 
@@ -145,7 +149,24 @@ import { STATUS_PAGE_URL } from "../status";
     max-width: 62ch;
   }
 
-  .status-page h1 {
+  /* The page's name, as an eyebrow over the live state. It is the h1 for a
+     crawler and a label for a reader, who came for the line under it. */
+  .status-page .page-name {
+    margin: 0 0 0.9rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+  }
+
+  /* .overall, not .state: .state is each monitor row's label below, and
+     both blocks are global, so a shared name styles one as the other. */
+  .status-page .overall {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 600;
+    line-height: 1.08;
     font-size: clamp(2.25rem, 5vw, 3.5rem);
     letter-spacing: -0.045em;
     display: flex;
@@ -155,7 +176,7 @@ import { STATUS_PAGE_URL } from "../status";
 
   /* The state dot before the headline: green for up, copper for degraded,
      a hard red for down, hollow for unknown. */
-  .status-page h1::before {
+  .status-page .overall::before {
     content: "";
     flex: none;
     width: 0.4em;
@@ -163,15 +184,15 @@ import { STATUS_PAGE_URL } from "../status";
     border-radius: 50%;
     border: 2px solid var(--text-dim);
   }
-  .status-page h1[data-state="up"]::before {
+  .status-page .overall[data-state="up"]::before {
     background: var(--green);
     border-color: var(--green);
   }
-  .status-page h1[data-state="degraded"]::before {
+  .status-page .overall[data-state="degraded"]::before {
     background: var(--copper);
     border-color: var(--copper);
   }
-  .status-page h1[data-state="down"]::before {
+  .status-page .overall[data-state="down"]::before {
     background: #c2362f;
     border-color: #c2362f;
   }

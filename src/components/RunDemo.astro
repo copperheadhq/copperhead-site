@@ -1,0 +1,260 @@
+---
+import TerminalDemo from "./TerminalDemo.astro";
+import FileBlock from "./FileBlock.astro";
+import InstallBlock from "./InstallBlock.astro";
+import { links, pkg, speakerBrief, quickstart } from "../config";
+import { stats, compact } from "../stats";
+
+// The quickstart beside the agent run, one section under the fold. The
+// heading runs across the top. Under it, on the left, how to try it: the
+// install lines and the brief.md they point at. On the right, what a run looks
+// like: the terminal, with the stats that caption it underneath.
+//
+// The left column is the closing CTA that used to end the page (CtaEnd.astro,
+// now gone), moved up here beside the transcript. It is still the page's
+// #quickstart target, which the footer's "Quickstart", the CLI tier's "Get
+// started" and the topic pages' "Install the CLI" all land on. W-3 lives on this
+// block: it is the exact quickstart from config.ts, and the brief under it is
+// the shared speakerBrief from the same file.
+//
+// `fitViewport` is off on the terminal: that step shrinks the window to race
+// a fold, and this one is not on a fold.
+const showStats = stats.stars !== null || stats.downloads !== null;
+---
+
+<section id="quickstart" class="run">
+  <div class="wrap">
+    <div class="head">
+      <h2 class="section-title">Open source. Free to run.</h2>
+
+      <p class="section-intro">
+        Three commands and a few lines about your board. It runs on your
+        machine, with your own model key.
+      </p>
+    </div>
+
+    <div class="split">
+      <div class="copy">
+        <InstallBlock lines={quickstart} />
+
+        <!-- What `--brief brief.md` points at. The figure lives in
+             FileBlock.astro and the content in config.ts, both shared with
+             the blog. -->
+        <div class="brief">
+          <FileBlock name="brief.md" code={speakerBrief} lang="md" />
+        </div>
+      </div>
+
+      <div class="stage">
+        <TerminalDemo fitViewport={false} />
+      </div>
+
+      {
+        showStats && (
+          <p class="stats">
+            {stats.stars !== null && (
+              <a
+                class="stat"
+                href={links.repo}
+                aria-label={`${stats.stars} stars on GitHub`}
+              >
+                <svg
+                  class="ico"
+                  viewBox="0 0 16 16"
+                  width="14"
+                  height="14"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M8 .5l2.3 4.66 5.15.75-3.72 3.63.88 5.13L8 12.34l-4.6 2.42.88-5.13L.55 5.9l5.15-.75L8 .5z"
+                  />
+                </svg>
+                <strong class="num">{compact(stats.stars)}</strong>
+                <span class="lbl">GitHub stars</span>
+              </a>
+            )}
+            {stats.stars !== null && stats.downloads !== null && (
+              <span class="sep" aria-hidden="true" />
+            )}
+            {stats.downloads !== null && (
+              <a
+                class="stat"
+                href={`https://www.npmjs.com/package/${pkg}`}
+                aria-label={`${stats.downloads} installs a month on npm`}
+              >
+                <strong class="num">{compact(stats.downloads)}</strong>
+                <span class="lbl">installs / month</span>
+              </a>
+            )}
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* The heading and its lede run across the top, and the two columns start
+     under them on one line: the install block's top edge is the terminal's.
+     Before this the left column carried the heading as well, so it was a third
+     taller than the window beside it, and centring the two left the terminal
+     floating level with nothing.
+
+     `minmax(0, …)` on both tracks: a grid track's default minimum is auto, and
+     the terminal's longest tool line would otherwise hold the right track open
+     at its own min-content width and push the page sideways. */
+  .head {
+    margin-bottom: 2.25rem;
+  }
+
+  .section-title {
+    max-width: none;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0 clamp(2rem, 4.4vw, 4.5rem);
+    /* Three rows on the right against one tall box on the left: an empty
+       band, the window, then a band the same height holding the stats. The
+       two bands are both 1fr, which is what makes the space above the window
+       equal the space below it at every width, with no number to keep in
+       step with the left column's height. */
+    grid-template-rows: 1fr auto 1fr;
+  }
+
+  .copy,
+  .stage {
+    min-width: 0;
+  }
+
+  /* The install lines and the brief share a left and a right edge: they read
+     as one stacked object, the command and the file it names. The column is
+     stretched to the row, and the brief takes whatever height is left over, so
+     its bottom edge lands on the foot of the right-hand stack. */
+  .copy {
+    display: flex;
+    flex-direction: column;
+    /* All three rows, so the left box sets the height the right-hand stack
+       is centred in. */
+    grid-row: 1 / span 3;
+  }
+
+  .brief {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.75rem;
+  }
+
+  .brief :global(.filefig) {
+    flex: 1;
+  }
+
+  /* The middle row: the window, centred between the two equal bands. */
+  .stage {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* The number carries the weight and the unit sits dim beside it, the two
+     stats parted by a hairline rule. Centred under the window they caption:
+     in the band below it, centred in that band's height so they sit midway
+     between the window's bottom edge and the left box's. */
+  .stats {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.15rem;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.86rem;
+    color: var(--text-dim);
+  }
+
+  .stat {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45em;
+    white-space: nowrap;
+    color: inherit;
+    text-decoration-color: color-mix(in srgb, var(--copper) 45%, transparent);
+  }
+
+  .stat:hover,
+  .stat:hover .lbl {
+    color: var(--text);
+  }
+
+  .stat .ico {
+    flex: none;
+    align-self: center;
+    color: var(--copper);
+  }
+
+  .stat .num {
+    color: var(--text);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stats .sep {
+    width: 1px;
+    height: 0.95em;
+    align-self: center;
+    background: var(--hairline);
+  }
+
+  /* Two columns: the window comes down to 9px on its one scale knob (12px is
+     its full size), which makes it about 344px tall against a left box of
+     433. That difference is what the two bands share, 44px each, and the
+     lower one has to seat a 20px stats line with air on both sides of it.
+     Measured, not reasoned: at 10px the bands were 25px and the stats sat
+     3px under the window. 9px is the size TerminalDemo's own notes call small
+     for reading, and it is accepted here because this window is an
+     illustration beside the commands, not the page's lead as it was in the
+     hero. */
+  @media (min-width: 1081px) {
+    .stage :global(.term) {
+      font-size: 9px;
+    }
+  }
+
+  @media (max-width: 1080px) {
+    /* Stacked: one column, everything in document order, and the stats get
+       their gap back as a margin. */
+    .split {
+      grid-template-rows: none;
+    }
+
+    .copy,
+    .stage,
+    .stats {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.5rem 0;
+    }
+
+    .stats {
+      grid-column: auto;
+      margin-top: -1rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .stats .sep {
+      display: none;
+    }
+  }
+</style>

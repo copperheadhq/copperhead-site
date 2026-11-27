@@ -63,7 +63,7 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'What does a run cost?',
-        a: `A single change request is roughly 0.10 to 1.00 dollars in model tokens. A full <code>create</code> pipeline run is five to ten times that. You are billed by your model provider directly; Copperhead itself is free.`,
+        a: `A single change request is roughly 0.10 to 1.00 dollars in model tokens. A full <code>create</code> pipeline run is five to ten times that. With the CLI you are billed by your model provider directly, and the CLI itself is free. Copperhead Cloud's plans are on the <a href="${links.pricing}">pricing page</a>.`,
       },
     ],
   },
@@ -84,7 +84,7 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'Where does my design data go?',
-        a: `It stays in your own git repository. The agent runs locally, stores nothing on a server and only sends design context as part of the model API call itself. Run transcripts live in <code>.copperhead/runs/</code> with secret patterns redacted, and the agent never reads paths outside your repository.`,
+        a: `With the CLI it stays in your own git repository. The agent runs locally, stores nothing on a server and only sends design context as part of the model API call itself. Run transcripts live in <code>.copperhead/runs/</code> with secret patterns redacted, and the agent never reads paths outside your repository. Copperhead Cloud is the opt-in exception: it runs the same agent on hosted infrastructure against the repositories you connect to it.`,
       },
       {
         q: 'What is the license?',
@@ -92,10 +92,31 @@ export const groups: FaqGroup[] = [
       },
       {
         q: 'Is there a hosted version?',
-        a: `Not today. The local CLI with your own key is the product right now. A hosted tier is planned, and teams with export-controlled designs will stay on self-hosted.`,
+        a: `Yes. <a href="${links.newChat}">Copperhead Cloud</a> runs the same agent on hosted infrastructure against the repositories you connect to it. The CLI stays free and does every core operation locally, and teams with export-controlled designs can self-host. Cloud's plans are on the <a href="${links.pricing}">pricing page</a>.`,
       },
     ],
   },
 ];
 
-export const stripTags = (s: string): string => s.replace(/<[^>]+>/g, '');
+// The entities an answer can carry, decoded in the same pass so "&amp;lt;"
+// comes out as "&lt;" and not as "<". JSON-LD text is plain text, so an
+// entity left in it would reach a search result as the literal "&amp;".
+const ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: '\u00a0',
+};
+
+export const stripTags = (s: string): string =>
+  s
+    .replace(/<[^>]+>/g, '')
+    .replace(/&(?:#(\d+)|#x([0-9a-f]+)|([a-z]+));/gi, (m, dec, hex, name) =>
+      dec
+        ? String.fromCodePoint(Number(dec))
+        : hex
+          ? String.fromCodePoint(parseInt(hex, 16))
+          : (ENTITIES[name.toLowerCase()] ?? m),
+    );

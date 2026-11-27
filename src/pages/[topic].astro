@@ -1,0 +1,282 @@
+---
+import Base from "../layouts/Base.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import { site, links } from "../config";
+import { topics, topicPath, type Topic } from "../landing";
+import { stripTags } from "../faq";
+import { breadcrumbs, ORG_ID, SOFTWARE_ID, WEBSITE_ID } from "../seo";
+
+// One page per search topic, from src/landing.ts. The route is a single
+// segment, so it sits beside the catch-all in [...path].astro without the two
+// competing: that one only builds the paths its collection names, and
+// astro.config.mjs fails the build if both ever claim the same address.
+export function getStaticPaths() {
+  return topics.map((topic) => ({ params: { topic: topic.slug }, props: { topic } }));
+}
+
+interface Props {
+  topic: Topic;
+}
+
+const { topic } = Astro.props;
+const path = topicPath(topic.slug);
+const url = new URL(path, site).href;
+const others = topics.filter((t) => t.slug !== topic.slug);
+
+// One node for the page, typed as both a WebPage and its FAQPage, so the
+// questions belong to this URL rather than to an anonymous second node. The
+// visible FAQ and mainEntity are the same list, so the structured data cannot
+// say something the page does not.
+const crumbsId = `${url}#breadcrumb`;
+const jsonLd = [
+  {
+    "@type": ["WebPage", "FAQPage"],
+    "@id": url,
+    url,
+    name: topic.h1,
+    description: topic.description,
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": SOFTWARE_ID },
+    publisher: { "@id": ORG_ID },
+    breadcrumb: { "@id": crumbsId },
+    mainEntity: topic.faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: stripTags(f.a) },
+    })),
+  },
+  {
+    "@id": crumbsId,
+    ...breadcrumbs([
+      ["Home", "/"],
+      [topic.nav, path],
+    ]),
+  },
+];
+---
+
+<Base
+  title={topic.title}
+  description={topic.description}
+  path={path}
+  jsonLd={jsonLd}
+>
+  <Navbar home={false} />
+  <main id="top">
+    <article class="topic">
+      <div class="wrap">
+        <header>
+          <p class="kicker">{topic.nav}</p>
+          <h1>{topic.h1}</h1>
+          <p class="lede" set:html={topic.lede} />
+          <div class="actions">
+            <a class="btn btn-primary" href={links.newChat}>Start building</a>
+            <a class="btn btn-secondary" href="/#quickstart">Install the CLI</a>
+          </div>
+        </header>
+
+        <div class="body">
+          {
+            topic.sections.map((s) => (
+              <section>
+                <h2>{s.h2}</h2>
+                <Fragment set:html={s.body} />
+              </section>
+            ))
+          }
+
+          <section class="faq">
+            <h2>Questions</h2>
+            <div class="items">
+              {
+                topic.faq.map((f) => (
+                  <details>
+                    <summary>{f.q}</summary>
+                    <p set:html={f.a} />
+                  </details>
+                ))
+              }
+            </div>
+            <p class="more"><a href={links.faq}>The full FAQ</a></p>
+          </section>
+
+          <nav class="related" aria-label="Related topics">
+            <h2>Related</h2>
+            <ul>
+              {others.map((t) => <li><a href={topicPath(t.slug)}>{t.h1}</a></li>)}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  /* One reading column, as the About page and the FAQ set it. */
+  .topic {
+    padding-block: calc(var(--nav-h) + 72px) 110px;
+  }
+
+  .topic .wrap {
+    max-width: 860px;
+  }
+
+  .kicker {
+    margin: 0 0 1rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--copper);
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 5vw, 3.5rem);
+    font-weight: 500;
+    letter-spacing: -0.05em;
+    text-wrap: balance;
+  }
+
+  .lede {
+    margin: 1.4rem 0 0;
+    font-family: var(--body);
+    font-size: 1.1875rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 1.8rem;
+  }
+
+  .body {
+    margin-top: 3.5rem;
+    font-family: var(--body);
+  }
+
+  /* global.css gives every section the page's 136px block padding, which is
+     a home page measure. Here a section is a chapter of one article. */
+  .body section {
+    padding-block: 0;
+    margin-top: 3rem;
+    padding-top: 2.4rem;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .body h2 {
+    font-size: clamp(1.45rem, 2.6vw, 1.85rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .body :global(p),
+  .body :global(li) {
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .body :global(strong) {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .body :global(ol),
+  .body :global(ul) {
+    padding-left: 1.3rem;
+    margin: 0 0 1rem;
+  }
+
+  .body :global(li) {
+    margin-bottom: 0.45rem;
+  }
+
+  .body :global(code),
+  .lede :global(code) {
+    padding: 0.1em 0.35em;
+    background: var(--surface);
+    font-size: 0.86em;
+    overflow-wrap: anywhere;
+  }
+
+  .items {
+    border-top: 1px solid var(--line);
+  }
+
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 0;
+    font-family: var(--display);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* a drawn plus, with an upright bar that rotates onto the flat one */
+  summary::after {
+    content: "";
+    flex: none;
+    width: 11px;
+    height: 11px;
+    background:
+      linear-gradient(var(--copper), var(--copper)) center / 100% 1px no-repeat,
+      linear-gradient(var(--copper), var(--copper)) center / 1px 100% no-repeat;
+    transition: transform 0.18s ease;
+  }
+
+  details[open] summary::after {
+    transform: rotate(90deg);
+  }
+
+  details p {
+    margin: 0;
+    padding: 0 0 20px;
+    max-width: 68ch;
+  }
+
+  .more {
+    margin: 1.4rem 0 0;
+    font-size: 0.9rem;
+  }
+
+  .related {
+    margin-top: 3rem;
+    padding-top: 2.4rem;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .related ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.5rem 2rem;
+  }
+
+  @media (max-width: 720px) {
+    .topic {
+      padding-block: calc(var(--nav-h) + 40px) 72px;
+    }
+
+    .lede {
+      font-size: 1.0625rem;
+    }
+  }
+</style>
