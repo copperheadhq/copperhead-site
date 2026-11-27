@@ -9,8 +9,10 @@ import { links } from "../config";
 // use Copperhead fully. The free CLI does every core operation.
 //
 // Each card is a summary: a one-line blurb and four features short enough to
-// hold one line each. The longer account of each plan is PricingDetails.astro
-// on /pricing/. A feature that needs a clause to explain it belongs there.
+// hold one line each wherever the four cards share a row (from 1200px; below
+// that they go two by two). The longer account of each plan is the comparison
+// table in PricingDetails.astro on /pricing/. A feature that needs a clause to
+// explain it belongs there.
 interface Tier {
   name: string;
   price: string;
@@ -66,7 +68,7 @@ const tiers: Tier[] = [
     features: [
       "CI bot on pull requests",
       "Shared constraint libraries",
-      "SSO / SAML and roles",
+      "SSO / SAML",
       "Pooled credits",
     ],
   },
@@ -81,7 +83,7 @@ const tiers: Tier[] = [
     headline: "Everything in Team, plus:",
     features: [
       "Self-hosted or VPC",
-      "Altium support",
+      "RBAC and security review",
       "SLA and dedicated support",
       "Compliance audit trail",
     ],
@@ -348,7 +350,9 @@ const { id = 'top', page = false } = Astro.props;
     color: var(--copper);
   }
 
-  @media (max-width: 1080px) {
+  /* Two by two below 1200px: from 1081 to 1199px four columns are too narrow
+     for the features to hold one line each. */
+  @media (max-width: 1199px) {
     .grid {
       grid-template-columns: repeat(2, 1fr);
     }

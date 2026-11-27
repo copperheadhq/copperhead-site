@@ -1,6 +1,8 @@
 ---
 import { links } from '../config';
 
+const email = links.contact.replace('mailto:', '');
+
 // The lower "details" half of the pricing page: the three metering modes, the
 // full feature-comparison table and the open-core / open-hardware commitments.
 // Kept text-first and quiet so the tier cards above stay the headline act.
@@ -28,6 +30,8 @@ const cols = ['CLI', 'Cloud', 'Team', 'Enterprise'];
 const rows: { label: string; cells: string[] }[] = [
   { label: 'Price', cells: ['Free', '$49 / user / mo', '$49 / user / mo + $199 / mo', 'Custom, annual'] },
   { label: 'Repos', cells: ['Your own, local', 'Private, hosted', 'Private, hosted', 'Private / VPC / self-hosted'] },
+  { label: 'Web viewer', cells: ['n/a', 'Live renders, ERC/DRC status', 'Live renders, ERC/DRC status', 'Live renders, ERC/DRC status'] },
+  { label: 'Run history', cells: ['n/a', 'With shareable check reports', 'Shared across the team', 'Shared across the team'] },
   { label: 'Inference', cells: ['BYO key', 'BYO key or managed', 'BYO key or managed (pooled)', 'Self-hosted / private, flat'] },
   { label: 'Managed credits', cells: ['n/a', '200 / seat / mo', '200 / seat, pooled', 'Negotiated volume'] },
   { label: 'Overage', cells: ['n/a', 'model cost + 20%', 'model cost + 20%', 'None (flat)'] },
@@ -35,7 +39,7 @@ const rows: { label: string; cells: string[] }[] = [
   { label: 'Shared constraint libraries', cells: ['Local', 'Per-user', 'Org-wide', 'Org-wide'] },
   { label: 'SSO / RBAC', cells: ['n/a', 'n/a', 'SSO', 'SSO + RBAC'] },
   { label: 'Audit trail artifact', cells: ['In repo', 'In repo', 'In repo', 'Compliance-grade'] },
-  { label: 'Support', cells: ['Community', 'Email', 'Priority', 'Dedicated + SLA'] },
+  { label: 'Support', cells: ['Community', 'Email', 'Priority', 'Dedicated + SLA, security review'] },
 ];
 
 // The open-hardware and discount offers live in the callout banner below, so
@@ -130,7 +134,9 @@ const commitments = [
           Startups and non-profits: 50% off · accredited education: free
         </p>
       </div>
-      <a class="btn btn-primary apply" href={links.contact}>Apply for open tier</a>
+      {/* The booking page, like every other call to action on this page: a
+          mailto: link does nothing on a machine with no mail app set up. */}
+      <a class="btn btn-primary apply" href={links.getStarted}>Apply for open tier</a>
     </div>
 
     <ul class="commitments">
@@ -144,10 +150,12 @@ const commitments = [
       }
     </ul>
 
+    {/* The address is written out, so it still works where a mailto: link
+        opens nothing. */}
     <p class="closer">
       Questions on volume, credits or self-hosting?{' '}
-      <a href={links.contact}>Talk to us</a> or{' '}
-      <a href={links.getStarted}>book a demo call</a>.
+      <a href={links.getStarted}>Book a demo call</a> or write to{' '}
+      <a href={links.contact}>{email}</a>.
     </p>
   </div>
 </section>
