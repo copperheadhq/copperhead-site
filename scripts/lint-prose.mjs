@@ -19,7 +19,7 @@
 // to this file, one entry per accepted sentence.
 
 import { readFileSync, readdirSync } from 'node:fs'
-import { join, dirname, relative, resolve, extname } from 'node:path'
+import { join, dirname, relative, resolve, extname, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -198,13 +198,19 @@ function lineOf(text, index) {
 // an ASCII sketch of the layout they build, and a diagram is not prose.
 const BLOCK = /\0|[|\u2500-\u257f]|\n[ \t]*(?:[>#]|[-*+] |\d+[.)] )/g
 
-function sentenceAt(text, index) {
+// The offset just before the sentence around `index` begins.
+function sentenceStart(text, index) {
   let start = Math.max(text.lastIndexOf('\n\n', index), text.lastIndexOf(': ', index))
   for (const re of [/[.!?]['"’”]?(\s|$)/g, BLOCK]) {
     for (const m of text.slice(0, index).matchAll(re)) {
       if (m.index > start) start = m.index
     }
   }
+  return start
+}
+
+function sentenceAt(text, index) {
+  const start = sentenceStart(text, index)
   let end = text.length
   for (const re of [/[.!?]['"’”]?(\s|$)/g, BLOCK]) {
     for (const m of text.slice(index).matchAll(re)) {
@@ -220,7 +226,9 @@ const problems = []
 const args = process.argv.slice(2).filter((a) => !a.startsWith('--'))
 
 for (const path of args.length ? args.map((f) => resolve(f)) : collect('.')) {
-  const file = relative(root, path)
+  // Forward slashes on every OS: the collection and synced-page checks below
+  // compare against "src/content/...", which a Windows path never matched.
+  const file = relative(root, path).split(sep).join('/')
   const source = readFileSync(path, 'utf8')
   // A copy synced in by scripts/sync-pages.mjs is another repo's text: the
   // legal masters follow their own style rules and counsel's wording, and a
@@ -237,7 +245,10 @@ for (const path of args.length ? args.map((f) => resolve(f)) : collect('.')) {
 
   for (const m of text.matchAll(/,\s+(and|or)\s/g)) {
     const sentence = sentenceAt(text, m.index)
-    const head = sentence.slice(0, sentence.indexOf(normalise(m[0])))
+    // Everything before this match, not before the sentence's first match. A
+    // sentence that joins two clauses with a comma and "and", then runs a list,
+    // used to pass: the head stopped at the first join, before the list began.
+    const head = normalise(text.slice(sentenceStart(text, m.index) + 1, m.index))
     // No earlier comma means no series to close: this is two clauses joined,
     // or a two-item pair, both of which keep the comma.
     // Commas inside an aside or inside a number are not list commas.

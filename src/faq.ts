@@ -26,7 +26,7 @@ export const groups: FaqGroup[] = [
     items: [
       {
         q: 'What is Copperhead?',
-        a: `An open source AI agent that designs, documents and verifies printed circuit boards. You describe a change or hand it a product brief, and it edits your real KiCad files, updates every document that references them, and runs KiCad's own checks until they pass. <a href="/blog/meet-copperhead/">Longer introduction here</a>.`,
+        a: `An open source AI agent that designs, documents and verifies printed circuit boards. You describe a change or hand it a product brief, and it edits your real KiCad files, updates every document that references them and runs KiCad's own checks until they pass. <a href="/blog/meet-copperhead/">Longer introduction here</a>.`,
       },
       {
         q: 'What problem does it actually solve?',
