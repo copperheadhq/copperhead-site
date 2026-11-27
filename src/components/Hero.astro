@@ -47,7 +47,9 @@ import { links } from "../config";
 // here. A visitor who is already signed in is sent on to the app's own start
 // screen with the text in its box. This page cannot tell the two apart and
 // does not need to. The textarea has no `name`, so nothing typed ever lands
-// in a query string.
+// in a query string. The cost of that is the reader with no script: the
+// button still opens the app but the text stays behind. A line under the box
+// says so.
 //
 // The terminal that used to hold the right half of this fold is one section
 // down, in RunDemo.astro, with the stats that caption it.
@@ -74,6 +76,21 @@ const [latest] = [
     date: a.data.date,
   })),
 ].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+// What the placeholder types out (see the script): a fixed opening, then one
+// board after another. Written into the markup as data rather than kept in the
+// script, so the layout audit (scripts/shots.mjs) checks each one against the
+// field it is typed into. Plain ASCII: the script sets them as they are, and
+// the font subset carries nothing more.
+const lead = "Ask Copperhead to design ";
+const ideas = [
+  "a USB-C power breakout with a 3 A fuse",
+  "an ESP32 sensor node that sleeps at 50 uA",
+  "a palm-size Bluetooth speaker",
+  "a CAN bus motor driver for two 3 A motors",
+  "a LoRa weather station on a solar cell",
+  "a macro pad with twelve keys and USB-C",
+];
 ---
 
 <section id="top" class="hero">
@@ -121,24 +138,30 @@ const [latest] = [
       </p>
 
       <div class="stage">
-      <form class="panel" action={links.newChat} method="get" data-prompt-form>
-        <label class="sr-only" for="hero-prompt">Describe the board you want to build</label>
-        <textarea
-          id="hero-prompt"
-          rows="1"
-          maxlength="8000"
-          placeholder="Describe the board you want to build"
-          autocomplete="off"
-          enterkeyhint="send"
-          spellcheck="true"></textarea>
+        <form class="panel" action={links.newChat} method="get" data-prompt-form>
+          <label class="sr-only" for="hero-prompt">Describe the board you want to build</label>
+          <textarea
+            id="hero-prompt"
+            rows="1"
+            maxlength="8000"
+            placeholder="Describe the board you want to build"
+            data-lead={lead}
+            data-ideas={JSON.stringify(ideas)}
+            autocomplete="off"
+            enterkeyhint="send"
+            spellcheck="true"></textarea>
 
-        <button type="submit" class="send" aria-label="Start building in Copperhead Cloud">
-          <span class="send-label">Start building</span>
-          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
-            <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M3 8h9.5M9 4.5 12.5 8 9 11.5"></path>
-          </svg>
-        </button>
-      </form>
+          <button type="submit" class="send" aria-label="Start building in Copperhead Cloud">
+            <span class="send-label">Start building</span>
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+              <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M3 8h9.5M9 4.5 12.5 8 9 11.5"></path>
+            </svg>
+          </button>
+        </form>
+
+        <noscript>
+          <p class="nojs">Your text is carried over only with JavaScript on.</p>
+        </noscript>
       </div>
 
     </div>
@@ -157,87 +180,134 @@ const [latest] = [
   const field = form?.querySelector<HTMLTextAreaElement>("textarea");
 
   if (form && field) {
-    // The field grows with what is typed into it, up to a ceiling, so a long
-    // description is not read through a two-line slot.
+    // The field grows with what is typed into it, so a long description is
+    // not read through a two-line slot. The ceiling is the CSS max-height,
+    // which caps the inline height too, so the number lives there alone. An
+    // empty box drops its inline height and goes back to its CSS one.
     const fit = () => {
+      if (!field.value) {
+        field.style.height = "";
+        return;
+      }
       field.style.height = "auto";
-      field.style.height = `${Math.min(field.scrollHeight, 220)}px`;
+      field.style.height = `${field.scrollHeight}px`;
     };
     field.addEventListener("input", fit);
-    // A width change rewraps the text, so a grown box is fitted again; an
-    // empty one is left to its CSS height.
-    addEventListener("resize", () => {
-      if (field.value) fit();
-    });
+    // A width change rewraps the text, so the box is fitted again.
+    addEventListener("resize", fit);
 
     // The placeholder types itself: a fixed opening, then one prewritten board
-    // after another, typed out, held and deleted. It is the placeholder
-    // attribute being rewritten, not an overlay, so it disappears the moment
-    // the reader types and never has to be kept out of the way of real text.
-    // The static sentence in the markup is what a reader with reduced motion
-    // (or no script) sees, and what it returns to if reduced motion is turned
-    // on mid-visit. While the box has focus the current example stands still,
-    // whole, so nothing moves under a reader who is about to type.
+    // after another, typed out, held and deleted. The opening and the boards
+    // are data attributes on the field (see the frontmatter). It is the
+    // placeholder attribute being rewritten, not an overlay, so it disappears
+    // the moment the reader types and never has to be kept out of the way of
+    // real text. The static sentence in the markup is what a reader with
+    // reduced motion (or no script) sees, and what it returns to if reduced
+    // motion is turned on mid-visit. Turned off again, the typing restarts.
+    // The moment the box takes focus the current example is put up whole and
+    // stands still, so nothing moves under a reader who is about to type and
+    // a screen reader never reads half a sentence as the hint.
+    //
+    // The loop stops rather than idles while the hero is off screen or the
+    // box has focus. The observer and the blur start it again.
     const STILL = field.placeholder;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-    const LEAD = "Ask Copperhead to design ";
-    const IDEAS = [
-      "a USB-C power breakout with a 3 A fuse",
-      "an ESP32 sensor node that sleeps at 50 uA",
-      "a palm-size Bluetooth speaker",
-      "a CAN bus motor driver for two 3 A motors",
-      "a LoRa weather station on a solar cell",
-      "a macro pad with twelve keys and USB-C",
-    ];
+    const LEAD = field.dataset.lead ?? "";
+    const IDEAS: string[] = JSON.parse(field.dataset.ideas ?? "[]");
     const TYPE = 42; // ms per character typed
     const ERASE = 18; // per character deleted
     const HOLD = 1900; // a finished line stays this long
     const GAP = 380; // the pause on the bare opening before the next line
 
-    if (!reduce.matches) {
-      let idea = 0;
-      let shown = 0;
-      let erasing = false;
+    let idea = 0;
+    let shown = 0;
+    let erasing = false;
+    let onScreen = true;
+    // Set while a tick is pending, so undefined means the loop is stopped.
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
-      const tick = () => {
+    const later = (ms: number) => {
+      clearTimeout(timer);
+      timer = setTimeout(tick, ms);
+    };
+    const halt = () => {
+      clearTimeout(timer);
+      timer = undefined;
+    };
+    const start = (ms: number) => {
+      if (timer === undefined && IDEAS.length && !reduce.matches) later(ms);
+    };
+    // The current example, whole. Erased from there once focus leaves.
+    const whole = () => {
+      shown = IDEAS[idea].length;
+      erasing = true;
+      field.placeholder = LEAD + IDEAS[idea];
+    };
+
+    const tick = () => {
+      timer = undefined;
+      if (reduce.matches) {
+        field.placeholder = STILL;
+        return;
+      }
+      if (!onScreen) return;
+      if (document.activeElement === field) {
+        whole();
+        return;
+      }
+      // Nothing to animate while there is real text in the field or the tab
+      // is in the background; look again shortly.
+      if (field.value || document.hidden) {
+        later(400);
+        return;
+      }
+
+      const text = IDEAS[idea];
+      shown += erasing ? -1 : 1;
+      field.placeholder = LEAD + text.slice(0, shown);
+
+      let wait = erasing ? ERASE : TYPE;
+      if (!erasing && shown === text.length) {
+        erasing = true;
+        wait = HOLD;
+      } else if (erasing && shown === 0) {
+        erasing = false;
+        idea = (idea + 1) % IDEAS.length;
+        wait = GAP;
+      }
+      later(wait);
+    };
+
+    if (IDEAS.length) {
+      if (!reduce.matches) field.placeholder = LEAD;
+      start(700);
+
+      const hero = form.closest(".hero");
+      if (hero) {
+        new IntersectionObserver(([e]) => {
+          onScreen = e.isIntersecting;
+          if (onScreen) start(GAP);
+        }).observe(hero);
+      }
+
+      field.addEventListener("focus", () => {
+        if (reduce.matches) return;
+        halt();
+        whole();
+      });
+      field.addEventListener("blur", () => start(GAP));
+
+      reduce.addEventListener("change", () => {
+        halt();
         if (reduce.matches) {
           field.placeholder = STILL;
           return;
         }
-        // Held whole while the box has focus; it is erased from there once
-        // focus leaves.
-        if (document.activeElement === field) {
-          shown = IDEAS[idea].length;
-          erasing = true;
-          field.placeholder = LEAD + IDEAS[idea];
-          setTimeout(tick, 400);
-          return;
-        }
-        // Nothing to animate while there is real text in the field or the tab
-        // is in the background; look again shortly.
-        if (field.value || document.hidden) {
-          setTimeout(tick, 400);
-          return;
-        }
-
-        const text = IDEAS[idea];
-        shown += erasing ? -1 : 1;
-        field.placeholder = LEAD + text.slice(0, shown);
-
-        let wait = erasing ? ERASE : TYPE;
-        if (!erasing && shown === text.length) {
-          erasing = true;
-          wait = HOLD;
-        } else if (erasing && shown === 0) {
-          erasing = false;
-          idea = (idea + 1) % IDEAS.length;
-          wait = GAP;
-        }
-        setTimeout(tick, wait);
-      };
-
-      field.placeholder = LEAD;
-      setTimeout(tick, 700);
+        shown = 0;
+        erasing = false;
+        field.placeholder = LEAD;
+        start(GAP);
+      });
     }
 
     // ── The handoff to the app's guest chat. The box is an ordinary text box:
@@ -245,36 +315,53 @@ const [latest] = [
     // app.copperhead.sh/new#prompt=<text>, and an empty box keeps them here
     // with the cursor in it. A fragment reaches no server, log or referrer. The
     // app reads it once (lib/guest/prompt.ts in copperhead-cloud) and takes at
-    // most 8,000 characters, which is this box's limit too. The form's
-    // action is that address, so with no script the button still gets there.
+    // most 8,000 characters, which is this box's limit too. Only this script
+    // puts the text there. The form's action is the same address and the
+    // textarea has no name, so with no script the button still opens the app
+    // but carries nothing; the <noscript> line under the box tells the reader.
+    // A named field would carry the text without script, in a query string
+    // that every server and log on the way can read.
     const target = () => {
       const text = field.value.trim();
-      return text ? `${form.action}#prompt=${encodeURIComponent(text)}` : form.action;
+      if (!text) return form.action;
+      // A lone surrogate (half an emoji, cut or pasted) makes
+      // encodeURIComponent throw. toWellFormed swaps it for U+FFFD where the
+      // browser has it.
+      return `${form.action}#prompt=${encodeURIComponent(text.toWellFormed?.() ?? text)}`;
     };
 
     // The way out: the app starts loading at once, and while it does the page
     // fades to its background, the colour the app's page opens on, so the
     // switch is a fade rather than a flash. Nothing waits on the fade. If the
     // app takes a moment, a thin copper bar runs along the top so the empty
-    // screen reads as loading, not as stuck. The veil stays up until the
-    // app's page replaces this one, or, if that never happens (the reader
-    // pressed Esc or Stop, or the app did not answer), for ten seconds, after
-    // which the page is handed back so the box works again.
+    // screen reads as loading, not as stuck. The veil takes the clicks, and
+    // the page under it is made inert so Tab cannot reach it either. It stays
+    // up until the app's page replaces this one. Esc hands the page back at
+    // once. The Stop button tells the page nothing, so after Stop (or if the
+    // app never answers) it is handed back after ten seconds and the box
+    // works again.
     let leaving = false;
     let veil: HTMLElement | null = null;
     let giveUp: ReturnType<typeof setTimeout> | undefined;
+    // Where focus was. Going inert takes it away, and stay() puts it back.
+    let back: HTMLElement | null = null;
+    const under = () => document.querySelectorAll<HTMLElement>("body > :is(header, main, footer)");
 
     const stay = () => {
       clearTimeout(giveUp);
       veil?.remove();
       veil = null;
       leaving = false;
+      for (const el of under()) el.inert = false;
+      if (back && document.activeElement === document.body) back.focus({ preventScroll: true });
+      back = null;
     };
 
     const go = () => {
       if (leaving) return;
-      leaving = true;
+      // Before anything changes, so a throw leaves the page as it was.
       const href = target();
+      leaving = true;
 
       if (!reduce.matches) {
         veil = document.createElement("div");
@@ -282,6 +369,8 @@ const [latest] = [
         veil.setAttribute("aria-hidden", "true");
         veil.innerHTML = '<div class="handoff-loading"></div>';
         document.body.append(veil);
+        back = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        for (const el of under()) el.inert = true;
       }
 
       giveUp = setTimeout(stay, 10_000);
@@ -308,6 +397,12 @@ const [latest] = [
       if (e.key !== "Enter" || e.shiftKey || e.isComposing || e.keyCode === 229) return;
       e.preventDefault();
       build();
+    });
+
+    // Esc can stop the navigation, which would leave this page behind the
+    // veil. Hand it back now rather than in ten seconds.
+    addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && leaving) stay();
     });
 
     // Back from the app restores this page from the back/forward cache with
@@ -363,7 +458,7 @@ const [latest] = [
      edge, which put a coloured cloud under the backer logos, and one as a
      halo behind the panel, which read as a smudge round a box that is
      otherwise all straight edges. The panel is set off by its frame and the
-     lighter border it takes on focus, and the fold is flat.
+     copper ring it takes on focus, and the fold is flat.
 
      The width is in rem, not px, so a reader with a larger default text size
      gets a wider panel to match and the line counts below still hold. */
@@ -590,13 +685,22 @@ const [latest] = [
     transition: border-color 0.16s ease;
   }
 
-  /* The textarea draws no outline of its own, so this is its focus cue. The
-     transparent outline is for forced colours (Windows High Contrast), which
-     flattens the border change and paints the outline in the system colour. */
+  /* The textarea draws no outline of its own; the panel draws it instead,
+     the site's 2px copper ring (global.css) round the pill. A text field
+     matches :focus-visible however it was focused, so the ring shows for a
+     click as well as for Tab. Any focus inside the panel also lightens its
+     border. The transparent outline is for forced colours (Windows High
+     Contrast) in a browser without :has(), which flattens the border change
+     and paints the outline in the system colour. */
   .panel:focus-within {
     border-color: var(--text-dim);
     outline: 2px solid transparent;
     outline-offset: 2px;
+  }
+
+  .panel:has(textarea:focus-visible) {
+    outline: 2px solid var(--copper);
+    outline-offset: 3px;
   }
 
   /* Heights are counted in lines (lh) plus the 24px of padding, so they
@@ -627,7 +731,9 @@ const [latest] = [
 
   /* The page's main button, so copper from the start, like the navbar's
      "Let's talk", rather than grey until something is typed. Pressed with an
-     empty box it puts the cursor in the box (see the script). */
+     empty box it puts the cursor in the box (see the script). The border is
+     transparent rather than none: forced colours drop the copper fill and
+     paint the border, which is then all that marks the button out. */
   .send {
     flex: none;
     display: inline-flex;
@@ -636,7 +742,7 @@ const [latest] = [
     gap: 8px;
     height: 40px;
     padding: 0 16px 0 18px;
-    border: 0;
+    border: 1px solid transparent;
     border-radius: 999px;
     background: var(--copper);
     color: var(--on-copper);
@@ -658,9 +764,19 @@ const [latest] = [
     outline-offset: 2px;
   }
 
+  /* Shown only with no script, under the box: the button still opens the
+     app but the text does not go with it (see the script). Quiet, in the
+     subhead's dim ink, a size under the field. */
+  .nojs {
+    margin: 12px 0 0;
+    color: var(--text-dim);
+    font-size: 0.875rem;
+  }
+
   /* ── The way out (see the script). A veil in the page's background colour
      fades up over everything, the navbar included, and takes every click
-     while the app loads. The script makes it, so it carries no scoped
+     while the app loads; the script makes the page under it inert for the
+     keyboard. The script makes the veil too, so it carries no scoped
      attribute and is reached through :global. The loading bar waits before
      it shows, so a quick load never flashes it. ── */
   :global(.handoff) {
@@ -740,7 +856,10 @@ const [latest] = [
      em so they move with the reader's text size (a media query's em is the
      browser's default size), and each sits a little above its measurement so
      a classic scrollbar, which narrows the page but not the query, still
-     fits. */
+     fits. Those four hold at 20px text too. At 24px (Chrome's "Very large")
+     the narrowest phones need a fifth line, which is the last step below.
+     scripts/shots.mjs checks every example against the field at each width
+     it audits. */
   @media (max-width: 52em) {
     textarea {
       min-height: 72px;
@@ -789,6 +908,17 @@ const [latest] = [
     textarea {
       min-height: 120px;
       min-height: calc(4lh + 24px);
+    }
+  }
+
+  /* Five lines. Only reachable at a large default text size: at 24px the
+     examples clip up to 348px wide and fit from 349px, and 15em is 360px
+     there. At 16px or 20px the query asks for a screen under 320px. The
+     fallback is in rem, since 1lh is 1.5rem here at any text size. */
+  @media (max-width: 15em) {
+    textarea {
+      min-height: calc(7.5rem + 24px);
+      min-height: calc(5lh + 24px);
     }
   }
 </style>
